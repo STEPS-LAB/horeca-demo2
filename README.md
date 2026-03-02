@@ -1,135 +1,114 @@
-# LUMINA Hotel — Premium Demo Site
+# LUMINA Hotel — Production-Grade Demo Site
 
-> A fully-featured, production-grade luxury hotel website demo built for **STEPS LAB** — showcasing technological advantage through speed, advanced UX, and best engineering practices.
+> A fully-featured, multilingual, CRM-driven luxury hotel platform built for **STEPS LAB** — showcasing modern Next.js architecture, real-time bookings, i18n routing, and admin intelligence.
 
-**Live Stack:** Next.js 15 · React 19 · TypeScript · Tailwind CSS 4 · Framer Motion · Lucide React
+**Live Stack:** Next.js 15 · React 19 · TypeScript · Tailwind CSS 4 · Framer Motion · Prisma 7 · PostgreSQL · jose JWT
 
 ---
 
 ## Features
 
-### Functional
-- **Booking System** — room selection, date picker, real-time price calculation, payment simulation, animated confirmation flow
-- **Room Catalogue** — 6 room types with image galleries, descriptions, amenities, and instant filtering
-- **Advanced Filters** — type, price range, guest count, features, and sort — all with real-time animated response
-- **Contact Form** — inline validation, animated success/error states, accessible and keyboard-navigable
-- **Sticky Navigation** — transparent on hero, solid on scroll, mobile-first collapsible menu
-- **Room Detail Modals** — animated open/close with Framer Motion, image gallery, focus trapping
-- **Booking Modal** — multi-step (details → payment → confirmation) with animated transitions
+### Guest-Facing
+- **Multilingual (EN / UA)** — `/en` and `/ua` routing via Next.js middleware; language switcher in header; cookie-persisted preference; SEO-friendly `hreflang` alternates
+- **Instant Room Filtering** — type, price range, guest count, features, sort — all client-side with zero reload
+- **Real-Time Booking Flow** — stay details → payment → confirmation; simulated 1 800 ms payment processing; `LMN-{timestamp}` reference generation
+- **Live Pricing Engine** — subtotal, cleaning fee ($35), tax (12%), per-night breakdown with tooltips
+- **Accessibility** — ARIA labels, keyboard focus trap in modals, `aria-expanded`, skip-to-content link
+- **Performance** — Server Components + dynamic imports for heavy sections; Skeleton loaders; Framer Motion with reduced-motion support; Next.js Image optimisation (AVIF/WebP)
+- **Mobile-First** — responsive header with animated drawer, collapsible filter sidebar
 
-### Technical
-- Next.js 15 App Router with Server Components + Client Components separation
-- React 19 with optimised re-render strategy (useMemo, useCallback throughout)
-- Tailwind CSS v4 with CSS-first configuration and custom design tokens
-- Framer Motion — scroll parallax, viewport-triggered animations, AnimatePresence, spring physics
-- Dynamic imports for large sections (lazy loading below the fold)
-- Next.js `<Image>` with automatic WebP/AVIF conversion and lazy loading
-- Full TypeScript strict mode — no `any` types
-- Accessible: ARIA labels, keyboard navigation, focus trapping, `prefers-reduced-motion` safe
-
-### Design
-- Warm, neutral luxury palette with gold accents
-- Inter variable font (Google Fonts, `display: swap`)
-- Mobile-first responsive grid (320px → 1920px)
-- Custom CSS design tokens via `@theme` (Tailwind v4)
+### Admin CRM (`/admin`)
+- **Dashboard** — revenue, room count, booking KPIs, recent bookings table
+- **Room Management** — list all rooms, search, activate/deactivate; extensible with full CRUD
+- **Booking Intelligence** — filter by status (CONFIRMED / PENDING / CANCELLED), search by guest / email / reference
+- **Pricing & Promotions** — create percentage, fixed, or date-range promotions; apply to specific rooms
+- **JWT Session Auth** — `jose`-signed cookies, 8-hour expiry, middleware-protected routes
+- **Demo mode** — works without a database using static data and hardcoded credentials
 
 ---
 
-## Project Structure
-
-```
-demo-site/
-├── app/
-│   ├── layout.tsx              # Root layout (Inter font, metadata)
-│   ├── globals.css             # Tailwind v4 import + @theme tokens
-│   ├── page.tsx                # Home page (Server Component)
-│   ├── FeaturedRooms.tsx       # Home featured rooms (Client Component)
-│   ├── rooms/
-│   │   ├── page.tsx            # Rooms page
-│   │   └── RoomsClient.tsx     # Filtered room grid (Client Component)
-│   ├── booking/
-│   │   ├── page.tsx            # Booking page
-│   │   └── BookingPageClient.tsx
-│   └── contact/
-│       ├── page.tsx            # Contact page
-│       └── ContactClient.tsx
-│
-├── components/
-│   ├── ui/
-│   │   ├── Button.tsx          # Animated button with variants
-│   │   ├── Modal.tsx           # Focus-trapped animated modal
-│   │   ├── Input.tsx           # Input, Textarea, Select with validation UI
-│   │   ├── Badge.tsx           # Status/type badge
-│   │   └── Tooltip.tsx         # Hover/focus tooltip with placement
-│   ├── layout/
-│   │   ├── Header.tsx          # Sticky, scroll-aware, mobile-first header
-│   │   └── Footer.tsx          # Full footer with CTA banner
-│   ├── sections/
-│   │   ├── Hero.tsx            # Parallax hero with booking CTA
-│   │   ├── Features.tsx        # Hotel amenities grid
-│   │   ├── Testimonials.tsx    # Animated testimonial slider
-│   │   └── Gallery.tsx         # Mosaic image gallery
-│   ├── rooms/
-│   │   ├── RoomCard.tsx        # Room card with image carousel
-│   │   ├── RoomModal.tsx       # Full room detail modal
-│   │   └── RoomFilters.tsx     # Sidebar filter panel
-│   └── booking/
-│       ├── BookingForm.tsx     # Multi-field booking form
-│       ├── BookingModal.tsx    # Step-based booking modal
-│       └── BookingConfirmation.tsx
-│
-├── hooks/
-│   ├── useBooking.ts           # Booking state machine
-│   ├── useRoomFilter.ts        # Room filtering + sorting
-│   └── useModal.ts             # Modal open/close + Escape + scroll lock
-│
-├── utils/
-│   ├── cn.ts                   # clsx + tailwind-merge
-│   ├── pricing.ts              # Price calculations + formatting
-│   └── validation.ts           # Form validation helpers
-│
-├── data/
-│   └── rooms.ts                # 6 rooms + 4 testimonials (demo data)
-│
-├── types/
-│   └── index.ts                # All TypeScript interfaces
-│
-├── __tests__/
-│   ├── utils.test.ts
-│   ├── RoomCard.test.tsx
-│   ├── BookingForm.test.tsx
-│   ├── Navigation.test.tsx
-│   └── ContactForm.test.tsx
-│
-└── .github/
-    └── workflows/
-        └── main.yml            # CI: lint → type-check → test → build → deploy
-```
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js ≥ 20.x
-- npm ≥ 10.x
-
-### Installation
+## Quick Start
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/your-org/demo-site.git
-cd demo-site
-
-# 2. Install dependencies
+# 1. Install
 npm install
 
-# 3. Start the development server
+# 2. Configure environment
+cp .env.example .env.local
+# Edit .env.local (see Environment Variables below)
+
+# 3. Database (optional — skip for demo mode)
+npx prisma migrate dev --name init
+npm run db:seed
+
+# 4. Develop
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+> **Demo mode (no DB needed):** Simply skip Step 3. The app uses static room data and demo admin credentials.
+
+---
+
+## Environment Variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_URL` | Optional | PostgreSQL connection string. If omitted, app runs in demo mode |
+| `JWT_SECRET` | Recommended | Secret for admin session signing. Defaults to an insecure placeholder |
+| `NEXT_PUBLIC_SITE_URL` | Optional | Canonical site URL for SEO |
+| `VERCEL_TOKEN` | CI only | Vercel deployment token |
+| `VERCEL_ORG_ID` | CI only | Vercel organisation ID |
+| `VERCEL_PROJECT_ID` | CI only | Vercel project ID |
+
+Copy `.env.example` → `.env.local` and fill in your values.
+
+---
+
+## Database Setup
+
+Requires PostgreSQL 14+.
+
+```bash
+# Push schema to DB (no migration history)
+npm run db:push
+
+# OR use migrations (recommended for production)
+npm run db:migrate
+
+# Seed with demo rooms, admin user, and sample promotion
+npm run db:seed
+
+# Open Prisma Studio (visual DB browser)
+npm run db:studio
+```
+
+### Prisma Schema
+
+| Model | Description |
+|---|---|
+| `Room` | Hotel rooms with bilingual names/descriptions, pricing, amenities |
+| `Booking` | Guest reservations with status tracking |
+| `Promotion` | Percentage/fixed/date-range discounts |
+| `BlockedDate` | Maintenance/event date blocks per room |
+| `User` | Admin/Manager accounts with bcrypt passwords |
+
+---
+
+## Admin Panel
+
+| URL | Description |
+|---|---|
+| `/admin/login` | Sign in page |
+| `/admin` | Dashboard (KPIs, recent bookings) |
+| `/admin/rooms` | Room catalogue management |
+| `/admin/bookings` | Booking list with status filter |
+| `/admin/pricing` | Promotions management |
+
+**Demo credentials** (no DB required):
+```
+Email:    admin@luminahotel.ua
+Password: lumina-admin-2025
+```
 
 ---
 
@@ -137,105 +116,129 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 | Command | Description |
 |---|---|
-| `npm run dev` | Start dev server with Turbopack |
+| `npm run dev` | Development server (Turbopack) |
 | `npm run build` | Production build |
-| `npm start` | Start production server |
-| `npm run lint` | ESLint check |
-| `npm run type-check` | TypeScript type check |
-| `npm test` | Run all tests |
-| `npm run test:watch` | Watch mode |
-| `npm run test:coverage` | Tests with coverage report |
+| `npm run start` | Start production server |
+| `npm run lint` | ESLint |
+| `npm run type-check` | TypeScript strict check |
+| `npm test` | Jest (41 tests across 5 suites) |
+| `npm run test:coverage` | Coverage report |
+| `npm run db:generate` | Regenerate Prisma client |
+| `npm run db:migrate` | Run database migrations |
+| `npm run db:seed` | Seed demo data |
+| `npm run db:studio` | Open Prisma Studio |
+
+---
+
+## Architecture
+
+```
+app/
+  [locale]/          # EN + UA locale pages (SSG via generateStaticParams)
+    layout.tsx       # I18nProvider + Header + Footer
+    page.tsx         # Home
+    rooms/           # Filterable catalogue
+    booking/         # 3-step booking flow
+    contact/         # Contact form
+  admin/             # CRM panel (auth-protected by middleware)
+    login/
+    rooms/
+    bookings/
+    pricing/
+  api/               # Route handlers
+    admin/auth/      # POST login, DELETE logout, GET session
+    rooms/           # GET list, POST create
+    bookings/        # GET list (admin), POST create
+    promotions/      # GET list, POST create
+
+components/
+  ui/                # Button, Modal, Input, Badge, Tooltip, Skeleton
+  layout/            # Header (i18n-aware), Footer, LanguageSwitcher, LocaleLang
+  sections/          # Hero, Features, Testimonials, Gallery
+  rooms/             # RoomCard, RoomModal, RoomFilters
+  booking/           # BookingForm, BookingModal, BookingConfirmation
+  admin/             # AdminSidebar, AdminDashboard, AdminRoomsClient, …
+
+i18n/
+  config.ts          # Locale list + helpers
+  dictionaries/      # en.ts + ua.ts (full translations)
+  get-dictionary.ts  # Async dictionary loader
+  context.tsx        # I18nProvider + useTranslations hook
+
+lib/
+  prisma.ts          # Singleton Prisma client (pg adapter, dev HMR safe)
+  auth.ts            # JWT sign/verify, cookie helpers (jose)
+  services/          # rooms, bookings, promotions, availability
+
+middleware.ts        # i18n redirect + admin auth guard
+```
+
+---
+
+## i18n Routing
+
+| URL | Locale |
+|---|---|
+| `/` | Redirects to `/en` or `/ua` (cookie / Accept-Language) |
+| `/en` | English home page |
+| `/ua` | Ukrainian home page |
+| `/en/rooms` | English room catalogue |
+| `/ua/booking` | Ukrainian booking flow |
+
+Language preference is stored in the `lumina_locale` cookie (1 year TTL).
 
 ---
 
 ## Testing
 
-Tests use **Jest** + **@testing-library/react**.
-
 ```bash
-# Run all tests
-npm test
-
-# Watch mode
-npm run test:watch
-
-# With coverage
-npm run test:coverage
+npm test               # all 41 tests
+npm run test:coverage  # with coverage report
 ```
 
-Test suites cover:
-- Pricing utilities (calculateNights, formatCurrency, etc.)
-- Validation utilities (booking form, contact form)
-- RoomCard rendering + interactions
-- BookingForm fields and validation display
-- Header navigation and mobile menu
-- ContactForm submission and success state
+**Test suites:**
+- `utils.test.ts` — pricing, validation utilities
+- `RoomCard.test.tsx` — rendering, callbacks, accessibility
+- `BookingForm.test.tsx` — field updates, validation, price summary
+- `Navigation.test.tsx` — Header rendering, mobile menu, locale links
+- `ContactForm.test.tsx` — submission, email validation, success state
 
 ---
 
-## Deployment (Vercel)
+## Deployment
 
-### Manual deployment
+### Vercel (recommended)
 
-```bash
-# Install Vercel CLI
-npm i -g vercel
+1. Import the repo to Vercel
+2. Set environment variables in Vercel dashboard
+3. Run `npm run db:migrate && npm run db:seed` from CLI against production DB
 
-# Deploy to production
-vercel --prod
-```
+### GitHub Actions CI/CD
 
-### Automatic deployment via GitHub Actions
-
-The included workflow (`.github/workflows/main.yml`) automatically:
-
-1. Lints, type-checks, and runs tests on every push/PR
-2. Builds the application
-3. Deploys to Vercel on merge to `main`
-
-**Required GitHub Secrets:**
-
-| Secret | Description |
-|---|---|
-| `VERCEL_TOKEN` | Your Vercel API token |
-| `VERCEL_ORG_ID` | Your Vercel team/org ID |
-| `VERCEL_PROJECT_ID` | Your Vercel project ID |
-
-To find your IDs, run `vercel link` in the project root after installing the CLI.
-
----
-
-## Performance Notes
-
-- **PageSpeed target:** 90+ mobile & desktop
-- Images served as WebP/AVIF via Next.js Image Optimization
-- Below-fold sections loaded via `dynamic()` imports
-- Framer Motion animations use only `transform` and `opacity` — no layout thrash
-- Tailwind v4 tree-shakes unused CSS automatically
-- `optimizePackageImports` configured for `lucide-react` and `framer-motion`
+The workflow (`.github/workflows/main.yml`) runs on every push:
+1. **Quality** — lint + type-check + tests
+2. **Build** — Next.js production build
+3. **Deploy** — Vercel deployment on `main` branch (requires `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` secrets)
 
 ---
 
 ## Design Tokens
 
-Custom tokens defined in `app/globals.css` via `@theme`:
-
 | Token | Value | Usage |
 |---|---|---|
 | `--color-gold-500` | `#c9a96e` | Primary accent |
 | `--color-stone-25` | `#fdfcfb` | Page background |
-| `--shadow-card` | `...` | Card shadows |
-| `--shadow-modal` | `...` | Modal shadow |
-| `--ease-spring` | `cubic-bezier(0.34, 1.56, 0.64, 1)` | Spring animations |
+| `--shadow-card` | custom | Room cards |
+| `--ease-spring` | cubic-bezier | Spring animations |
 
 ---
 
 ## Credits
 
-Built by **STEPS LAB** as a premium hotel website demo.
-Inspired by [shelest.ua](https://shelest.ua/) — a beautiful Ukrainian eco-hotel.
-Photography courtesy of [Unsplash](https://unsplash.com/).
+- **Unsplash** — Photography
+- **Framer Motion** — Animations
+- **Lucide React** — Icons
+- **Tailwind CSS v4** — Styling
+- **Prisma** — Database ORM
 
----
-
-*© 2026 STEPS LAB. Demo project — not a real hotel.*
+Built by STEPS LAB · [LUMINA Hotel Demo](https://github.com)

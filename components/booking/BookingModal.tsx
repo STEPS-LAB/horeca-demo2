@@ -10,12 +10,14 @@ import { BookingForm } from '@/components/booking/BookingForm';
 import { BookingConfirmation } from '@/components/booking/BookingConfirmation';
 import { useBooking } from '@/hooks/useBooking';
 import { formatCurrency } from '@/utils/pricing';
-import type { Room } from '@/types';
+import type { Room, Promotion } from '@/types';
 
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialRoom?: Room;
+  rooms?: Room[];
+  promotions?: Promotion[];
 }
 
 const stepTitles = {
@@ -36,8 +38,8 @@ const slideVariants = {
   }),
 };
 
-export function BookingModal({ isOpen, onClose, initialRoom }: BookingModalProps) {
-  const booking = useBooking(initialRoom?.id);
+export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promotions = [] }: BookingModalProps) {
+  const booking = useBooking(initialRoom?.id, rooms, promotions);
   const [paymentData, setPaymentData] = useState({
     cardNumber: '',
     cardHolder: '',
@@ -129,6 +131,8 @@ export function BookingModal({ isOpen, onClose, initialRoom }: BookingModalProps
             <BookingForm
               form={booking.form}
               errors={booking.errors}
+              rooms={rooms}
+              promotions={promotions}
               onUpdateField={booking.updateField}
               onTouchField={booking.touchField}
               onSubmit={booking.submitBookingForm}
@@ -240,6 +244,11 @@ export function BookingModal({ isOpen, onClose, initialRoom }: BookingModalProps
                 </div>
               </div>
 
+              {booking.submitError && (
+                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                  {booking.submitError}
+                </p>
+              )}
               <div className="flex gap-3 pt-2">
                 <Button
                   type="button"

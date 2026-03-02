@@ -1,10 +1,9 @@
 'use client';
 
 import { useState, useCallback, useMemo } from 'react';
-import type { BookingFormData, BookingCalculation, BookingStep } from '@/types';
-import { calculateBookingPrice, getTodayString, getTomorrowString } from '@/utils/pricing';
+import type { BookingFormData, BookingCalculation, BookingStep, Room, Promotion } from '@/types';
+import { calculateBookingPrice, getTodayString, getTomorrowString, applyBestPromotion } from '@/utils/pricing';
 import { validateBookingForm, hasErrors } from '@/utils/validation';
-import { rooms } from '@/data/rooms';
 
 const defaultForm: BookingFormData = {
   roomId: '',
@@ -18,7 +17,11 @@ const defaultForm: BookingFormData = {
   specialRequests: '',
 };
 
-export function useBooking(initialRoomId?: string) {
+export function useBooking(
+  initialRoomId?: string,
+  rooms: Room[] = [],
+  promotions: Promotion[] = []
+) {
   const [form, setForm] = useState<BookingFormData>({
     ...defaultForm,
     roomId: initialRoomId ?? '',
@@ -27,16 +30,28 @@ export function useBooking(initialRoomId?: string) {
   const [touched, setTouched] = useState<Partial<Record<keyof BookingFormData, boolean>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState<string>('');
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [finalPricing, setFinalPricing] = useState<BookingCalculation | null>(null);
 
   const selectedRoom = useMemo(
     () => rooms.find((r) => r.id === form.roomId) ?? null,
-    [form.roomId]
+    [rooms, form.roomId]
   );
+
+  // Apply the best active promotion to the room's base price (filtered by room slug)
+  const { discountedPrice, promotion: bestPromotion } = useMemo(
+    () => applyBestPromotion(selectedRoom?.pricePerNight ?? 0, promotions, selectedRoom?.id),
+    [selectedRoom, promotions]
+  );
+
+  const effectivePricePerNight = selectedRoom
+    ? (bestPromotion ? discountedPrice : selectedRoom.pricePerNight)
+    : 0;
 
   const pricing = useMemo<BookingCalculation | null>(() => {
     if (!selectedRoom || !form.checkIn || !form.checkOut) return null;
-    return calculateBookingPrice(selectedRoom.pricePerNight, form.checkIn, form.checkOut);
-  }, [selectedRoom, form.checkIn, form.checkOut]);
+    return calculateBookingPrice(effectivePricePerNight, form.checkIn, form.checkOut);
+  }, [selectedRoom, form.checkIn, form.checkOut, effectivePricePerNight]);
 
   const errors = useMemo(() => validateBookingForm(form), [form]);
 
@@ -78,12 +93,39 @@ export function useBooking(initialRoomId?: string) {
 
   const submitPayment = useCallback(async (): Promise<void> => {
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1800));
-    const id = `LMN-${Date.now().toString(36).toUpperCase()}`;
-    setBookingId(id);
-    setStep('confirmation');
-    setIsSubmitting(false);
-  }, []);
+    setSubmitError(null);
+    try {
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ form }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({})) as { error?: string };
+        throw new Error(err.error ?? 'Booking failed. Please try again.');
+      }
+      const data = await res.json() as {
+        reference: string;
+        subtotal: number;
+        cleaningFee: number;
+        taxes: number;
+        total: number;
+      };
+      setBookingId(data.reference);
+      setFinalPricing({
+        nights: pricing?.nights ?? 0,
+        basePrice: data.subtotal,
+        cleaningFee: data.cleaningFee,
+        taxes: data.taxes,
+        total: data.total,
+      });
+      setStep('confirmation');
+    } catch (e) {
+      setSubmitError(e instanceof Error ? e.message : 'Booking failed. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [form, pricing]);
 
   const reset = useCallback(() => {
     setForm({ ...defaultForm, roomId: initialRoomId ?? '' });
@@ -91,16 +133,23 @@ export function useBooking(initialRoomId?: string) {
     setTouched({});
     setIsSubmitting(false);
     setBookingId('');
+    setSubmitError(null);
+    setFinalPricing(null);
   }, [initialRoomId]);
 
   return {
     form,
     step,
     errors: touchedErrors,
-    pricing,
+    // After confirmed: use server pricing; before: show live client estimate
+    pricing: finalPricing ?? pricing,
     selectedRoom,
+    bestPromotion,
+    discountedPrice,
+    effectivePricePerNight,
     isSubmitting,
     bookingId,
+    submitError,
     updateField,
     touchField,
     submitBookingForm,

@@ -9,8 +9,10 @@ export type RoomType =
 export interface Room {
   id: string;
   name: string;
+  nameUa?: string;
   type: RoomType;
   description: string;
+  descriptionUa?: string;
   shortDescription: string;
   pricePerNight: number;
   maxGuests: number;
@@ -84,6 +86,19 @@ export interface HotelFeature {
 }
 
 export type BookingStep = 'form' | 'payment' | 'confirmation';
+
+export interface Promotion {
+  id: string;
+  name: string;
+  type: 'PERCENTAGE' | 'FIXED' | 'DATE_RANGE';
+  value: number;
+  startDate: string | null;
+  endDate: string | null;
+  minNights: number | null;
+  isActive: boolean;
+  /** null = applies to all rooms; string[] = only these room slugs */
+  roomSlugs: string[] | null;
+}
 
 export interface PaymentData {
   cardNumber: string;

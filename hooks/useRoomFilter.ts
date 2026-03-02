@@ -2,9 +2,8 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import type { Room, RoomFilter, RoomType } from '@/types';
-import { rooms as allRooms } from '@/data/rooms';
 
-const MAX_PRICE = 1000;
+const MAX_PRICE = 1500;
 
 const defaultFilter: RoomFilter = {
   types: [],
@@ -14,11 +13,11 @@ const defaultFilter: RoomFilter = {
   sortBy: 'price-asc',
 };
 
-export function useRoomFilter() {
+export function useRoomFilter(rooms: Room[]) {
   const [filter, setFilter] = useState<RoomFilter>(defaultFilter);
 
   const filteredRooms = useMemo<Room[]>(() => {
-    let result = allRooms.filter((room) => {
+    let result = rooms.filter((room) => {
       if (filter.types.length > 0 && !filter.types.includes(room.type)) return false;
       if (room.pricePerNight < filter.priceRange[0] || room.pricePerNight > filter.priceRange[1])
         return false;
@@ -48,7 +47,7 @@ export function useRoomFilter() {
     });
 
     return result;
-  }, [filter]);
+  }, [filter, rooms]);
 
   const toggleType = useCallback((type: RoomType) => {
     setFilter((prev) => ({

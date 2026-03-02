@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useBooking } from '@/hooks/useBooking';
 import { formatCurrency } from '@/utils/pricing';
+import type { Room, Promotion } from '@/types';
 
 const stepLabels = ['Stay Details', 'Payment', 'Confirmation'];
 
@@ -18,8 +19,8 @@ const slideVariants = {
   exit: (dir: number) => ({ x: dir > 0 ? -40 : 40, opacity: 0 }),
 };
 
-export function BookingPageClient() {
-  const booking = useBooking();
+export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; promotions?: Promotion[] }) {
+  const booking = useBooking(undefined, rooms, promotions);
   const [paymentData, setPaymentData] = useState({
     cardNumber: '',
     cardHolder: '',
@@ -107,6 +108,8 @@ export function BookingPageClient() {
                 <BookingForm
                   form={booking.form}
                   errors={booking.errors}
+                  rooms={rooms}
+                  promotions={promotions}
                   onUpdateField={booking.updateField}
                   onTouchField={booking.touchField}
                   onSubmit={booking.submitBookingForm}
@@ -220,6 +223,11 @@ export function BookingPageClient() {
                       }
                     />
                   </div>
+                  {booking.submitError && (
+                    <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                      {booking.submitError}
+                    </p>
+                  )}
                   <div className="flex gap-3 pt-2">
                     <Button
                       type="button"

@@ -1,4 +1,4 @@
-import type { BookingCalculation } from '@/types';
+import type { BookingCalculation, Promotion } from '@/types';
 
 const TAX_RATE = 0.12;
 const CLEANING_FEE = 35;
@@ -54,4 +54,37 @@ export function getDateString(daysFromNow: number): string {
   const date = new Date();
   date.setDate(date.getDate() + daysFromNow);
   return date.toISOString().split('T')[0];
+}
+
+/**
+ * Finds the best (largest) discount from a list of active promotions
+ * and returns the effective price per night and the winning promotion.
+ * Pass roomSlug to filter out promotions that only apply to specific rooms.
+ */
+export function applyBestPromotion(
+  pricePerNight: number,
+  promotions: Promotion[],
+  roomSlug?: string
+): { discountedPrice: number; promotion: Promotion | null } {
+  const applicable = roomSlug
+    ? promotions.filter((p) => !p.roomSlugs || p.roomSlugs.includes(roomSlug))
+    : promotions;
+
+  if (!applicable.length) return { discountedPrice: pricePerNight, promotion: null };
+
+  let best: Promotion | null = null;
+  let bestPrice = pricePerNight;
+
+  for (const promo of applicable) {
+    const discounted =
+      promo.type === 'PERCENTAGE'
+        ? pricePerNight * (1 - promo.value / 100)
+        : Math.max(0, pricePerNight - promo.value);
+    if (discounted < bestPrice) {
+      bestPrice = discounted;
+      best = promo;
+    }
+  }
+
+  return { discountedPrice: bestPrice, promotion: best };
 }

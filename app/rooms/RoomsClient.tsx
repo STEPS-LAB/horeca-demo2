@@ -9,11 +9,10 @@ import { RoomModal } from '@/components/rooms/RoomModal';
 import { BookingModal } from '@/components/booking/BookingModal';
 import { useRoomFilter } from '@/hooks/useRoomFilter';
 import { useModal } from '@/hooks/useModal';
-import { rooms } from '@/data/rooms';
-import type { Room } from '@/types';
+import type { Room, Promotion } from '@/types';
 
-export function RoomsClient() {
-  const filterState = useRoomFilter();
+export function RoomsClient({ initialRooms, promotions = [] }: { initialRooms: Room[]; promotions?: Promotion[] }) {
+  const filterState = useRoomFilter(initialRooms);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [bookingRoom, setBookingRoom] = useState<Room | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
@@ -62,7 +61,7 @@ export function RoomsClient() {
               transition={{ duration: 0.25 }}
               className="lg:hidden overflow-hidden mb-5"
             >
-              <RoomFilters state={filterState} totalCount={rooms.length} />
+              <RoomFilters state={filterState} totalCount={initialRooms.length} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -70,7 +69,7 @@ export function RoomsClient() {
         <div className="flex gap-8">
           {/* Desktop sidebar */}
           <aside className="hidden lg:block w-64 shrink-0" aria-label="Room filters">
-            <RoomFilters state={filterState} totalCount={rooms.length} />
+            <RoomFilters state={filterState} totalCount={initialRooms.length} />
           </aside>
 
           {/* Room grid */}
@@ -113,6 +112,7 @@ export function RoomsClient() {
                       >
                         <RoomCard
                           room={room}
+                          promotions={promotions}
                           onViewDetails={handleViewDetails}
                           onBook={handleBook}
                         />
@@ -139,6 +139,8 @@ export function RoomsClient() {
         isOpen={bookingModal.isOpen}
         onClose={bookingModal.close}
         initialRoom={bookingRoom ?? undefined}
+        rooms={initialRooms}
+        promotions={promotions}
       />
     </section>
   );

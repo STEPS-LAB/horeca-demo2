@@ -6,27 +6,20 @@ import { Calendar, Users, Home, ChevronRight, Info } from 'lucide-react';
 import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Tooltip } from '@/components/ui/Tooltip';
-import { formatCurrency, calculateBookingPrice } from '@/utils/pricing';
-import { rooms } from '@/data/rooms';
-import type { BookingFormData, ValidationErrors } from '@/types';
+import { formatCurrency, calculateBookingPrice, applyBestPromotion } from '@/utils/pricing';
+import type { BookingFormData, ValidationErrors, Room, Promotion } from '@/types';
 
 interface BookingFormProps {
   form: BookingFormData;
   errors: ValidationErrors<BookingFormData>;
+  rooms: Room[];
+  promotions?: Promotion[];
   onUpdateField: <K extends keyof BookingFormData>(field: K, value: BookingFormData[K]) => void;
   onTouchField: (field: keyof BookingFormData) => void;
   onSubmit: () => Promise<boolean>;
   isLoading?: boolean;
   compact?: boolean;
 }
-
-const roomOptions = [
-  { value: '', label: 'Select a room…' },
-  ...rooms.map((r) => ({
-    value: r.id,
-    label: `${r.name} — ${formatCurrency(r.pricePerNight)}/night`,
-  })),
-];
 
 const guestOptions = Array.from({ length: 6 }, (_, i) => ({
   value: i + 1,
@@ -45,18 +38,41 @@ const fieldVariants = {
 export function BookingForm({
   form,
   errors,
+  rooms,
+  promotions = [],
   onUpdateField,
   onTouchField,
   onSubmit,
   isLoading,
   compact = false,
 }: BookingFormProps) {
-  const selectedRoom = useMemo(() => rooms.find((r) => r.id === form.roomId) ?? null, [form.roomId]);
+  const selectedRoom = useMemo(() => rooms.find((r) => r.id === form.roomId) ?? null, [rooms, form.roomId]);
+
+  const { discountedPrice, promotion: bestPromotion } = useMemo(
+    () => applyBestPromotion(selectedRoom?.pricePerNight ?? 0, promotions, selectedRoom?.id ?? undefined),
+    [selectedRoom, promotions]
+  );
+
+  const effectivePrice = selectedRoom
+    ? (bestPromotion ? discountedPrice : selectedRoom.pricePerNight)
+    : 0;
+
+  const roomOptions = useMemo(
+    () => [
+      { value: '', label: 'Select a room…' },
+      ...rooms.map((r) => {
+        const { discountedPrice: dp, promotion: promo } = applyBestPromotion(r.pricePerNight, promotions, r.id);
+        const price = promo ? dp : r.pricePerNight;
+        return { value: r.id, label: `${r.name} — ${formatCurrency(price)}/night` };
+      }),
+    ],
+    [rooms, promotions]
+  );
 
   const pricing = useMemo(() => {
     if (!selectedRoom || !form.checkIn || !form.checkOut) return null;
-    return calculateBookingPrice(selectedRoom.pricePerNight, form.checkIn, form.checkOut);
-  }, [selectedRoom, form.checkIn, form.checkOut]);
+    return calculateBookingPrice(effectivePrice, form.checkIn, form.checkOut);
+  }, [selectedRoom, form.checkIn, form.checkOut, effectivePrice]);
 
   return (
     <motion.form
@@ -139,9 +155,24 @@ export function BookingForm({
           className="bg-stone-50 rounded-xl p-4 border border-stone-100"
         >
           <div className="flex flex-col gap-2 text-sm">
+            {bestPromotion && (
+              <div className="flex justify-between text-emerald-600 text-xs font-medium pb-1 border-b border-stone-200">
+                <span>🏷 {bestPromotion.name}</span>
+                <span>
+                  −{bestPromotion.type === 'PERCENTAGE'
+                    ? `${bestPromotion.value}%`
+                    : formatCurrency(bestPromotion.value)}
+                </span>
+              </div>
+            )}
             <div className="flex justify-between text-stone-600">
               <span>
-                {formatCurrency(selectedRoom?.pricePerNight ?? 0)} × {pricing.nights} nights
+                {formatCurrency(effectivePrice)} × {pricing.nights} nights
+                {bestPromotion && (
+                  <span className="text-stone-400 line-through ml-1 text-xs">
+                    ({formatCurrency(selectedRoom?.pricePerNight ?? 0)})
+                  </span>
+                )}
               </span>
               <span>{formatCurrency(pricing.basePrice)}</span>
             </div>

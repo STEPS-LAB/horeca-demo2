@@ -6,12 +6,14 @@ import { motion } from 'framer-motion';
 import { Star, Users, Maximize2, BedDouble, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { formatCurrency } from '@/utils/pricing';
+import { formatCurrency, applyBestPromotion } from '@/utils/pricing';
 import { cn } from '@/utils/cn';
-import type { Room } from '@/types';
+import type { Room, Promotion } from '@/types';
+import { useLocale } from '@/i18n/context';
 
 interface RoomCardProps {
   room: Room;
+  promotions?: Promotion[];
   onViewDetails: (room: Room) => void;
   onBook: (room: Room) => void;
 }
@@ -25,9 +27,15 @@ const roomTypeLabels: Record<Room['type'], string> = {
   'garden-villa': 'Garden Villa',
 };
 
-export function RoomCard({ room, onViewDetails, onBook }: RoomCardProps) {
+export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomCardProps) {
   const [imgIndex, setImgIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const locale = useLocale();
+  const displayName = locale === 'ua' && room.nameUa ? room.nameUa : room.name;
+  const displayDesc = locale === 'ua' && room.descriptionUa
+    ? room.descriptionUa.slice(0, 120)
+    : room.shortDescription;
+  const { discountedPrice, promotion: bestPromotion } = applyBestPromotion(room.pricePerNight, promotions, room.id);
 
   return (
     <motion.article
@@ -36,13 +44,13 @@ export function RoomCard({ room, onViewDetails, onBook }: RoomCardProps) {
       transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      aria-label={`${room.name} — ${formatCurrency(room.pricePerNight)} per night`}
+      aria-label={`${displayName} — ${formatCurrency(room.pricePerNight)} per night`}
     >
       {/* Image gallery */}
       <div className="relative h-52 sm:h-60 overflow-hidden">
         <Image
           src={room.images[imgIndex]}
-          alt={`${room.name} — image ${imgIndex + 1}`}
+          alt={`${displayName} — image ${imgIndex + 1}`}
           fill
           className="object-cover transition-transform duration-700 group-hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
@@ -53,8 +61,15 @@ export function RoomCard({ room, onViewDetails, onBook }: RoomCardProps) {
         <div className="absolute inset-0 gradient-dark opacity-60 group-hover:opacity-70 transition-opacity" />
 
         {/* Type badge */}
-        <div className="absolute top-3 left-3">
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
           <Badge variant="gold">{roomTypeLabels[room.type]}</Badge>
+          {bestPromotion && (
+            <span className="self-start text-[10px] font-bold bg-red-500 text-white px-2 py-0.5 rounded-full tracking-wide uppercase">
+              {bestPromotion.type === 'PERCENTAGE'
+                ? `−${bestPromotion.value}%`
+                : `−${formatCurrency(bestPromotion.value)}`}
+            </span>
+          )}
         </div>
 
         {/* Rating */}
@@ -104,15 +119,22 @@ export function RoomCard({ room, onViewDetails, onBook }: RoomCardProps) {
       {/* Content */}
       <div className="p-5">
         <div className="flex items-start justify-between gap-2 mb-3">
-          <h3 className="font-semibold text-stone-900 leading-tight">{room.name}</h3>
+          <h3 className="font-semibold text-stone-900 leading-tight">{displayName}</h3>
           <div className="text-right shrink-0">
-            <span className="text-lg font-bold text-stone-900">{formatCurrency(room.pricePerNight)}</span>
+            {bestPromotion && (
+              <span className="text-xs text-stone-400 line-through block">
+                {formatCurrency(room.pricePerNight)}
+              </span>
+            )}
+            <span className={`text-lg font-bold ${bestPromotion ? 'text-red-600' : 'text-stone-900'}`}>
+              {formatCurrency(bestPromotion ? discountedPrice : room.pricePerNight)}
+            </span>
             <span className="text-xs text-stone-400 block">/ night</span>
           </div>
         </div>
 
         <p className="text-sm text-stone-500 leading-relaxed mb-4 line-clamp-2">
-          {room.shortDescription}
+          {displayDesc}
         </p>
 
         {/* Stats */}

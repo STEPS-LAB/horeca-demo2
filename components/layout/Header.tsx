@@ -7,13 +7,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X, Phone } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { Button } from '@/components/ui/Button';
-
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/rooms', label: 'Rooms & Suites' },
-  { href: '/booking', label: 'Book Now' },
-  { href: '/contact', label: 'Contact' },
-];
+import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
+import { useTranslations } from '@/i18n/context';
+import type { Locale } from '@/i18n/config';
 
 const menuVariants = {
   hidden: { opacity: 0, height: 0 },
@@ -29,11 +25,23 @@ const linkVariants = {
   }),
 };
 
-export function Header() {
+interface HeaderProps {
+  locale: Locale;
+}
+
+export function Header({ locale }: HeaderProps) {
+  const t = useTranslations();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  const isHome = pathname === '/';
+  const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
+
+  const navLinks = [
+    { href: `/${locale}`, label: t.nav.home },
+    { href: `/${locale}/rooms`, label: t.nav.rooms },
+    { href: `/${locale}/booking`, label: t.nav.bookNow },
+    { href: `/${locale}/contact`, label: t.nav.contact },
+  ];
 
   const handleScroll = useCallback(() => {
     setScrolled(window.scrollY > 48);
@@ -44,12 +52,10 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  // Close menu on route change
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
 
-  // Prevent body scroll when menu open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -72,7 +78,7 @@ export function Header() {
         <div className="flex items-center justify-between h-16 lg:h-18">
           {/* Logo */}
           <Link
-            href="/"
+            href={`/${locale}`}
             className="flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 rounded-md"
             aria-label="LUMINA Hotel — Home"
           >
@@ -119,6 +125,7 @@ export function Header() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
+            <LanguageSwitcher transparent={headerTransparent} />
             <a
               href="tel:+380441234567"
               className={cn(
@@ -127,57 +134,60 @@ export function Header() {
               )}
             >
               <Phone size={14} />
-              <span>+380 44 123 4567</span>
+              <span className="hidden xl:block">{t.nav.phone}</span>
             </a>
-            <Link href="/booking">
+            <Link href={`/${locale}/booking`}>
               <Button
                 variant={headerTransparent ? 'ghost' : 'primary'}
                 size="sm"
                 className={headerTransparent ? 'border border-white/30 text-white hover:bg-white/10' : ''}
               >
-                Reserve
+                {t.nav.reserve}
               </Button>
             </Link>
           </div>
 
-          {/* Mobile menu toggle */}
-          <button
-            className={cn(
-              'lg:hidden flex items-center justify-center w-10 h-10 rounded-lg transition-colors duration-150',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500',
-              headerTransparent
-                ? 'text-white hover:bg-white/10'
-                : 'text-stone-600 hover:bg-stone-100'
-            )}
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-menu"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              {menuOpen ? (
-                <motion.span
-                  key="close"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <X size={20} />
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="menu"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <Menu size={20} />
-                </motion.span>
+          {/* Mobile: language + menu toggle */}
+          <div className="lg:hidden flex items-center gap-2">
+            <LanguageSwitcher transparent={headerTransparent} />
+            <button
+              className={cn(
+                'flex items-center justify-center w-10 h-10 rounded-lg transition-colors duration-150',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500',
+                headerTransparent
+                  ? 'text-white hover:bg-white/10'
+                  : 'text-stone-600 hover:bg-stone-100'
               )}
-            </AnimatePresence>
-          </button>
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {menuOpen ? (
+                  <motion.span
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <X size={20} />
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="menu"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <Menu size={20} />
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -215,7 +225,7 @@ export function Header() {
                   className="flex items-center gap-2 px-4 py-3 text-stone-500 hover:text-stone-900 transition-colors"
                 >
                   <Phone size={16} />
-                  <span className="text-sm">+380 44 123 4567</span>
+                  <span className="text-sm">{t.nav.phone}</span>
                 </a>
               </div>
             </nav>

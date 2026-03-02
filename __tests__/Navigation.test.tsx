@@ -1,8 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import enDict from '@/i18n/dictionaries/en';
 
 jest.mock('next/navigation', () => ({
-  usePathname: () => '/',
+  usePathname: () => '/en',
+  useRouter: () => ({ push: jest.fn() }),
 }));
 
 jest.mock('next/link', () => ({
@@ -18,34 +20,43 @@ jest.mock('next/link', () => ({
   }) => <a href={href} {...props}>{children}</a>,
 }));
 
+// Mock i18n context so Header can call useTranslations()
+jest.mock('@/i18n/context', () => ({
+  useTranslations: () => enDict,
+  useLocale: () => 'en',
+  I18nProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
 import { Header } from '@/components/layout/Header';
+
+const renderHeader = () => render(<Header locale="en" />);
 
 describe('Header', () => {
   it('renders the hotel logo', () => {
-    render(<Header />);
+    renderHeader();
     expect(screen.getByText('LUMINA')).toBeInTheDocument();
   });
 
   it('renders navigation links', () => {
-    render(<Header />);
+    renderHeader();
     const hrefs = screen.getAllByRole('link').map((l) => l.getAttribute('href'));
-    expect(hrefs).toContain('/');
-    expect(hrefs).toContain('/rooms');
+    expect(hrefs).toContain('/en');
+    expect(hrefs).toContain('/en/rooms');
   });
 
   it('has a Reserve link', () => {
-    render(<Header />);
+    renderHeader();
     expect(screen.getByRole('link', { name: /reserve/i })).toBeInTheDocument();
   });
 
   it('mobile menu button starts collapsed', () => {
-    render(<Header />);
+    renderHeader();
     const btn = screen.getByRole('button', { name: /open menu/i });
     expect(btn).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('toggles mobile menu on click', () => {
-    render(<Header />);
+    renderHeader();
     const btn = screen.getByRole('button', { name: /open menu/i });
     fireEvent.click(btn);
     expect(btn).toHaveAttribute('aria-expanded', 'true');

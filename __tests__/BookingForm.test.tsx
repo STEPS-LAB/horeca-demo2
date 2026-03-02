@@ -11,6 +11,26 @@ const checkOutDate = new Date(futureDate);
 checkOutDate.setDate(checkOutDate.getDate() + 2);
 const checkOut = checkOutDate.toISOString().split('T')[0];
 
+const mockRooms = [
+  {
+    id: 'standard-01',
+    name: 'Forest Room',
+    type: 'standard' as const,
+    pricePerNight: 180,
+    images: ['/img.jpg'],
+    description: 'A cozy room.',
+    shortDescription: 'A cozy room.',
+    size: 28,
+    maxGuests: 2,
+    bedType: 'King',
+    amenities: ['WiFi'],
+    features: ['WiFi'],
+    available: true,
+    rating: 4.8,
+    reviewCount: 120,
+  },
+];
+
 const defaultForm: BookingFormData = {
   roomId: 'standard-01',
   checkIn,
@@ -35,6 +55,7 @@ describe('BookingForm', () => {
       <BookingForm
         form={{ ...defaultForm, ...overrides }}
         errors={errors}
+        rooms={mockRooms}
         onUpdateField={mockUpdateField}
         onTouchField={mockTouchField}
         onSubmit={mockOnSubmit}

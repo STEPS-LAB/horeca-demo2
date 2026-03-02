@@ -3,6 +3,13 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { RoomCard } from '@/components/rooms/RoomCard';
 import { rooms } from '@/data/rooms';
 
+// Mock i18n context
+jest.mock('@/i18n/context', () => ({
+  useTranslations: () => ({}),
+  useLocale: () => 'en',
+  I18nProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
 // Mock framer-motion to prevent animation issues in tests
 jest.mock('framer-motion', () => ({
   motion: {

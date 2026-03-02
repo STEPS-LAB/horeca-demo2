@@ -8,10 +8,9 @@ import { RoomCard } from '@/components/rooms/RoomCard';
 import { RoomModal } from '@/components/rooms/RoomModal';
 import { BookingModal } from '@/components/booking/BookingModal';
 import { useModal } from '@/hooks/useModal';
-import { rooms } from '@/data/rooms';
-import type { Room } from '@/types';
+import type { Room, Promotion } from '@/types';
 
-export function FeaturedRooms() {
+export function FeaturedRooms({ rooms, promotions = [] }: { rooms: Room[]; promotions?: Promotion[] }) {
   const featuredRooms = rooms.slice(0, 3);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [bookingRoom, setBookingRoom] = useState<Room | null>(null);
@@ -74,6 +73,7 @@ export function FeaturedRooms() {
             >
               <RoomCard
                 room={room}
+                promotions={promotions}
                 onViewDetails={handleViewDetails}
                 onBook={handleBook}
               />
@@ -96,6 +96,8 @@ export function FeaturedRooms() {
         isOpen={bookingModal.isOpen}
         onClose={bookingModal.close}
         initialRoom={bookingRoom ?? undefined}
+        rooms={rooms}
+        promotions={promotions}
       />
     </section>
   );

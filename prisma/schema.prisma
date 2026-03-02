@@ -1,0 +1,156 @@
+// This is your Prisma schema file.
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────
+// Users (Admin / Manager roles)
+// ─────────────────────────────────────────────
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         UserRole  @default(MANAGER)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+}
+
+// ─────────────────────────────────────────────
+// Rooms
+// ─────────────────────────────────────────────
+model Room {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  nameEn         String
+  nameUa         String
+  descriptionEn  String    @db.Text
+  descriptionUa  String    @db.Text
+  basePrice      Float
+  capacity       Int
+  type           RoomType
+  amenities      String[]
+  images         String[]
+  rating         Float     @default(4.8)
+  reviewCount    Int       @default(0)
+  size           Int       // sq. meters
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  bookings       Booking[]
+  blockedDates   BlockedDate[]
+  promotions     RoomPromotion[]
+
+  @@map("rooms")
+}
+
+enum RoomType {
+  STANDARD
+  DELUXE
+  JUNIOR_SUITE
+  EXECUTIVE_SUITE
+  PRESIDENTIAL_SUITE
+  GARDEN_VILLA
+}
+
+// ─────────────────────────────────────────────
+// Promotions / Pricing Rules
+// ─────────────────────────────────────────────
+model Promotion {
+  id          String          @id @default(cuid())
+  name        String
+  description String?
+  type        PromotionType
+  value       Float           // percentage or fixed amount
+  startDate   DateTime?
+  endDate     DateTime?
+  minNights   Int?
+  isActive    Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  rooms       RoomPromotion[]
+
+  @@map("promotions")
+}
+
+enum PromotionType {
+  PERCENTAGE
+  FIXED
+  DATE_RANGE
+}
+
+model RoomPromotion {
+  room        Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  roomId      String
+  promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  promotionId String
+
+  @@id([roomId, promotionId])
+  @@map("room_promotions")
+}
+
+// ─────────────────────────────────────────────
+// Bookings
+// ─────────────────────────────────────────────
+model Booking {
+  id              String        @id @default(cuid())
+  reference       String        @unique // e.g. LMN-1718000000000
+  room            Room          @relation(fields: [roomId], references: [id])
+  roomId          String
+  checkIn         DateTime
+  checkOut        DateTime
+  guests          Int
+  firstName       String
+  lastName        String
+  email           String
+  phone           String
+  specialRequests String?       @db.Text
+  status          BookingStatus @default(PENDING)
+  subtotal        Float
+  cleaningFee     Float
+  taxes           Float
+  total           Float
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([roomId])
+  @@index([email])
+  @@index([checkIn, checkOut])
+  @@map("bookings")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+// ─────────────────────────────────────────────
+// Blocked Dates (maintenance, private events)
+// ─────────────────────────────────────────────
+model BlockedDate {
+  id        String   @id @default(cuid())
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  roomId    String
+  date      DateTime
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@unique([roomId, date])
+  @@map("blocked_dates")
+}
