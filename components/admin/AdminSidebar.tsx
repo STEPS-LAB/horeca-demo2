@@ -11,13 +11,14 @@ import {
   Hotel,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
-import { useTranslations, useLocale } from '@/i18n/context';
+import { useSetLocale, useTranslations, useLocale } from '@/i18n/context';
 
 export function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations().admin.sidebar;
   const locale = useLocale();
+  const setLocale = useSetLocale();
 
   const navItems = [
     { href: '/admin', label: t.dashboard, icon: LayoutDashboard, exact: true },
@@ -33,8 +34,8 @@ export function AdminSidebar() {
   }
 
   function switchLocale(next: 'en' | 'ua') {
-    document.cookie = `lumina_locale=${next};path=/;max-age=${60 * 60 * 24 * 365}`;
-    router.refresh();
+    document.cookie = `lumina_locale=${next}; Path=/; Max-Age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+    void setLocale(next);
   }
 
   return (

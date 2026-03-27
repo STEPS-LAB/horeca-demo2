@@ -1,28 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { MapPin, Phone, Mail, Instagram, Facebook, Twitter } from 'lucide-react';
-
-const footerLinks = {
-  hotel: [
-    { href: '/', label: 'Home' },
-    { href: '/rooms', label: 'Rooms & Suites' },
-    { href: '/booking', label: 'Book Now' },
-    { href: '/contact', label: 'Contact Us' },
-  ],
-  amenities: [
-    { href: '#', label: 'Spa & Wellness' },
-    { href: '#', label: 'Restaurant & Bar' },
-    { href: '#', label: 'Infinity Pool' },
-    { href: '#', label: 'Conference Hall' },
-    { href: '#', label: 'Guided Hikes' },
-  ],
-  info: [
-    { href: '#', label: 'About LUMINA' },
-    { href: '#', label: 'Gallery' },
-    { href: '#', label: 'Press & Media' },
-    { href: '#', label: 'Privacy Policy' },
-    { href: '#', label: 'Terms of Service' },
-  ],
-};
+import { useTranslations } from '@/i18n/context';
 
 const socials = [
   { href: '#', label: 'Instagram', Icon: Instagram },
@@ -31,6 +11,31 @@ const socials = [
 ];
 
 export function Footer() {
+  const t = useTranslations();
+
+  const footerLinks = {
+    hotel: [
+      { href: '/', label: t.nav.home },
+      { href: '/rooms', label: t.nav.rooms },
+      { href: '/booking', label: t.nav.bookNow },
+      { href: '/contact', label: t.contact.pageTitle },
+    ],
+    amenities: [
+      { href: '#', label: t.footer.amenities.spa },
+      { href: '#', label: t.footer.amenities.restaurant },
+      { href: '#', label: t.footer.amenities.pool },
+      { href: '#', label: t.footer.amenities.conference },
+      { href: '#', label: t.footer.amenities.hikes },
+    ],
+    info: [
+      { href: '#', label: t.footer.infoLinks.about },
+      { href: '#', label: t.footer.infoLinks.gallery },
+      { href: '#', label: t.footer.infoLinks.press },
+      { href: '#', label: t.footer.infoLinks.privacy },
+      { href: '#', label: t.footer.infoLinks.terms },
+    ],
+  };
+
   return (
     <footer className="bg-stone-950 text-stone-400" role="contentinfo">
       {/* CTA Banner */}
@@ -39,17 +44,17 @@ export function Footer() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div>
               <h2 className="text-2xl sm:text-3xl font-semibold text-white">
-                Ready for an extraordinary stay?
+                {t.footer.cta.title}
               </h2>
               <p className="mt-1.5 text-stone-400 text-sm">
-                Check availability and reserve your suite today.
+                {t.footer.cta.subtitle}
               </p>
             </div>
             <Link
               href="/booking"
               className="shrink-0 inline-flex items-center justify-center h-12 px-7 rounded-xl gradient-gold text-white font-semibold text-sm shadow-button hover:opacity-90 transition-opacity duration-150"
             >
-              Book a Stay
+              {t.footer.cta.button}
             </Link>
           </div>
         </div>
@@ -65,7 +70,7 @@ export function Footer() {
               <span className="ml-2 text-xs tracking-[0.25em] uppercase font-light text-stone-500">Hotel</span>
             </Link>
             <p className="text-sm leading-relaxed text-stone-400 max-w-xs">
-              A sanctuary of refined luxury nestled in the ancient Carpathian forests of Ukraine.
+              {t.footer.brandDescription}
             </p>
             <div className="mt-6 flex flex-col gap-3">
               <a
@@ -90,7 +95,9 @@ export function Footer() {
 
           {/* Hotel links */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">Hotel</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
+              {t.footer.columns.hotel}
+            </h3>
             <ul className="flex flex-col gap-2.5">
               {footerLinks.hotel.map(({ href, label }) => (
                 <li key={href}>
@@ -105,11 +112,11 @@ export function Footer() {
           {/* Amenities */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
-              Amenities
+              {t.footer.columns.amenities}
             </h3>
             <ul className="flex flex-col gap-2.5">
               {footerLinks.amenities.map(({ href, label }) => (
-                <li key={href}>
+                <li key={`${href}-${label}`}>
                   <a href={href} className="text-sm hover:text-white transition-colors">
                     {label}
                   </a>
@@ -121,11 +128,11 @@ export function Footer() {
           {/* Info */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
-              Information
+              {t.footer.columns.info}
             </h3>
             <ul className="flex flex-col gap-2.5">
               {footerLinks.info.map(({ href, label }) => (
-                <li key={href}>
+                <li key={`${href}-${label}`}>
                   <a href={href} className="text-sm hover:text-white transition-colors">
                     {label}
                   </a>
@@ -138,7 +145,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-stone-600 text-center sm:text-left">
-            © {new Date().getFullYear()} LUMINA Hotel. All rights reserved. Demo by{' '}
+            © {new Date().getFullYear()} LUMINA Hotel. {t.footer.bottom.allRights} {t.footer.bottom.demoBy}{' '}
             <span className="text-stone-500">STEPS LAB</span>.
           </p>
           <div className="flex items-center gap-3">

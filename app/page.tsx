@@ -1,10 +1,8 @@
-import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { Hero } from '@/components/sections/Hero';
 import { Features } from '@/components/sections/Features';
 import { getRooms } from '@/lib/services/rooms.service';
 import { getActivePublicPromotions } from '@/lib/services/promotions.service';
-import type { Locale } from '@/i18n/config';
 
 const Testimonials = dynamic(() =>
   import('@/components/sections/Testimonials').then((m) => m.Testimonials)
@@ -16,26 +14,7 @@ const FeaturedRooms = dynamic(() =>
   import('@/app/FeaturedRooms').then((m) => m.FeaturedRooms)
 );
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  const isUa = locale === 'ua';
-  return {
-    title: isUa
-      ? 'Готель LUMINA — Там де Розкіш Зустрічає Природу'
-      : 'LUMINA Hotel — Where Luxury Meets Nature',
-  };
-}
-
-export default async function LocaleHomePage({
-  params,
-}: {
-  params: Promise<{ locale: Locale }>;
-}) {
-  await params; // locale available via I18nProvider in layout
+export default async function HomePage() {
   const [rooms, promotions] = await Promise.all([getRooms(), getActivePublicPromotions()]);
   return (
     <>
@@ -47,3 +26,4 @@ export default async function LocaleHomePage({
     </>
   );
 }
+

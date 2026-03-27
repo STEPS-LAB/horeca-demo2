@@ -10,6 +10,7 @@ import { BookingForm } from '@/components/booking/BookingForm';
 import { BookingConfirmation } from '@/components/booking/BookingConfirmation';
 import { useBooking } from '@/hooks/useBooking';
 import { formatCurrency } from '@/utils/pricing';
+import { useTranslations } from '@/i18n/context';
 import type { Room, Promotion } from '@/types';
 
 interface BookingModalProps {
@@ -19,12 +20,6 @@ interface BookingModalProps {
   rooms?: Room[];
   promotions?: Promotion[];
 }
-
-const stepTitles = {
-  form: 'Reserve Your Room',
-  payment: 'Secure Payment',
-  confirmation: 'Booking Confirmed!',
-};
 
 const slideVariants = {
   enter: (dir: number) => ({
@@ -39,6 +34,7 @@ const slideVariants = {
 };
 
 export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promotions = [] }: BookingModalProps) {
+  const t = useTranslations();
   const booking = useBooking(initialRoom?.id, rooms, promotions);
   const [paymentData, setPaymentData] = useState({
     cardNumber: '',
@@ -57,11 +53,11 @@ export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promoti
   const validatePayment = () => {
     const errs: Record<string, string> = {};
     if (!paymentData.cardNumber.replace(/\s/g, '') || paymentData.cardNumber.replace(/\s/g, '').length < 16)
-      errs.cardNumber = 'Enter a valid 16-digit card number';
-    if (!paymentData.cardHolder.trim()) errs.cardHolder = 'Cardholder name is required';
+      errs.cardNumber = t.booking.paymentErrors.cardNumber;
+    if (!paymentData.cardHolder.trim()) errs.cardHolder = t.booking.paymentErrors.cardHolder;
     if (!paymentData.expiry || !/^\d{2}\/\d{2}$/.test(paymentData.expiry))
-      errs.expiry = 'Enter expiry as MM/YY';
-    if (!paymentData.cvv || paymentData.cvv.length < 3) errs.cvv = 'Enter a valid CVV';
+      errs.expiry = t.booking.paymentErrors.expiry;
+    if (!paymentData.cvv || paymentData.cvv.length < 3) errs.cvv = t.booking.paymentErrors.cvv;
     setPaymentErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -83,7 +79,13 @@ export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promoti
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title={stepTitles[booking.step]}
+      title={
+        booking.step === 'form'
+          ? t.booking.reserveRoom
+          : booking.step === 'payment'
+          ? t.booking.securePayment
+          : t.booking.successTitle
+      }
       size="md"
     >
       {/* Step indicator */}
@@ -108,7 +110,7 @@ export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promoti
                     booking.step === s ? 'text-stone-700 font-medium' : 'text-stone-400'
                   }`}
                 >
-                  {s === 'form' ? 'Details' : 'Payment'}
+                  {s === 'form' ? t.booking.detailsStep : t.booking.paymentStep}
                 </span>
                 {i < 1 && <div className="flex-1 h-px bg-stone-200 w-8" />}
               </div>
@@ -154,7 +156,7 @@ export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promoti
             {/* Security badge */}
             <div className="flex items-center gap-2 bg-emerald-50 text-emerald-700 text-xs px-3 py-2 rounded-lg mb-5 border border-emerald-200">
               <Lock size={13} />
-              <span>Your payment is secured with 256-bit TLS encryption</span>
+              <span>{t.booking.paymentSecured}</span>
             </div>
 
             {/* Price summary */}
@@ -166,7 +168,8 @@ export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promoti
                       {booking.selectedRoom?.name}
                     </p>
                     <p className="text-xs text-stone-400 mt-0.5">
-                      {booking.form.checkIn} → {booking.form.checkOut} · {booking.pricing.nights} nights
+                      {booking.form.checkIn} → {booking.form.checkOut} ·{' '}
+                      {t.booking.nightsLabel.replace('{count}', String(booking.pricing.nights))}
                     </p>
                   </div>
                   <span className="text-lg font-bold text-stone-900">
@@ -187,12 +190,12 @@ export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promoti
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <CreditCard size={15} className="text-stone-400" />
-                  <span className="text-sm font-semibold text-stone-700">Card Details</span>
-                  <span className="text-xs text-stone-400">(demo — no real charge)</span>
+                  <span className="text-sm font-semibold text-stone-700">{t.booking.cardDetails}</span>
+                  <span className="text-xs text-stone-400">{t.booking.demoNoCharge}</span>
                 </div>
                 <div className="flex flex-col gap-3">
                   <Input
-                    label="Card number"
+                    label={t.booking.cardNumber}
                     required
                     inputMode="numeric"
                     placeholder="1234 5678 9012 3456"
@@ -204,7 +207,7 @@ export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promoti
                     maxLength={19}
                   />
                   <Input
-                    label="Cardholder name"
+                    label={t.booking.cardholderName}
                     required
                     placeholder="John Smith"
                     autoComplete="cc-name"
@@ -216,7 +219,7 @@ export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promoti
                   />
                   <div className="grid grid-cols-2 gap-3">
                     <Input
-                      label="Expiry"
+                      label={t.booking.expiry}
                       required
                       placeholder="MM/YY"
                       inputMode="numeric"
@@ -228,7 +231,7 @@ export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promoti
                       }
                     />
                     <Input
-                      label="CVV"
+                      label={t.booking.cvv}
                       required
                       placeholder="123"
                       inputMode="numeric"
@@ -258,7 +261,7 @@ export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promoti
                   leftIcon={<ArrowLeft size={15} />}
                   className="shrink-0"
                 >
-                  Back
+                  {t.common.back}
                 </Button>
                 <Button
                   type="submit"
@@ -268,7 +271,7 @@ export function BookingModal({ isOpen, onClose, initialRoom, rooms = [], promoti
                   isLoading={booking.isSubmitting}
                   rightIcon={<ChevronRight size={16} />}
                 >
-                  Confirm Booking
+                  {t.booking.confirmBooking}
                 </Button>
               </div>
             </form>

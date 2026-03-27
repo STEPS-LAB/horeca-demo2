@@ -67,41 +67,40 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // ── i18n redirect ─────────────────────────
-  // Admin routes are not locale-prefixed — skip i18n logic for them
+  // ── i18n (URL-less) ───────────────────────
+  // Admin routes are not localized — skip i18n logic for them
   if (pathname.startsWith('/admin')) {
     return NextResponse.next();
   }
 
-  const pathnameHasLocale = LOCALES.some(
-    (loc) => pathname === `/${loc}` || pathname.startsWith(`/${loc}/`)
-  );
+  const response = NextResponse.next();
 
-  if (!pathnameHasLocale) {
-    const locale = getLocaleFromRequest(req);
+  // Normalize legacy locale-prefixed URLs to URL-less routes.
+  // Example: /en/rooms → /rooms, and persist locale preference.
+  const legacyLocale = pathname.split('/')[1] as Locale;
+  if (LOCALES.includes(legacyLocale)) {
     const newUrl = req.nextUrl.clone();
-    newUrl.pathname = `/${locale}${pathname}`;
-    const response = NextResponse.redirect(newUrl);
-    // Persist locale preference
-    response.cookies.set(LOCALE_COOKIE, locale, {
+    const rest = pathname.replace(`/${legacyLocale}`, '') || '/';
+    newUrl.pathname = rest;
+    const redirect = NextResponse.redirect(newUrl);
+    redirect.cookies.set(LOCALE_COOKIE, legacyLocale, {
       maxAge: 60 * 60 * 24 * 365,
       path: '/',
       sameSite: 'lax',
     });
-    return response;
+    return redirect;
   }
 
-  // Update locale cookie to match the URL locale
-  const urlLocale = pathname.split('/')[1] as Locale;
-  if (LOCALES.includes(urlLocale)) {
-    const response = NextResponse.next();
-    response.cookies.set(LOCALE_COOKIE, urlLocale, {
+  // Ensure locale preference is set (no redirects).
+  const cookie = req.cookies.get(LOCALE_COOKIE)?.value as Locale | undefined;
+  if (!cookie || !LOCALES.includes(cookie)) {
+    const inferred = getLocaleFromRequest(req);
+    response.cookies.set(LOCALE_COOKIE, inferred, {
       maxAge: 60 * 60 * 24 * 365,
       path: '/',
       sameSite: 'lax',
     });
-    return response;
   }
 
-  return NextResponse.next();
+  return response;
 }

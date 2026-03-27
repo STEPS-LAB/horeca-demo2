@@ -6,17 +6,6 @@ import type { Room } from '@/types';
 import { formatCurrency } from '@/utils/pricing';
 import { useTranslations } from '@/i18n/context';
 
-const TYPE_LABELS: Record<string, string> = {
-  standard: 'Standard',
-  deluxe: 'Deluxe',
-  'junior-suite': 'Junior Suite',
-  'executive-suite': 'Executive Suite',
-  'presidential-suite': 'Presidential Suite',
-  'garden-villa': 'Garden Villa',
-};
-
-const ROOM_TYPES = Object.entries(TYPE_LABELS);
-
 // ── Shared form state ──────────────────────────────────────────────────────
 interface RoomFormState {
   slug: string;
@@ -115,6 +104,16 @@ function RoomFormModal({
   busy, busyLabel, submitLabel, error, isEdit = false, t,
 }: RoomModalProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const publicRooms = useTranslations().rooms;
+
+  const roomTypeOptions = [
+    { value: 'standard', label: publicRooms.types.standard },
+    { value: 'deluxe', label: publicRooms.types.deluxe },
+    { value: 'junior-suite', label: publicRooms.types['junior-suite'] },
+    { value: 'executive-suite', label: publicRooms.types['executive-suite'] },
+    { value: 'presidential-suite', label: publicRooms.types['presidential-suite'] },
+    { value: 'garden-villa', label: publicRooms.types['garden-villa'] },
+  ];
 
   const addAmenity = useCallback(() => {
     const val = form.amenityInput.trim();
@@ -145,7 +144,7 @@ function RoomFormModal({
                 className={inputCls}
                 value={form.slug}
                 onChange={(e) => onChange({ slug: e.target.value })}
-                placeholder="e.g. deluxe-mountain-01"
+                placeholder="—"
               />
             </Field>
           )}
@@ -160,7 +159,7 @@ function RoomFormModal({
                   const v = e.target.value;
                   onChange({ nameEn: v, ...(!isEdit ? { slug: slugify(v) } : {}) });
                 }}
-                placeholder="Forest Room"
+                placeholder="—"
               />
             </Field>
             <Field label={t.fieldNameUa}>
@@ -168,7 +167,7 @@ function RoomFormModal({
                 className={inputCls}
                 value={form.nameUa}
                 onChange={(e) => onChange({ nameUa: e.target.value })}
-                placeholder="Лісовий Номер"
+                placeholder="—"
               />
             </Field>
           </div>
@@ -180,7 +179,7 @@ function RoomFormModal({
               rows={3}
               value={form.descriptionEn}
               onChange={(e) => onChange({ descriptionEn: e.target.value })}
-              placeholder="A description in English…"
+              placeholder="—"
             />
           </Field>
           <Field label={t.fieldDescUa}>
@@ -189,7 +188,7 @@ function RoomFormModal({
               rows={3}
               value={form.descriptionUa}
               onChange={(e) => onChange({ descriptionUa: e.target.value })}
-              placeholder="Опис українською…"
+              placeholder="—"
             />
           </Field>
 
@@ -201,8 +200,8 @@ function RoomFormModal({
                 value={form.type}
                 onChange={(e) => onChange({ type: e.target.value })}
               >
-                {ROOM_TYPES.map(([val, label]) => (
-                  <option key={val} value={val}>{label}</option>
+                {roomTypeOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
             </Field>
@@ -362,6 +361,7 @@ function RoomFormModal({
 // ── Main component ─────────────────────────────────────────────────────────
 export function AdminRoomsClient({ initialRooms }: { initialRooms: Room[] }) {
   const t = useTranslations().admin.rooms;
+  const publicRooms = useTranslations().rooms;
   const [rooms, setRooms] = useState(initialRooms);
   const [search, setSearch] = useState('');
 
@@ -552,7 +552,7 @@ export function AdminRoomsClient({ initialRooms }: { initialRooms: Room[] }) {
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-stone-300">{TYPE_LABELS[room.type] ?? room.type}</td>
+                  <td className="px-4 py-4 text-stone-300">{publicRooms.types[room.type] ?? room.type}</td>
                   <td className="px-4 py-4 font-semibold text-white">{formatCurrency(room.pricePerNight)}</td>
                   <td className="px-4 py-4 text-stone-400">{room.maxGuests} {t.guests}</td>
                   <td className="px-4 py-4">

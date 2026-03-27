@@ -4,31 +4,32 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { useTranslations } from '@/i18n/context';
 
 const galleryImages = [
   {
     src: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=80',
-    alt: 'Hotel exterior at dusk',
+    altKey: 'exterior',
     className: 'col-span-2 row-span-2',
   },
   {
     src: 'https://images.unsplash.com/photo-1620626011761-996317702519?auto=format&fit=crop&w=600&q=80',
-    alt: 'Spa treatment room',
+    altKey: 'spaRoom',
     className: 'col-span-1 row-span-1',
   },
   {
     src: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=600&q=80',
-    alt: 'Fine dining restaurant',
+    altKey: 'dining',
     className: 'col-span-1 row-span-1',
   },
   {
     src: 'https://images.unsplash.com/photo-1561501900-3701fa6a0864?auto=format&fit=crop&w=600&q=80',
-    alt: 'Infinity pool at sunset',
+    altKey: 'pool',
     className: 'col-span-1 row-span-2',
   },
   {
     src: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80',
-    alt: 'Spa and wellness area',
+    altKey: 'spaArea',
     className: 'col-span-1 row-span-1',
   },
 ];
@@ -44,6 +45,7 @@ const imageVariants = {
 };
 
 export function Gallery() {
+  const t = useTranslations();
   return (
     <section
       className="py-20 sm:py-28 bg-stone-50"
@@ -60,17 +62,17 @@ export function Gallery() {
         >
           <div>
             <span className="text-xs font-semibold tracking-[0.2em] uppercase text-gold-600 mb-2 block">
-              Visual Journey
+              {t.sections.gallery.eyebrow}
             </span>
             <h2 id="gallery-heading" className="text-3xl sm:text-4xl font-bold text-stone-900">
-              Life at LUMINA
+              {t.sections.gallery.title}
             </h2>
           </div>
           <Link
             href="/rooms"
             className="flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors group"
           >
-            <span>View all rooms</span>
+            <span>{t.sections.gallery.viewAllRooms}</span>
             <ArrowRight
               size={15}
               className="transition-transform duration-200 group-hover:translate-x-1"
@@ -96,7 +98,7 @@ export function Gallery() {
             >
               <Image
                 src={img.src}
-                alt={img.alt}
+                alt={t.sections.gallery.images[img.altKey as keyof typeof t.sections.gallery.images]}
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
                 sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 400px"

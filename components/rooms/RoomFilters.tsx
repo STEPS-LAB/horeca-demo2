@@ -7,6 +7,7 @@ import { cn } from '@/utils/cn';
 import { formatCurrency } from '@/utils/pricing';
 import type { RoomType, RoomFilter } from '@/types';
 import type { useRoomFilter } from '@/hooks/useRoomFilter';
+import { useTranslations } from '@/i18n/context';
 
 type RoomFilterState = ReturnType<typeof useRoomFilter>;
 
@@ -14,22 +15,6 @@ interface RoomFiltersProps {
   state: RoomFilterState;
   totalCount: number;
 }
-
-const roomTypes: { value: RoomType; label: string }[] = [
-  { value: 'standard', label: 'Standard' },
-  { value: 'deluxe', label: 'Deluxe' },
-  { value: 'junior-suite', label: 'Junior Suite' },
-  { value: 'executive-suite', label: 'Executive Suite' },
-  { value: 'presidential-suite', label: 'Presidential' },
-  { value: 'garden-villa', label: 'Garden Villa' },
-];
-
-const sortOptions: { value: RoomFilter['sortBy']; label: string }[] = [
-  { value: 'price-asc', label: 'Price: Low to High' },
-  { value: 'price-desc', label: 'Price: High to Low' },
-  { value: 'rating', label: 'Highest Rated' },
-  { value: 'size', label: 'Largest First' },
-];
 
 const featureOptions = [
   'Balcony',
@@ -42,6 +27,7 @@ const featureOptions = [
 ];
 
 export function RoomFilters({ state, totalCount }: RoomFiltersProps) {
+  const t = useTranslations();
   const sliderId = useId();
   const {
     filter,
@@ -56,13 +42,29 @@ export function RoomFilters({ state, totalCount }: RoomFiltersProps) {
     MAX_PRICE,
   } = state;
 
+  const roomTypes: { value: RoomType; label: string }[] = [
+    { value: 'standard', label: t.rooms.types.standard },
+    { value: 'deluxe', label: t.rooms.types.deluxe },
+    { value: 'junior-suite', label: t.rooms.types['junior-suite'] },
+    { value: 'executive-suite', label: t.rooms.types['executive-suite'] },
+    { value: 'presidential-suite', label: t.rooms.types['presidential-suite'] },
+    { value: 'garden-villa', label: t.rooms.types['garden-villa'] },
+  ];
+
+  const sortOptions: { value: RoomFilter['sortBy']; label: string }[] = [
+    { value: 'price-asc', label: t.rooms.sort.priceLow },
+    { value: 'price-desc', label: t.rooms.sort.priceHigh },
+    { value: 'rating', label: t.rooms.filtersUi.highestRated },
+    { value: 'size', label: t.rooms.filtersUi.largestFirst },
+  ];
+
   return (
     <div className="bg-white rounded-2xl border border-stone-100 shadow-card p-5 sticky top-20">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <SlidersHorizontal size={16} className="text-stone-500" strokeWidth={1.5} />
-          <span className="font-semibold text-stone-800 text-sm">Filters</span>
+          <span className="font-semibold text-stone-800 text-sm">{t.rooms.filtersUi.filters}</span>
           <AnimatePresence>
             {activeFilterCount > 0 && (
               <motion.span
@@ -82,22 +84,22 @@ export function RoomFilters({ state, totalCount }: RoomFiltersProps) {
             className="flex items-center gap-1 text-xs text-stone-400 hover:text-stone-700 transition-colors"
           >
             <X size={12} />
-            Clear
+            {t.rooms.filtersUi.clear}
           </button>
         )}
       </div>
 
       {/* Results count */}
       <p className="text-xs text-stone-400 mb-5 pb-5 border-b border-stone-100">
-        Showing{' '}
-        <span className="font-semibold text-stone-600">{filteredRooms.length}</span> of{' '}
-        <span className="font-semibold text-stone-600">{totalCount}</span> rooms
+        {t.rooms.filtersUi.showing
+          .replace('{shown}', String(filteredRooms.length))
+          .replace('{total}', String(totalCount))}
       </p>
 
       {/* Room Type */}
       <div className="mb-6">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-500 mb-3">
-          Room Type
+          {t.rooms.filters.type}
         </h3>
         <div className="flex flex-col gap-2">
           {roomTypes.map(({ value, label }) => (
@@ -123,14 +125,14 @@ export function RoomFilters({ state, totalCount }: RoomFiltersProps) {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-500">
-            Price / Night
+            {t.rooms.filtersUi.pricePerNight}
           </h3>
           <span className="text-xs font-medium text-stone-700">
             {formatCurrency(filter.priceRange[0])} – {formatCurrency(filter.priceRange[1])}
           </span>
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor={`${sliderId}-min`} className="sr-only">Minimum price</label>
+          <label htmlFor={`${sliderId}-min`} className="sr-only">{t.rooms.filtersUi.minimumPrice}</label>
           <input
             id={`${sliderId}-min`}
             type="range"
@@ -141,7 +143,7 @@ export function RoomFilters({ state, totalCount }: RoomFiltersProps) {
             onChange={(e) => setPriceRange([+e.target.value, filter.priceRange[1]])}
             className="w-full accent-stone-900 h-1.5 rounded-full cursor-pointer"
           />
-          <label htmlFor={`${sliderId}-max`} className="sr-only">Maximum price</label>
+          <label htmlFor={`${sliderId}-max`} className="sr-only">{t.rooms.filtersUi.maximumPrice}</label>
           <input
             id={`${sliderId}-max`}
             type="range"
@@ -158,7 +160,7 @@ export function RoomFilters({ state, totalCount }: RoomFiltersProps) {
       {/* Guests */}
       <div className="mb-6">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-500 mb-3">
-          Min. Guests
+          {t.rooms.filtersUi.minGuests}
         </h3>
         <div className="flex gap-2">
           {[1, 2, 3, 4, 5, 6].map((n) => (
@@ -182,7 +184,7 @@ export function RoomFilters({ state, totalCount }: RoomFiltersProps) {
       {/* Features */}
       <div className="mb-6">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-500 mb-3">
-          Features
+          {t.rooms.filters.features}
         </h3>
         <div className="flex flex-wrap gap-2">
           {featureOptions.map((feat) => (
@@ -206,7 +208,7 @@ export function RoomFilters({ state, totalCount }: RoomFiltersProps) {
       {/* Sort */}
       <div>
         <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-500 mb-3">
-          Sort By
+          {t.rooms.filters.sort}
         </h3>
         <div className="flex flex-col gap-1.5">
           {sortOptions.map(({ value, label }) => (

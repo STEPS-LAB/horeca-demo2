@@ -35,9 +35,9 @@ export function AdminBookingsClient({
 
   const statusLabels: Record<string, string> = {
     ALL: t.filterAll,
-    CONFIRMED: 'Confirmed',
-    PENDING: 'Pending',
-    CANCELLED: 'Cancelled',
+    CONFIRMED: t.statuses.CONFIRMED,
+    PENDING: t.statuses.PENDING,
+    CANCELLED: t.statuses.CANCELLED,
   };
 
   const visible = initialBookings.filter((b) => {

@@ -14,18 +14,23 @@ export interface Room {
   description: string;
   descriptionUa?: string;
   shortDescription: string;
+  shortDescriptionUa?: string;
   pricePerNight: number;
   maxGuests: number;
   size: number;
   bedType: string;
+  bedTypeUa?: string;
   images: string[];
   amenities: string[];
+  amenitiesUa?: string[];
   features: string[];
+  featuresUa?: string[];
   available: boolean;
   rating: number;
   reviewCount: number;
   floor?: number;
   view?: string;
+  viewUa?: string;
 }
 
 export interface BookingFormData {
@@ -70,12 +75,17 @@ export type ValidationErrors<T> = Partial<Record<keyof T, string>>;
 export interface Testimonial {
   id: string;
   name: string;
+  nameUa?: string;
   location: string;
+  locationUa?: string;
   avatar: string;
   rating: number;
   text: string;
+  textUa?: string;
   date: string;
+  dateUa?: string;
   roomStayed: string;
+  roomStayedUa?: string;
 }
 
 export interface HotelFeature {

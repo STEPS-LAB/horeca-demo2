@@ -11,47 +11,40 @@ import {
   Sparkles,
   Wine,
 } from 'lucide-react';
+import { useTranslations } from '@/i18n/context';
 
 const features = [
   {
     Icon: Sparkles,
-    title: 'Spa & Wellness',
-    description: 'A full-service spa with thermal pools, forest baths, and bespoke treatment programmes.',
+    key: 'spa',
   },
   {
     Icon: UtensilsCrossed,
-    title: 'Farm-to-Table Restaurant',
-    description: 'Three dining venues serving seasonal Carpathian cuisine crafted by our Michelin-starred chef.',
+    key: 'dining',
   },
   {
     Icon: Waves,
-    title: 'Infinity Pool',
-    description: 'A heated infinity pool overlooking the Carpathian peaks — open year-round.',
+    key: 'pool',
   },
   {
     Icon: TreePine,
-    title: 'Guided Forest Hikes',
-    description: 'Expert naturalists lead daily excursions through protected ancient woodland.',
+    key: 'hikes',
   },
   {
     Icon: Dumbbell,
-    title: 'Performance Fitness',
-    description: 'State-of-the-art gym with Technogym equipment and certified personal trainers.',
+    key: 'fitness',
   },
   {
     Icon: Wine,
-    title: 'Private Wine Cellar',
-    description: 'Over 800 labels curated by our sommelier, with private tasting experiences on request.',
+    key: 'wine',
   },
   {
     Icon: Wifi,
-    title: '10 Gbps Wi-Fi',
-    description: 'Lightning-fast fibre throughout the property — work from anywhere in comfort.',
+    key: 'wifi',
   },
   {
     Icon: Car,
-    title: 'Concierge & Transfers',
-    description: 'Dedicated concierge team, private airport transfers, and helicopter landing pad.',
+    key: 'concierge',
   },
 ];
 
@@ -66,6 +59,7 @@ const cardVariants = {
 };
 
 export function Features() {
+  const t = useTranslations();
   return (
     <section
       className="py-20 sm:py-28 bg-white"
@@ -81,19 +75,16 @@ export function Features() {
           transition={{ duration: 0.6 }}
         >
           <span className="text-xs font-semibold tracking-[0.2em] uppercase text-gold-600 mb-3 block">
-            The LUMINA Experience
+            {t.sections.features.eyebrow}
           </span>
           <h2
             id="features-heading"
             className="text-3xl sm:text-4xl font-bold text-stone-900 leading-tight text-balance"
           >
-            Everything you need,
-            <br />
-            nothing you don&apos;t expect
+            {t.sections.features.title}
           </h2>
           <p className="mt-4 text-stone-500 text-base leading-relaxed text-pretty">
-            Every amenity at LUMINA has been considered, designed, and perfected to elevate your
-            stay from exceptional to unforgettable.
+            {t.sections.features.subtitle}
           </p>
         </motion.div>
 
@@ -105,9 +96,9 @@ export function Features() {
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
         >
-          {features.map(({ Icon, title, description }) => (
+          {features.map(({ Icon, key }) => (
             <motion.div
-              key={title}
+              key={key}
               variants={cardVariants}
               className="group relative p-6 rounded-2xl bg-stone-50 border border-stone-100 hover:border-gold-300/60 hover:bg-stone-25 hover:shadow-card transition-all duration-250"
               whileHover={{ y: -3 }}
@@ -120,8 +111,12 @@ export function Features() {
                   strokeWidth={1.5}
                 />
               </div>
-              <h3 className="text-sm font-semibold text-stone-800 mb-1.5">{title}</h3>
-              <p className="text-sm text-stone-500 leading-relaxed">{description}</p>
+              <h3 className="text-sm font-semibold text-stone-800 mb-1.5">
+                {t.sections.features.items[key as keyof typeof t.sections.features.items].title}
+              </h3>
+              <p className="text-sm text-stone-500 leading-relaxed">
+                {t.sections.features.items[key as keyof typeof t.sections.features.items].description}
+              </p>
             </motion.div>
           ))}
         </motion.div>

@@ -29,12 +29,24 @@ const ua = {
     search: 'Пошук',
     filter: 'Фільтр',
     sortBy: 'Сортувати',
+    quickView: 'Швидкий перегляд',
+    upTo: 'До {count}',
+    more: 'ще {count}',
+    viewImage: 'Переглянути фото {index}',
+    image: 'Фото {index}',
   },
 
   home: {
     heroTitle: 'Там, де Розкіш\nЗустрічає Природу',
     heroSubtitle:
       'Відчуйте неперевершений комфорт у серці Карпатських гір. Готель LUMINA — ваш притулок над хмарами.',
+    heroLocation: 'Карпати, Україна',
+    heroImageAlt: 'Готель LUMINA — гірський курорт у Карпатах',
+    heroPrimaryCta: 'Забронювати Люкс',
+    heroSecondaryCta: 'Переглянути Номери',
+    heroReviews: '{rating} на основі {count} перевірених відгуків',
+    heroScrollCta: 'Відкрити',
+    heroScrollAria: 'Прокрутити вниз',
     heroCheckIn: 'Заїзд',
     heroCheckOut: 'Виїзд',
     heroGuests: 'Гості',
@@ -53,6 +65,7 @@ const ua = {
     pageTitle: 'Номери та Люкси',
     pageSubtitle:
       'Від затишних номерів до розкішних люксів — кожен простір у LUMINA є шедевром комфорту та дизайну.',
+    resultsCount: 'Знайдено {count} номер{plural}',
     noResults: 'Жоден номер не відповідає вашим фільтрам.',
     clearFilters: 'Очистити фільтри',
     filters: {
@@ -77,6 +90,30 @@ const ua = {
       'presidential-suite': 'Президентський Люкс',
       'garden-villa': 'Садова Вілла',
     },
+    modal: {
+      reviews: '{count} відгуків',
+      size: 'Площа',
+      guests: 'Гості',
+      bed: 'Ліжко',
+      view: 'Вид',
+      amenities: 'Зручності',
+      roomFeatures: 'Особливості номера',
+      continueBrowsing: 'Продовжити перегляд',
+      reserveWithPrice: 'Бронювати — {price} {perNight}',
+      previousImage: 'Попереднє фото',
+      nextImage: 'Наступне фото',
+    },
+    filtersUi: {
+      filters: 'Фільтри',
+      clear: 'Очистити',
+      showing: 'Показано {shown} з {total} номерів',
+      pricePerNight: 'Ціна / Ніч',
+      minGuests: 'Мін. гостей',
+      minimumPrice: 'Мінімальна ціна',
+      maximumPrice: 'Максимальна ціна',
+      highestRated: 'Найвищий рейтинг',
+      largestFirst: 'Найбільші спочатку',
+    },
   },
 
   booking: {
@@ -94,7 +131,10 @@ const ua = {
       email: 'Електронна пошта',
       phone: 'Телефон',
       specialRequests: 'Особливі побажання',
+      emailHint: 'Сюди буде надіслано підтвердження бронювання',
+      specialRequestsHint: 'Ми зробимо все можливе, щоб врахувати ваші побажання.',
     },
+    guestInfoTitle: 'Ваші дані',
     placeholders: {
       specialRequests: 'Будь-які особливі вимоги, дієтичні потреби або переваги щодо номера…',
     },
@@ -104,6 +144,8 @@ const ua = {
       cleaningFee: 'Плата за прибирання',
       taxes: 'Податки та збори',
       total: 'Разом',
+      cleaningFeeHint: 'Разова плата за прибирання включена до кожного бронювання.',
+      taxesHint: 'Включає ПДВ та місцевий туристичний збір.',
     },
     continueToPayment: 'Перейти до Оплати',
     confirmBooking: 'Підтвердити Бронювання',
@@ -112,6 +154,35 @@ const ua = {
     successMessage: 'Ваше бронювання підтверджено. Лист підтвердження надіслано на',
     referenceLabel: 'Номер Бронювання',
     printConfirmation: 'Роздрукувати Підтвердження',
+    receiptTitle: 'Ваше перебування підтверджено!',
+    receiptMessage: 'Дякуємо, {name}. Детальне підтвердження надіслано на {email}.',
+    details: {
+      room: 'Номер',
+      dates: 'Дати',
+      guests: 'Гості',
+      totalPaid: 'Сплачено',
+      specialRequests: 'Ваші побажання',
+    },
+    printReceipt: 'Роздрукувати квитанцію',
+    done: 'Готово',
+    reserveRoom: 'Забронювати номер',
+    securePayment: 'Безпечна оплата',
+    cardDetails: 'Дані картки',
+    demoNoCharge: '(демо — списання не відбувається)',
+    cardNumber: 'Номер картки',
+    cardholderName: "Ім'я власника",
+    expiry: 'Термін дії',
+    cvv: 'CVV',
+    paymentSecured: 'Оплата захищена 256-бітним TLS шифруванням',
+    paymentErrors: {
+      cardNumber: 'Введіть коректний 16-значний номер картки',
+      cardHolder: "Ім'я власника є обов'язковим",
+      expiry: 'Вкажіть термін дії у форматі MM/YY',
+      cvv: 'Введіть коректний CVV',
+    },
+    detailsStep: 'Деталі',
+    paymentStep: 'Оплата',
+    nightsLabel: '{count} ночей',
   },
 
   contact: {
@@ -141,6 +212,86 @@ const ua = {
       phone: '+380 44 123 4567',
       email: 'info@luminahotel.ua',
       hours: 'Рецепція: цілодобово',
+      labels: {
+        phone: 'Телефон',
+        email: 'Email',
+        address: 'Адреса',
+        checkInOut: 'Заїзд / Виїзд',
+      },
+      subs: {
+        phone: 'Доступно 24/7',
+        email: 'Відповідь протягом 2 годин',
+        address: 'Карпати, Україна',
+        checkInOut: 'Ранній/пізній за попереднім запитом',
+      },
+      checkInOutValue: 'З 14:00 / До 12:00',
+    },
+  },
+
+  sections: {
+    features: {
+      eyebrow: 'Досвід LUMINA',
+      title: 'Усе необхідне — і навіть більше',
+      subtitle:
+        'Кожна зручність у LUMINA продумана, спроєктована та доведена до досконалості, щоб ваш відпочинок став незабутнім.',
+      items: {
+        spa: {
+          title: 'Спа та Велнес',
+          description:
+            'Повноцінний спа-комплекс з термальними басейнами, лісовими купелями та індивідуальними програмами догляду.',
+        },
+        dining: {
+          title: 'Ресторан з локальними продуктами',
+          description:
+            'Три заклади з сезонною карпатською кухнею від нашого шефа з досвідом Michelin.',
+        },
+        pool: {
+          title: 'Інфініті-басейн',
+          description: 'Підігрітий інфініті-басейн з видом на вершини Карпат — працює цілий рік.',
+        },
+        hikes: {
+          title: 'Піші прогулянки з гідом',
+          description: 'Щоденні маршрути з натуралістами територіями заповідних лісів.',
+        },
+        fitness: {
+          title: 'Фітнес-зона',
+          description: 'Сучасний зал з обладнанням Technogym та сертифікованими тренерами.',
+        },
+        wine: {
+          title: 'Приватний винний льох',
+          description: 'Понад 800 позицій від сомельє та дегустації на запит.',
+        },
+        wifi: {
+          title: 'Wi‑Fi 10 Гбіт/с',
+          description: 'Надшвидкий інтернет по всій території — працюйте з комфортом будь-де.',
+        },
+        concierge: {
+          title: 'Консьєрж та трансфери',
+          description: 'Команда консьєржів, приватні трансфери та майданчик для гелікоптера.',
+        },
+      },
+    },
+    gallery: {
+      eyebrow: 'Візуальна Подорож',
+      title: 'Життя в LUMINA',
+      viewAllRooms: 'Переглянути всі номери',
+      images: {
+        exterior: 'Екстерʼєр готелю ввечері',
+        spaRoom: 'Кабінет спа-процедур',
+        dining: 'Ресторан високої кухні',
+        pool: 'Інфініті-басейн на заході сонця',
+        spaArea: 'Спа та велнес-зона',
+      },
+    },
+    testimonials: {
+      eyebrow: 'Історії Гостей',
+      title: 'Враження наших гостей',
+      stayedIn: 'Зупинялися в: {room} · {date}',
+      previous: 'Попередній відгук',
+      next: 'Наступний відгук',
+      nav: 'Навігація відгуків',
+      itemAria: 'Відгук {index}',
+      ratingAria: 'Рейтинг: {rating}/5',
     },
   },
 
@@ -179,6 +330,8 @@ const ua = {
       showPassword: 'Показати пароль',
       hidePassword: 'Приховати пароль',
       networkError: 'Помилка мережі. Спробуйте ще раз.',
+      portal: 'Адмін-портал',
+      demoCredentials: 'Демо-дані: {email} / {password}',
     },
     dashboard: {
       title: 'Дашборд',
@@ -233,6 +386,11 @@ const ua = {
       title: 'Бронювання',
       total: 'бронювань всього',
       filterAll: 'Всі',
+      statuses: {
+        CONFIRMED: 'Підтверджено',
+        PENDING: 'В очікуванні',
+        CANCELLED: 'Скасовано',
+      },
       search: 'Пошук за іменем, email або номером…',
       colReference: 'Номер',
       colGuest: 'Гість',
@@ -274,6 +432,10 @@ const ua = {
       allRooms: 'Всі номери',
       delete: 'Видалити',
       confirmDelete: 'Видалити цю акцію?',
+      percentSuffix: '(%)',
+      moneySuffix: '(₴)',
+      amountOff: 'знижка {value}',
+      minNightsShort: 'мін. {nights} ночей',
     },
   },
 
@@ -284,6 +446,36 @@ const ua = {
       privacy: 'Політика Конфіденційності',
       terms: 'Умови Використання',
       cookies: 'Політика Cookies',
+    },
+    cta: {
+      title: 'Готові до незабутнього відпочинку?',
+      subtitle: 'Перевірте наявність і забронюйте люкс вже сьогодні.',
+      button: 'Забронювати',
+    },
+    brandDescription:
+      'Оазис вишуканої розкоші, що розташований серед древніх карпатських лісів України.',
+    columns: {
+      hotel: 'Готель',
+      amenities: 'Зручності',
+      info: 'Інформація',
+    },
+    amenities: {
+      spa: 'Спа та Велнес',
+      restaurant: 'Ресторан та Бар',
+      pool: 'Інфініті-басейн',
+      conference: 'Конференц-зал',
+      hikes: 'Піші прогулянки',
+    },
+    infoLinks: {
+      about: 'Про LUMINA',
+      gallery: 'Галерея',
+      press: 'Преса та Медіа',
+      privacy: 'Політика Конфіденційності',
+      terms: 'Умови Використання',
+    },
+    bottom: {
+      allRights: 'Усі права захищено.',
+      demoBy: 'Демо від',
     },
   },
 } as const;

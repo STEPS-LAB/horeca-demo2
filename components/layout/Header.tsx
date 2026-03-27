@@ -8,8 +8,7 @@ import { Menu, X, Phone } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
-import { useTranslations } from '@/i18n/context';
-import type { Locale } from '@/i18n/config';
+import { useLocale, useTranslations } from '@/i18n/context';
 
 const menuVariants = {
   hidden: { opacity: 0, height: 0 },
@@ -25,22 +24,19 @@ const linkVariants = {
   }),
 };
 
-interface HeaderProps {
-  locale: Locale;
-}
-
-export function Header({ locale }: HeaderProps) {
+export function Header() {
+  const locale = useLocale();
   const t = useTranslations();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
+  const isHome = pathname === '/' || pathname === '';
 
   const navLinks = [
-    { href: `/${locale}`, label: t.nav.home },
-    { href: `/${locale}/rooms`, label: t.nav.rooms },
-    { href: `/${locale}/booking`, label: t.nav.bookNow },
-    { href: `/${locale}/contact`, label: t.nav.contact },
+    { href: `/`, label: t.nav.home },
+    { href: `/rooms`, label: t.nav.rooms },
+    { href: `/booking`, label: t.nav.bookNow },
+    { href: `/contact`, label: t.nav.contact },
   ];
 
   const handleScroll = useCallback(() => {
@@ -78,7 +74,7 @@ export function Header({ locale }: HeaderProps) {
         <div className="flex items-center justify-between h-16 lg:h-18">
           {/* Logo */}
           <Link
-            href={`/${locale}`}
+            href="/"
             className="flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 rounded-md"
             aria-label="LUMINA Hotel — Home"
           >
@@ -136,7 +132,7 @@ export function Header({ locale }: HeaderProps) {
               <Phone size={14} />
               <span className="hidden xl:block">{t.nav.phone}</span>
             </a>
-            <Link href={`/${locale}/booking`}>
+            <Link href="/booking">
               <Button
                 variant={headerTransparent ? 'ghost' : 'primary'}
                 size="sm"

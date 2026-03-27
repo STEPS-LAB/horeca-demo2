@@ -9,9 +9,8 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useBooking } from '@/hooks/useBooking';
 import { formatCurrency } from '@/utils/pricing';
+import { useTranslations } from '@/i18n/context';
 import type { Room, Promotion } from '@/types';
-
-const stepLabels = ['Stay Details', 'Payment', 'Confirmation'];
 
 const slideVariants = {
   enter: (dir: number) => ({ x: dir > 0 ? 40 : -40, opacity: 0 }),
@@ -20,6 +19,7 @@ const slideVariants = {
 };
 
 export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; promotions?: Promotion[] }) {
+  const t = useTranslations();
   const booking = useBooking(undefined, rooms, promotions);
   const [paymentData, setPaymentData] = useState({
     cardNumber: '',
@@ -28,6 +28,7 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
     cvv: '',
   });
   const [paymentErrors, setPaymentErrors] = useState<Record<string, string>>({});
+  const stepLabels = [t.booking.step1, t.booking.step2, t.booking.step3];
   const stepIndex = booking.step === 'form' ? 0 : booking.step === 'payment' ? 1 : 2;
   const stepDir = stepIndex;
 
@@ -41,11 +42,11 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
   const validatePayment = () => {
     const errs: Record<string, string> = {};
     if (!paymentData.cardNumber.replace(/\s/g, '') || paymentData.cardNumber.replace(/\s/g, '').length < 16)
-      errs.cardNumber = 'Enter a valid 16-digit card number';
-    if (!paymentData.cardHolder.trim()) errs.cardHolder = 'Cardholder name is required';
+      errs.cardNumber = t.booking.paymentErrors.cardNumber;
+    if (!paymentData.cardHolder.trim()) errs.cardHolder = t.booking.paymentErrors.cardHolder;
     if (!paymentData.expiry || !/^\d{2}\/\d{2}$/.test(paymentData.expiry))
-      errs.expiry = 'Enter expiry as MM/YY';
-    if (!paymentData.cvv || paymentData.cvv.length < 3) errs.cvv = 'CVV must be at least 3 digits';
+      errs.expiry = t.booking.paymentErrors.expiry;
+    if (!paymentData.cvv || paymentData.cvv.length < 3) errs.cvv = t.booking.paymentErrors.cvv;
     setPaymentErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -104,7 +105,7 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
                 transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                 className="p-6 sm:p-8"
               >
-                <h2 className="text-xl font-bold text-stone-900 mb-6">Stay Details</h2>
+                <h2 className="text-xl font-bold text-stone-900 mb-6">{t.booking.step1}</h2>
                 <BookingForm
                   form={booking.form}
                   errors={booking.errors}
@@ -128,35 +129,36 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
                 transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                 className="p-6 sm:p-8"
               >
-                <h2 className="text-xl font-bold text-stone-900 mb-5">Secure Payment</h2>
+                <h2 className="text-xl font-bold text-stone-900 mb-5">{t.booking.step2}</h2>
 
                 {/* Security note */}
                 <div className="flex items-center gap-2 bg-emerald-50 text-emerald-700 text-xs px-3 py-2 rounded-lg mb-5 border border-emerald-200">
                   <Lock size={13} />
-                  <span>256-bit TLS encryption. This is a demo — no real charge is made.</span>
+                  <span>{t.booking.paymentSecured}</span>
                 </div>
 
                 {/* Price summary */}
                 {booking.pricing && (
                   <div className="bg-stone-50 rounded-xl p-5 mb-6 border border-stone-100">
-                    <h3 className="text-sm font-semibold text-stone-700 mb-3">Order Summary</h3>
+                    <h3 className="text-sm font-semibold text-stone-700 mb-3">{t.booking.summary.title}</h3>
                     <div className="flex flex-col gap-2 text-sm">
                       <div className="flex justify-between text-stone-600">
                         <span>
-                          {formatCurrency(booking.selectedRoom?.pricePerNight ?? 0)} × {booking.pricing.nights} nights
+                          {formatCurrency(booking.selectedRoom?.pricePerNight ?? 0)} × {booking.pricing.nights}{' '}
+                          {booking.pricing.nights === 1 ? t.common.night : t.common.nights}
                         </span>
                         <span>{formatCurrency(booking.pricing.basePrice)}</span>
                       </div>
                       <div className="flex justify-between text-stone-400 text-xs">
-                        <span>Cleaning fee</span>
+                        <span>{t.booking.summary.cleaningFee}</span>
                         <span>{formatCurrency(booking.pricing.cleaningFee)}</span>
                       </div>
                       <div className="flex justify-between text-stone-400 text-xs">
-                        <span>Taxes (12%)</span>
+                        <span>{t.booking.summary.taxes}</span>
                         <span>{formatCurrency(booking.pricing.taxes)}</span>
                       </div>
                       <div className="flex justify-between font-bold text-stone-900 pt-3 border-t border-stone-200 mt-1 text-base">
-                        <span>Total due</span>
+                        <span>{t.booking.summary.total}</span>
                         <span>{formatCurrency(booking.pricing.total)}</span>
                       </div>
                     </div>
@@ -173,10 +175,10 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <CreditCard size={15} className="text-stone-400" />
-                    <span className="text-sm font-semibold text-stone-700">Card Details</span>
+                    <span className="text-sm font-semibold text-stone-700">{t.booking.cardDetails}</span>
                   </div>
                   <Input
-                    label="Card number"
+                    label={t.booking.cardNumber}
                     required
                     inputMode="numeric"
                     placeholder="1234 5678 9012 3456"
@@ -188,7 +190,7 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
                     maxLength={19}
                   />
                   <Input
-                    label="Cardholder name"
+                    label={t.booking.cardholderName}
                     required
                     placeholder="John Smith"
                     autoComplete="cc-name"
@@ -198,7 +200,7 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
                   />
                   <div className="grid grid-cols-2 gap-3">
                     <Input
-                      label="Expiry (MM/YY)"
+                      label={t.booking.expiry}
                       required
                       placeholder="MM/YY"
                       inputMode="numeric"
@@ -210,7 +212,7 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
                       }
                     />
                     <Input
-                      label="CVV"
+                      label={t.booking.cvv}
                       required
                       placeholder="123"
                       inputMode="numeric"
@@ -237,7 +239,7 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
                       leftIcon={<ArrowLeft size={15} />}
                       className="shrink-0"
                     >
-                      Back
+                      {t.common.back}
                     </Button>
                     <Button
                       type="submit"
@@ -247,7 +249,7 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
                       isLoading={booking.isSubmitting}
                       rightIcon={<ChevronRight size={16} />}
                     >
-                      Confirm Booking
+                      {t.booking.confirmBooking}
                     </Button>
                   </div>
                 </form>

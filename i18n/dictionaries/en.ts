@@ -31,6 +31,11 @@ const en = {
     search: 'Search',
     filter: 'Filter',
     sortBy: 'Sort by',
+    quickView: 'Quick View',
+    upTo: 'Up to {count}',
+    more: '{count} more',
+    viewImage: 'View image {index}',
+    image: 'Image {index}',
   },
 
   // ── Home page ────────────────────────────────
@@ -38,6 +43,13 @@ const en = {
     heroTitle: 'Where Luxury\nMeets Nature',
     heroSubtitle:
       'Experience unparalleled comfort in the heart of the Carpathian Mountains. LUMINA Hotel — your sanctuary above the clouds.',
+    heroLocation: 'Carpathian Mountains, Ukraine',
+    heroImageAlt: 'LUMINA Hotel — Carpathian mountain resort',
+    heroPrimaryCta: 'Reserve Your Suite',
+    heroSecondaryCta: 'Explore Rooms',
+    heroReviews: '{rating} from {count} verified reviews',
+    heroScrollCta: 'Discover',
+    heroScrollAria: 'Scroll down',
     heroCheckIn: 'Check-in',
     heroCheckOut: 'Check-out',
     heroGuests: 'Guests',
@@ -57,6 +69,7 @@ const en = {
     pageTitle: 'Rooms & Suites',
     pageSubtitle:
       'From intimate retreats to grand suites, every room at LUMINA is a masterpiece of comfort and design.',
+    resultsCount: '{count} room{plural} found',
     noResults: 'No rooms match your filters.',
     clearFilters: 'Clear all filters',
     filters: {
@@ -81,6 +94,30 @@ const en = {
       'presidential-suite': 'Presidential Suite',
       'garden-villa': 'Garden Villa',
     },
+    modal: {
+      reviews: '{count} reviews',
+      size: 'Size',
+      guests: 'Guests',
+      bed: 'Bed',
+      view: 'View',
+      amenities: 'Amenities',
+      roomFeatures: 'Room Features',
+      continueBrowsing: 'Continue Browsing',
+      reserveWithPrice: 'Reserve — {price} {perNight}',
+      previousImage: 'Previous image',
+      nextImage: 'Next image',
+    },
+    filtersUi: {
+      filters: 'Filters',
+      clear: 'Clear',
+      showing: 'Showing {shown} of {total} rooms',
+      pricePerNight: 'Price / Night',
+      minGuests: 'Min. Guests',
+      minimumPrice: 'Minimum price',
+      maximumPrice: 'Maximum price',
+      highestRated: 'Highest Rated',
+      largestFirst: 'Largest First',
+    },
   },
 
   // ── Booking ──────────────────────────────────
@@ -99,7 +136,10 @@ const en = {
       email: 'Email',
       phone: 'Phone',
       specialRequests: 'Special Requests',
+      emailHint: 'Booking confirmation will be sent here',
+      specialRequestsHint: "We'll do our very best to accommodate your needs.",
     },
+    guestInfoTitle: 'Your Information',
     placeholders: {
       specialRequests: 'Any special requirements, dietary needs, or room preferences…',
     },
@@ -109,6 +149,8 @@ const en = {
       cleaningFee: 'Cleaning fee',
       taxes: 'Taxes & fees',
       total: 'Total',
+      cleaningFeeHint: 'One-time cleaning fee included in all stays.',
+      taxesHint: 'Includes VAT and local accommodation tax.',
     },
     continueToPayment: 'Continue to Payment',
     confirmBooking: 'Confirm Booking',
@@ -117,6 +159,35 @@ const en = {
     successMessage: 'Your reservation has been confirmed. A confirmation email has been sent to',
     referenceLabel: 'Booking Reference',
     printConfirmation: 'Print Confirmation',
+    receiptTitle: 'Your stay is confirmed!',
+    receiptMessage: 'Thank you, {name}. A detailed confirmation has been sent to {email}.',
+    details: {
+      room: 'Room',
+      dates: 'Dates',
+      guests: 'Guests',
+      totalPaid: 'Total Paid',
+      specialRequests: 'Your special requests',
+    },
+    printReceipt: 'Print Receipt',
+    done: 'Done',
+    reserveRoom: 'Reserve Your Room',
+    securePayment: 'Secure Payment',
+    cardDetails: 'Card Details',
+    demoNoCharge: '(demo — no real charge)',
+    cardNumber: 'Card number',
+    cardholderName: 'Cardholder name',
+    expiry: 'Expiry',
+    cvv: 'CVV',
+    paymentSecured: 'Your payment is secured with 256-bit TLS encryption',
+    paymentErrors: {
+      cardNumber: 'Enter a valid 16-digit card number',
+      cardHolder: 'Cardholder name is required',
+      expiry: 'Enter expiry as MM/YY',
+      cvv: 'Enter a valid CVV',
+    },
+    detailsStep: 'Details',
+    paymentStep: 'Payment',
+    nightsLabel: '{count} nights',
   },
 
   // ── Contact ──────────────────────────────────
@@ -146,6 +217,87 @@ const en = {
       phone: '+380 44 123 4567',
       email: 'info@luminahotel.ua',
       hours: 'Reception: 24/7',
+      labels: {
+        phone: 'Phone',
+        email: 'Email',
+        address: 'Address',
+        checkInOut: 'Check-in / Out',
+      },
+      subs: {
+        phone: 'Available 24/7',
+        email: 'Reply within 2 hours',
+        address: 'Carpathian Mountains, Ukraine',
+        checkInOut: 'Early/late by arrangement',
+      },
+      checkInOutValue: 'From 14:00 / Until 12:00',
+    },
+  },
+
+  // ── Sections ─────────────────────────────────
+  sections: {
+    features: {
+      eyebrow: 'The LUMINA Experience',
+      title: "Everything you need, nothing you don't expect",
+      subtitle:
+        'Every amenity at LUMINA has been considered, designed, and perfected to elevate your stay from exceptional to unforgettable.',
+      items: {
+        spa: {
+          title: 'Spa & Wellness',
+          description:
+            'A full-service spa with thermal pools, forest baths, and bespoke treatment programmes.',
+        },
+        dining: {
+          title: 'Farm-to-Table Restaurant',
+          description:
+            'Three dining venues serving seasonal Carpathian cuisine crafted by our Michelin-starred chef.',
+        },
+        pool: {
+          title: 'Infinity Pool',
+          description: 'A heated infinity pool overlooking the Carpathian peaks — open year-round.',
+        },
+        hikes: {
+          title: 'Guided Forest Hikes',
+          description: 'Expert naturalists lead daily excursions through protected ancient woodland.',
+        },
+        fitness: {
+          title: 'Performance Fitness',
+          description: 'State-of-the-art gym with Technogym equipment and certified personal trainers.',
+        },
+        wine: {
+          title: 'Private Wine Cellar',
+          description: 'Over 800 labels curated by our sommelier, with private tasting experiences on request.',
+        },
+        wifi: {
+          title: '10 Gbps Wi‑Fi',
+          description: 'Lightning-fast fibre throughout the property — work from anywhere in comfort.',
+        },
+        concierge: {
+          title: 'Concierge & Transfers',
+          description: 'Dedicated concierge team, private airport transfers, and helicopter landing pad.',
+        },
+      },
+    },
+    gallery: {
+      eyebrow: 'Visual Journey',
+      title: 'Life at LUMINA',
+      viewAllRooms: 'View all rooms',
+      images: {
+        exterior: 'Hotel exterior at dusk',
+        spaRoom: 'Spa treatment room',
+        dining: 'Fine dining restaurant',
+        pool: 'Infinity pool at sunset',
+        spaArea: 'Spa and wellness area',
+      },
+    },
+    testimonials: {
+      eyebrow: 'Guest Stories',
+      title: 'Voices of our guests',
+      stayedIn: 'Stayed in: {room} · {date}',
+      previous: 'Previous testimonial',
+      next: 'Next testimonial',
+      nav: 'Testimonial navigation',
+      itemAria: 'Testimonial {index}',
+      ratingAria: 'Rating: {rating}/5',
     },
   },
 
@@ -185,6 +337,8 @@ const en = {
       showPassword: 'Show password',
       hidePassword: 'Hide password',
       networkError: 'Network error. Please try again.',
+      portal: 'Admin Portal',
+      demoCredentials: 'Demo credentials: {email} / {password}',
     },
     dashboard: {
       title: 'Dashboard',
@@ -239,6 +393,11 @@ const en = {
       title: 'Bookings',
       total: 'total bookings',
       filterAll: 'All',
+      statuses: {
+        CONFIRMED: 'Confirmed',
+        PENDING: 'Pending',
+        CANCELLED: 'Cancelled',
+      },
       search: 'Search by name, email, or reference…',
       colReference: 'Reference',
       colGuest: 'Guest',
@@ -280,6 +439,10 @@ const en = {
       allRooms: 'All rooms',
       delete: 'Delete',
       confirmDelete: 'Delete this promotion?',
+      percentSuffix: '(%)',
+      moneySuffix: '($)',
+      amountOff: '{value} off',
+      minNightsShort: 'min {nights} nights',
     },
   },
 
@@ -291,6 +454,36 @@ const en = {
       privacy: 'Privacy Policy',
       terms: 'Terms of Service',
       cookies: 'Cookie Policy',
+    },
+    cta: {
+      title: 'Ready for an extraordinary stay?',
+      subtitle: 'Check availability and reserve your suite today.',
+      button: 'Book a Stay',
+    },
+    brandDescription:
+      'A sanctuary of refined luxury nestled in the ancient Carpathian forests of Ukraine.',
+    columns: {
+      hotel: 'Hotel',
+      amenities: 'Amenities',
+      info: 'Information',
+    },
+    amenities: {
+      spa: 'Spa & Wellness',
+      restaurant: 'Restaurant & Bar',
+      pool: 'Infinity Pool',
+      conference: 'Conference Hall',
+      hikes: 'Guided Hikes',
+    },
+    infoLinks: {
+      about: 'About LUMINA',
+      gallery: 'Gallery',
+      press: 'Press & Media',
+      privacy: 'Privacy Policy',
+      terms: 'Terms of Service',
+    },
+    bottom: {
+      allRights: 'All rights reserved.',
+      demoBy: 'Demo by',
     },
   },
 } as const;

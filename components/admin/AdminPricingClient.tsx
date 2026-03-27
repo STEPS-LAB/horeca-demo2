@@ -124,7 +124,7 @@ export function AdminPricingClient({
                 value={form.name}
                 onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
                 className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
-                placeholder="Summer Sale"
+                placeholder="—"
               />
             </div>
             <div>
@@ -141,7 +141,7 @@ export function AdminPricingClient({
             </div>
             <div>
               <label className="block text-xs text-stone-400 mb-1.5">
-                {t.fieldValue} {form.type === 'PERCENTAGE' ? '(%)' : '($)'}
+                {t.fieldValue} {form.type === 'PERCENTAGE' ? t.percentSuffix : t.moneySuffix}
               </label>
               <input
                 required
@@ -262,8 +262,8 @@ export function AdminPricingClient({
 
                 <div className="flex items-center justify-between text-xs text-stone-500 mb-2">
                   <span>
-                    {p.type === 'PERCENTAGE' ? `${p.value}% off` : `$${p.value} off`}
-                    {p.minNights ? ` · min ${p.minNights} nights` : ''}
+                    {t.amountOff.replace('{value}', p.type === 'PERCENTAGE' ? `${p.value}%` : `${p.value}`)}
+                    {p.minNights ? ` · ${t.minNightsShort.replace('{nights}', String(p.minNights))}` : ''}
                   </span>
                   {p.startDate && (
                     <span>{formatDate(p.startDate, locale)} → {formatDate(p.endDate, locale)}</span>

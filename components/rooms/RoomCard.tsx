@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/Badge';
 import { formatCurrency, applyBestPromotion } from '@/utils/pricing';
 import { cn } from '@/utils/cn';
 import type { Room, Promotion } from '@/types';
-import { useLocale } from '@/i18n/context';
+import { useLocale, useTranslations } from '@/i18n/context';
 
 interface RoomCardProps {
   room: Room;
@@ -18,23 +18,18 @@ interface RoomCardProps {
   onBook: (room: Room) => void;
 }
 
-const roomTypeLabels: Record<Room['type'], string> = {
-  standard: 'Standard',
-  deluxe: 'Deluxe',
-  'junior-suite': 'Junior Suite',
-  'executive-suite': 'Executive Suite',
-  'presidential-suite': 'Presidential Suite',
-  'garden-villa': 'Garden Villa',
-};
-
 export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomCardProps) {
   const [imgIndex, setImgIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const locale = useLocale();
+  const t = useTranslations();
   const displayName = locale === 'ua' && room.nameUa ? room.nameUa : room.name;
-  const displayDesc = locale === 'ua' && room.descriptionUa
+  const displayDesc = locale === 'ua' && room.shortDescriptionUa
+    ? room.shortDescriptionUa
+    : locale === 'ua' && room.descriptionUa
     ? room.descriptionUa.slice(0, 120)
     : room.shortDescription;
+  const displayAmenities = locale === 'ua' && room.amenitiesUa ? room.amenitiesUa : room.amenities;
   const { discountedPrice, promotion: bestPromotion } = applyBestPromotion(room.pricePerNight, promotions, room.id);
 
   return (
@@ -44,7 +39,7 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
       transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      aria-label={`${displayName} — ${formatCurrency(room.pricePerNight)} per night`}
+      aria-label={`${displayName} — ${formatCurrency(room.pricePerNight)} ${t.common.perNight}`}
     >
       {/* Image gallery */}
       <div className="relative h-52 sm:h-60 overflow-hidden">
@@ -62,7 +57,7 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
 
         {/* Type badge */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-          <Badge variant="gold">{roomTypeLabels[room.type]}</Badge>
+          <Badge variant="gold">{t.rooms.types[room.type]}</Badge>
           {bestPromotion && (
             <span className="self-start text-[10px] font-bold bg-red-500 text-white px-2 py-0.5 rounded-full tracking-wide uppercase">
               {bestPromotion.type === 'PERCENTAGE'
@@ -89,7 +84,7 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
                   e.stopPropagation();
                   setImgIndex(i);
                 }}
-                aria-label={`View image ${i + 1}`}
+                aria-label={t.common.viewImage.replace('{index}', String(i + 1))}
                 className={cn(
                   'h-1.5 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white',
                   i === imgIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/50 hover:bg-white/80'
@@ -111,7 +106,7 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
             className="flex items-center gap-2 glass text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-white/20 transition-colors"
           >
             <Eye size={15} />
-            Quick View
+            {t.common.quickView}
           </button>
         </motion.div>
       </div>
@@ -129,7 +124,7 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
             <span className={`text-lg font-bold ${bestPromotion ? 'text-red-600' : 'text-stone-900'}`}>
               {formatCurrency(bestPromotion ? discountedPrice : room.pricePerNight)}
             </span>
-            <span className="text-xs text-stone-400 block">/ night</span>
+            <span className="text-xs text-stone-400 block">{t.common.perNight}</span>
           </div>
         </div>
 
@@ -145,7 +140,7 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
           </span>
           <span className="flex items-center gap-1">
             <Users size={13} className="text-stone-400" />
-            Up to {room.maxGuests}
+            {t.common.upTo.replace('{count}', String(room.maxGuests))}
           </span>
           <span className="flex items-center gap-1">
             <BedDouble size={13} className="text-stone-400" />
@@ -155,7 +150,7 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
 
         {/* Top amenities */}
         <div className="flex flex-wrap gap-1.5 mb-5">
-          {room.amenities.slice(0, 3).map((a) => (
+          {displayAmenities.slice(0, 3).map((a) => (
             <span
               key={a}
               className="text-xs px-2 py-0.5 rounded-md bg-stone-100 text-stone-500"
@@ -163,9 +158,9 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
               {a}
             </span>
           ))}
-          {room.amenities.length > 3 && (
+          {displayAmenities.length > 3 && (
             <span className="text-xs px-2 py-0.5 rounded-md bg-stone-100 text-stone-400">
-              +{room.amenities.length - 3} more
+              +{t.common.more.replace('{count}', String(displayAmenities.length - 3))}
             </span>
           )}
         </div>
@@ -178,7 +173,7 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
             className="flex-1"
             onClick={() => onViewDetails(room)}
           >
-            Details
+            {t.common.viewDetails}
           </Button>
           <Button
             variant="primary"
@@ -186,7 +181,7 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
             className="flex-1"
             onClick={() => onBook(room)}
           >
-            Book Now
+            {t.common.bookNow}
           </Button>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { Send, Check, Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { Input, Textarea, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { validateContactForm, hasErrors } from '@/utils/validation';
+import { useTranslations } from '@/i18n/context';
 import type { ContactFormData, ValidationErrors } from '@/types';
 
 const defaultForm: ContactFormData = {
@@ -15,52 +16,51 @@ const defaultForm: ContactFormData = {
   message: '',
 };
 
-const subjectOptions = [
-  { value: '', label: 'Select a subject…' },
-  { value: 'reservation', label: 'Room Reservation' },
-  { value: 'event', label: 'Event or Conference' },
-  { value: 'special-occasion', label: 'Special Occasion' },
-  { value: 'spa', label: 'Spa & Wellness Booking' },
-  { value: 'feedback', label: 'Feedback' },
-  { value: 'other', label: 'Other Enquiry' },
-];
-
-const contactInfo = [
-  {
-    Icon: Phone,
-    label: 'Phone',
-    value: '+380 44 123 4567',
-    sub: 'Available 24/7',
-    href: 'tel:+380441234567',
-  },
-  {
-    Icon: Mail,
-    label: 'Email',
-    value: 'hello@lumina-hotel.com',
-    sub: 'Reply within 2 hours',
-    href: 'mailto:hello@lumina-hotel.com',
-  },
-  {
-    Icon: MapPin,
-    label: 'Address',
-    value: '1 Lumina Drive, Yaremche',
-    sub: 'Carpathian Mountains, Ukraine',
-    href: 'https://maps.google.com',
-  },
-  {
-    Icon: Clock,
-    label: 'Check-in / Out',
-    value: 'From 14:00 / Until 12:00',
-    sub: 'Early/late by arrangement',
-    href: undefined,
-  },
-];
-
 export function ContactClient() {
+  const t = useTranslations();
   const [form, setForm] = useState<ContactFormData>(defaultForm);
   const [errors, setErrors] = useState<ValidationErrors<ContactFormData>>({});
   const [touched, setTouched] = useState<Partial<Record<keyof ContactFormData, boolean>>>({});
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+
+  const subjectOptions = [
+    { value: '', label: '—' },
+    { value: 'general', label: t.contact.form.subjects.general },
+    { value: 'reservation', label: t.contact.form.subjects.reservation },
+    { value: 'feedback', label: t.contact.form.subjects.feedback },
+    { value: 'events', label: t.contact.form.subjects.events },
+    { value: 'other', label: t.contact.form.subjects.other },
+  ];
+  const contactInfo = [
+    {
+      Icon: Phone,
+      label: t.contact.info.labels.phone,
+      value: t.contact.info.phone,
+      sub: t.contact.info.subs.phone,
+      href: 'tel:+380441234567',
+    },
+    {
+      Icon: Mail,
+      label: t.contact.info.labels.email,
+      value: t.contact.info.email,
+      sub: t.contact.info.subs.email,
+      href: 'mailto:hello@lumina-hotel.com',
+    },
+    {
+      Icon: MapPin,
+      label: t.contact.info.labels.address,
+      value: t.contact.info.address,
+      sub: t.contact.info.subs.address,
+      href: 'https://maps.google.com',
+    },
+    {
+      Icon: Clock,
+      label: t.contact.info.labels.checkInOut,
+      value: t.contact.info.checkInOutValue,
+      sub: t.contact.info.subs.checkInOut,
+      href: undefined,
+    },
+  ];
 
   const updateField = useCallback(
     <K extends keyof ContactFormData>(field: K, value: ContactFormData[K]) => {
@@ -115,10 +115,9 @@ export function ContactClient() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-xl font-bold text-stone-900 mb-2">Get in touch</h2>
+              <h2 className="text-xl font-bold text-stone-900 mb-2">{t.contact.pageTitle}</h2>
               <p className="text-stone-500 text-sm leading-relaxed mb-8">
-                Whether you need help with a reservation, have a special request, or simply want to
-                know more about LUMINA — we are always here for you.
+                {t.contact.pageSubtitle}
               </p>
 
               <div className="flex flex-col gap-5">
@@ -175,15 +174,15 @@ export function ContactClient() {
                     >
                       <Check size={28} className="text-emerald-600" strokeWidth={2.5} />
                     </motion.div>
-                    <h3 className="text-xl font-bold text-stone-900 mb-2">Message sent!</h3>
+                    <h3 className="text-xl font-bold text-stone-900 mb-2">{t.contact.successTitle}</h3>
                     <p className="text-stone-500 text-sm max-w-xs">
-                      Thank you, {form.name}. Our team will respond to your enquiry within 2 hours.
+                      {t.contact.successMessage} {form.email || form.name}
                     </p>
                     <button
                       onClick={() => { setForm(defaultForm); setStatus('idle'); setTouched({}); }}
                       className="mt-6 text-sm font-medium text-stone-600 hover:text-stone-900 underline underline-offset-2 transition-colors"
                     >
-                      Send another message
+                      {t.contact.form.send}
                     </button>
                   </motion.div>
                 ) : (
@@ -192,25 +191,25 @@ export function ContactClient() {
                     onSubmit={handleSubmit}
                     noValidate
                     className="flex flex-col gap-4"
-                    aria-label="Contact form"
+                    aria-label={t.contact.pageTitle}
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <Input
-                        label="Your name"
+                        label={t.contact.form.name}
                         required
                         autoComplete="name"
-                        placeholder="John Smith"
+                        placeholder="—"
                         value={form.name}
                         error={touchedErrors.name}
                         onChange={(e) => updateField('name', e.target.value)}
                         onBlur={() => touchField('name')}
                       />
                       <Input
-                        label="Email address"
+                        label={t.contact.form.email}
                         type="email"
                         required
                         autoComplete="email"
-                        placeholder="john@example.com"
+                        placeholder="—"
                         value={form.email}
                         error={touchedErrors.email}
                         onChange={(e) => updateField('email', e.target.value)}
@@ -219,7 +218,7 @@ export function ContactClient() {
                     </div>
 
                     <Select
-                      label="Subject"
+                      label={t.contact.form.subject}
                       required
                       options={subjectOptions}
                       value={form.subject}
@@ -229,14 +228,14 @@ export function ContactClient() {
                     />
 
                     <Textarea
-                      label="Message"
+                      label={t.contact.form.message}
                       required
-                      placeholder="Tell us how we can help you…"
+                      placeholder={t.contact.pageSubtitle}
                       value={form.message}
                       error={touchedErrors.message}
                       onChange={(e) => updateField('message', e.target.value)}
                       onBlur={() => touchField('message')}
-                      hint="Minimum 20 characters"
+                      hint="20+"
                     />
 
                     <Button
@@ -247,7 +246,7 @@ export function ContactClient() {
                       isLoading={status === 'submitting'}
                       rightIcon={<Send size={15} />}
                     >
-                      Send Message
+                      {status === 'submitting' ? t.contact.form.sending : t.contact.form.send}
                     </Button>
                   </motion.form>
                 )}

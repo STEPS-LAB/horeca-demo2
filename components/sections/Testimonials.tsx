@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react';
 import { testimonials } from '@/data/rooms';
+import { useTranslations } from '@/i18n/context';
+import { useLocale } from '@/i18n/context';
 
 const slideVariants = {
   enter: (direction: number) => ({
@@ -19,6 +21,8 @@ const slideVariants = {
 };
 
 export function Testimonials() {
+  const tr = useTranslations();
+  const locale = useLocale();
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
 
@@ -28,6 +32,13 @@ export function Testimonials() {
   };
 
   const t = testimonials[index];
+  const display = {
+    name: locale === 'ua' && t.nameUa ? t.nameUa : t.name,
+    location: locale === 'ua' && t.locationUa ? t.locationUa : t.location,
+    text: locale === 'ua' && t.textUa ? t.textUa : t.text,
+    date: locale === 'ua' && t.dateUa ? t.dateUa : t.date,
+    roomStayed: locale === 'ua' && t.roomStayedUa ? t.roomStayedUa : t.roomStayed,
+  };
 
   return (
     <section
@@ -44,10 +55,10 @@ export function Testimonials() {
           transition={{ duration: 0.6 }}
         >
           <span className="text-xs font-semibold tracking-[0.2em] uppercase text-gold-400 mb-3 block">
-            Guest Stories
+            {tr.sections.testimonials.eyebrow}
           </span>
           <h2 id="testimonials-heading" className="text-3xl sm:text-4xl font-bold text-white">
-            Voices of our guests
+            {tr.sections.testimonials.title}
           </h2>
         </motion.div>
 
@@ -75,7 +86,7 @@ export function Testimonials() {
               {/* Text */}
               <blockquote>
                 <p className="text-lg sm:text-xl text-stone-200 leading-relaxed font-light italic text-pretty">
-                  &ldquo;{t.text}&rdquo;
+                  &ldquo;{display.text}&rdquo;
                 </p>
 
                 <footer className="mt-8 flex items-center gap-4">
@@ -90,14 +101,19 @@ export function Testimonials() {
                   </div>
                   <div>
                     <cite className="not-italic font-semibold text-white text-base">
-                      {t.name}
+                      {display.name}
                     </cite>
-                    <p className="text-stone-400 text-sm">{t.location}</p>
+                    <p className="text-stone-400 text-sm">{display.location}</p>
                     <p className="text-stone-500 text-xs mt-0.5">
-                      Stayed in: {t.roomStayed} · {t.date}
+                      {tr.sections.testimonials.stayedIn
+                        .replace('{room}', display.roomStayed)
+                        .replace('{date}', display.date)}
                     </p>
                   </div>
-                  <div className="ml-auto flex items-center gap-0.5" aria-label={`Rating: ${t.rating}/5`}>
+                  <div
+                    className="ml-auto flex items-center gap-0.5"
+                    aria-label={tr.sections.testimonials.ratingAria.replace('{rating}', String(t.rating))}
+                  >
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
@@ -115,13 +131,17 @@ export function Testimonials() {
           {/* Navigation */}
           <div className="mt-6 flex items-center justify-between">
             {/* Dots */}
-            <div className="flex items-center gap-2" role="tablist" aria-label="Testimonial navigation">
+            <div
+              className="flex items-center gap-2"
+              role="tablist"
+              aria-label={tr.sections.testimonials.nav}
+            >
               {testimonials.map((_, i) => (
                 <button
                   key={i}
                   role="tab"
                   aria-selected={i === index}
-                  aria-label={`Testimonial ${i + 1}`}
+                  aria-label={tr.sections.testimonials.itemAria.replace('{index}', String(i + 1))}
                   onClick={() => {
                     setDirection(i > index ? 1 : -1);
                     setIndex(i);
@@ -145,14 +165,14 @@ export function Testimonials() {
               <button
                 onClick={() => paginate(-1)}
                 className="flex items-center justify-center w-10 h-10 rounded-xl bg-stone-700 text-stone-300 hover:bg-stone-600 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
-                aria-label="Previous testimonial"
+                aria-label={tr.sections.testimonials.previous}
               >
                 <ChevronLeft size={18} />
               </button>
               <button
                 onClick={() => paginate(1)}
                 className="flex items-center justify-center w-10 h-10 rounded-xl bg-stone-700 text-stone-300 hover:bg-stone-600 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
-                aria-label="Next testimonial"
+                aria-label={tr.sections.testimonials.next}
               >
                 <ChevronRight size={18} />
               </button>

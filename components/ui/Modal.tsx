@@ -4,6 +4,7 @@ import { useRef, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '@/utils/cn';
+import { useTranslations } from '@/i18n/context';
 
 type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
@@ -47,6 +48,7 @@ export function Modal({
   showClose = true,
   closeOnBackdrop = true,
 }: ModalProps) {
+  const t = useTranslations();
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -140,7 +142,7 @@ export function Modal({
                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500',
                       !title && 'ml-auto'
                     )}
-                    aria-label="Close modal"
+                    aria-label={t.common.close}
                   >
                     <X size={18} />
                   </button>

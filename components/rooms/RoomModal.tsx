@@ -19,15 +19,7 @@ import { Badge } from '@/components/ui/Badge';
 import { formatCurrency } from '@/utils/pricing';
 import { cn } from '@/utils/cn';
 import type { Room } from '@/types';
-
-const roomTypeLabels: Record<Room['type'], string> = {
-  standard: 'Standard',
-  deluxe: 'Deluxe',
-  'junior-suite': 'Junior Suite',
-  'executive-suite': 'Executive Suite',
-  'presidential-suite': 'Presidential Suite',
-  'garden-villa': 'Garden Villa',
-};
+import { useLocale, useTranslations } from '@/i18n/context';
 
 interface RoomModalProps {
   room: Room | null;
@@ -56,6 +48,8 @@ const imageSlideVariants = {
 export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
   const [imgIndex, setImgIndex] = useState(0);
   const [imgDir, setImgDir] = useState(1);
+  const locale = useLocale();
+  const t = useTranslations();
 
   const navigateImage = (dir: number) => {
     if (!room) return;
@@ -106,7 +100,7 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
             <button
               onClick={onClose}
               className="absolute top-4 right-4 z-20 flex items-center justify-center w-9 h-9 rounded-xl bg-white/90 backdrop-blur-sm text-stone-600 hover:text-stone-900 hover:bg-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
-              aria-label="Close"
+              aria-label={t.common.close}
             >
               <X size={18} />
             </button>
@@ -126,7 +120,7 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
                 >
                   <Image
                     src={room.images[imgIndex]}
-                    alt={`${room.name} — image ${imgIndex + 1}`}
+                    alt={`${(locale === 'ua' && room.nameUa ? room.nameUa : room.name)} — ${t.common.image.replace('{index}', String(imgIndex + 1))}`}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 896px"
@@ -141,14 +135,14 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
                   <button
                     onClick={() => navigateImage(-1)}
                     className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-9 h-9 rounded-xl glass-dark text-white hover:bg-white/20 transition-colors"
-                    aria-label="Previous image"
+                    aria-label={t.rooms.modal.previousImage}
                   >
                     <ChevronLeft size={18} />
                   </button>
                   <button
                     onClick={() => navigateImage(1)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-9 h-9 rounded-xl glass-dark text-white hover:bg-white/20 transition-colors"
-                    aria-label="Next image"
+                    aria-label={t.rooms.modal.nextImage}
                   >
                     <ChevronRight size={18} />
                   </button>
@@ -157,7 +151,7 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
                       <button
                         key={i}
                         onClick={() => { setImgDir(i > imgIndex ? 1 : -1); setImgIndex(i); }}
-                        aria-label={`Image ${i + 1}`}
+                        aria-label={t.common.image.replace('{index}', String(i + 1))}
                         className={cn(
                           'h-1.5 rounded-full transition-all duration-200',
                           i === imgIndex ? 'w-5 bg-white' : 'w-1.5 bg-white/50'
@@ -170,7 +164,7 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
 
               {/* Badge overlay */}
               <div className="absolute top-4 left-4">
-                <Badge variant="gold">{roomTypeLabels[room.type]}</Badge>
+                <Badge variant="gold">{t.rooms.types[room.type]}</Badge>
               </div>
             </div>
 
@@ -178,7 +172,9 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
             <div className="p-6 md:p-8">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-stone-900">{room.name}</h2>
+                  <h2 className="text-2xl font-bold text-stone-900">
+                    {locale === 'ua' && room.nameUa ? room.nameUa : room.name}
+                  </h2>
                   <div className="flex items-center gap-2 mt-1.5">
                     <div className="flex items-center gap-1">
                       {[...Array(5)].map((_, i) => (
@@ -191,22 +187,24 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
                       ))}
                     </div>
                     <span className="text-sm font-semibold text-stone-700">{room.rating}</span>
-                    <span className="text-sm text-stone-400">({room.reviewCount} reviews)</span>
+                    <span className="text-sm text-stone-400">
+                      ({t.rooms.modal.reviews.replace('{count}', String(room.reviewCount))})
+                    </span>
                   </div>
                 </div>
                 <div className="sm:text-right shrink-0">
                   <div className="text-3xl font-bold text-stone-900">{formatCurrency(room.pricePerNight)}</div>
-                  <div className="text-sm text-stone-400">per night</div>
+                  <div className="text-sm text-stone-400">{t.common.perNight}</div>
                 </div>
               </div>
 
               {/* Quick stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                 {[
-                  { Icon: Maximize2, label: 'Size', value: `${room.size} m²` },
-                  { Icon: Users, label: 'Guests', value: `Up to ${room.maxGuests}` },
-                  { Icon: BedDouble, label: 'Bed', value: room.bedType },
-                  { Icon: MapPin, label: 'View', value: room.view ?? 'Garden' },
+                  { Icon: Maximize2, label: t.rooms.modal.size, value: `${room.size} m²` },
+                  { Icon: Users, label: t.rooms.modal.guests, value: t.common.upTo.replace('{count}', String(room.maxGuests)) },
+                  { Icon: BedDouble, label: t.rooms.modal.bed, value: locale === 'ua' && room.bedTypeUa ? room.bedTypeUa : room.bedType },
+                  { Icon: MapPin, label: t.rooms.modal.view, value: locale === 'ua' && room.viewUa ? room.viewUa : (room.view ?? 'Garden') },
                 ].map(({ Icon, label, value }) => (
                   <div key={label} className="bg-stone-50 rounded-xl p-3">
                     <Icon size={15} className="text-stone-400 mb-1.5" strokeWidth={1.5} />
@@ -217,13 +215,15 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
               </div>
 
               {/* Description */}
-              <p className="text-stone-600 leading-relaxed text-sm mb-6">{room.description}</p>
+              <p className="text-stone-600 leading-relaxed text-sm mb-6">
+                {locale === 'ua' && room.descriptionUa ? room.descriptionUa : room.description}
+              </p>
 
               {/* Amenities */}
               <div className="mb-6">
-                <h3 className="text-sm font-semibold text-stone-800 mb-3">Amenities</h3>
+                <h3 className="text-sm font-semibold text-stone-800 mb-3">{t.rooms.modal.amenities}</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-2 gap-x-4">
-                  {room.amenities.map((a) => (
+                  {(locale === 'ua' && room.amenitiesUa ? room.amenitiesUa : room.amenities).map((a) => (
                     <div key={a} className="flex items-center gap-2 text-sm text-stone-600">
                       <Check size={13} className="text-gold-500 shrink-0" strokeWidth={2.5} />
                       <span>{a}</span>
@@ -234,9 +234,9 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
 
               {/* Features */}
               <div className="mb-8">
-                <h3 className="text-sm font-semibold text-stone-800 mb-3">Room Features</h3>
+                <h3 className="text-sm font-semibold text-stone-800 mb-3">{t.rooms.modal.roomFeatures}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {room.features.map((f) => (
+                  {(locale === 'ua' && room.featuresUa ? room.featuresUa : room.features).map((f) => (
                     <span
                       key={f}
                       className="px-3 py-1 rounded-full bg-stone-100 text-stone-600 text-xs font-medium"
@@ -250,7 +250,7 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
               {/* Book CTA */}
               <div className="flex flex-col sm:flex-row gap-3 pt-5 border-t border-stone-100">
                 <Button variant="outline" size="lg" className="sm:flex-1" onClick={onClose}>
-                  Continue Browsing
+                  {t.rooms.modal.continueBrowsing}
                 </Button>
                 <Button
                   variant="primary"
@@ -261,7 +261,9 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
                     onBook(room);
                   }}
                 >
-                  Reserve — {formatCurrency(room.pricePerNight)} / night
+                  {t.rooms.modal.reserveWithPrice
+                    .replace('{price}', formatCurrency(room.pricePerNight))
+                    .replace('{perNight}', t.common.perNight)}
                 </Button>
               </div>
             </div>

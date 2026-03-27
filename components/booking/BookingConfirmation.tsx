@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Check, Calendar, Mail, Home, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { formatCurrency } from '@/utils/pricing';
+import { useLocale, useTranslations } from '@/i18n/context';
 import type { BookingFormData, BookingCalculation, Room } from '@/types';
 
 interface BookingConfirmationProps {
@@ -41,6 +42,8 @@ export function BookingConfirmation({
   pricing,
   onClose,
 }: BookingConfirmationProps) {
+  const locale = useLocale();
+  const t = useTranslations();
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -68,12 +71,13 @@ export function BookingConfirmation({
         className="text-xl font-bold text-stone-900 focus:outline-none"
         tabIndex={-1}
       >
-        Your stay is confirmed!
+        {t.booking.receiptTitle}
       </motion.h2>
 
       <motion.p variants={itemVariants} className="text-stone-500 text-sm mt-2 mb-6 max-w-xs">
-        Thank you, {form.firstName}. A detailed confirmation has been sent to{' '}
-        <strong className="text-stone-700">{form.email}</strong>.
+        {t.booking.receiptMessage
+          .replace('{name}', form.firstName)
+          .replace('{email}', form.email)}
       </motion.p>
 
       {/* Booking reference */}
@@ -81,7 +85,7 @@ export function BookingConfirmation({
         variants={itemVariants}
         className="w-full bg-stone-50 border border-stone-200 rounded-xl p-4 mb-5"
       >
-        <p className="text-xs uppercase tracking-widest text-stone-400 mb-1">Booking Reference</p>
+        <p className="text-xs uppercase tracking-widest text-stone-400 mb-1">{t.booking.referenceLabel}</p>
         <p className="text-2xl font-bold text-stone-900 font-mono tracking-wider">{bookingId}</p>
       </motion.div>
 
@@ -93,22 +97,22 @@ export function BookingConfirmation({
         {[
           {
             Icon: Home,
-            label: 'Room',
-            value: room?.name ?? '—',
+            label: t.booking.details.room,
+            value: room ? (locale === 'ua' && room.nameUa ? room.nameUa : room.name) : '—',
           },
           {
             Icon: Calendar,
-            label: 'Dates',
+            label: t.booking.details.dates,
             value: `${form.checkIn} → ${form.checkOut}`,
           },
           {
             Icon: Mail,
-            label: 'Guests',
-            value: `${form.guests} ${form.guests === 1 ? 'guest' : 'guests'}`,
+            label: t.booking.details.guests,
+            value: `${form.guests} ${form.guests === 1 ? t.common.guest : t.common.guests}`,
           },
           {
             Icon: Check,
-            label: 'Total Paid',
+            label: t.booking.details.totalPaid,
             value: pricing ? formatCurrency(pricing.total) : '—',
           },
         ].map(({ Icon, label, value }) => (
@@ -128,7 +132,7 @@ export function BookingConfirmation({
           variants={itemVariants}
           className="w-full bg-amber-50 border border-amber-200 rounded-xl p-3 mb-5 text-left"
         >
-          <p className="text-xs font-medium text-amber-700 mb-1">Your special requests</p>
+          <p className="text-xs font-medium text-amber-700 mb-1">{t.booking.details.specialRequests}</p>
           <p className="text-sm text-amber-600">{form.specialRequests}</p>
         </motion.div>
       )}
@@ -142,10 +146,10 @@ export function BookingConfirmation({
           onClick={() => window.print()}
           leftIcon={<Printer size={15} />}
         >
-          Print Receipt
+          {t.booking.printReceipt}
         </Button>
         <Button variant="primary" size="md" className="sm:flex-1" onClick={onClose}>
-          Done
+          {t.booking.done}
         </Button>
       </motion.div>
     </motion.div>

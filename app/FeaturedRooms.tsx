@@ -8,9 +8,11 @@ import { RoomCard } from '@/components/rooms/RoomCard';
 import { RoomModal } from '@/components/rooms/RoomModal';
 import { BookingModal } from '@/components/booking/BookingModal';
 import { useModal } from '@/hooks/useModal';
+import { useTranslations } from '@/i18n/context';
 import type { Room, Promotion } from '@/types';
 
 export function FeaturedRooms({ rooms, promotions = [] }: { rooms: Room[]; promotions?: Promotion[] }) {
+  const t = useTranslations();
   const featuredRooms = rooms.slice(0, 3);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [bookingRoom, setBookingRoom] = useState<Room | null>(null);
@@ -40,20 +42,20 @@ export function FeaturedRooms({ rooms, promotions = [] }: { rooms: Room[]; promo
         >
           <div>
             <span className="text-xs font-semibold tracking-[0.2em] uppercase text-gold-600 mb-2 block">
-              Accommodation
+              {t.nav.rooms}
             </span>
             <h2
               id="featured-rooms-heading"
               className="text-3xl sm:text-4xl font-bold text-stone-900"
             >
-              Our finest rooms
+              {t.home.featuredTitle}
             </h2>
           </div>
           <Link
             href="/rooms"
             className="flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors group"
           >
-            <span>View all rooms</span>
+            <span>{t.sections.gallery.viewAllRooms}</span>
             <ArrowRight
               size={15}
               className="transition-transform duration-200 group-hover:translate-x-1"

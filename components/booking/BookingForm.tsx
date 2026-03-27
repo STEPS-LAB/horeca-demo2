@@ -7,6 +7,7 @@ import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { formatCurrency, calculateBookingPrice, applyBestPromotion } from '@/utils/pricing';
+import { useTranslations } from '@/i18n/context';
 import type { BookingFormData, ValidationErrors, Room, Promotion } from '@/types';
 
 interface BookingFormProps {
@@ -20,11 +21,6 @@ interface BookingFormProps {
   isLoading?: boolean;
   compact?: boolean;
 }
-
-const guestOptions = Array.from({ length: 6 }, (_, i) => ({
-  value: i + 1,
-  label: `${i + 1} ${i === 0 ? 'Guest' : 'Guests'}`,
-}));
 
 const fieldVariants = {
   hidden: { opacity: 0, y: 8 },
@@ -46,6 +42,7 @@ export function BookingForm({
   isLoading,
   compact = false,
 }: BookingFormProps) {
+  const t = useTranslations();
   const selectedRoom = useMemo(() => rooms.find((r) => r.id === form.roomId) ?? null, [rooms, form.roomId]);
 
   const { discountedPrice, promotion: bestPromotion } = useMemo(
@@ -57,16 +54,25 @@ export function BookingForm({
     ? (bestPromotion ? discountedPrice : selectedRoom.pricePerNight)
     : 0;
 
+  const guestOptions = useMemo(
+    () =>
+      Array.from({ length: 6 }, (_, i) => ({
+        value: i + 1,
+        label: `${i + 1} ${i === 0 ? t.common.guest : t.common.guests}`,
+      })),
+    [t.common.guest, t.common.guests]
+  );
+
   const roomOptions = useMemo(
     () => [
-      { value: '', label: 'Select a room…' },
+      { value: '', label: '—' },
       ...rooms.map((r) => {
         const { discountedPrice: dp, promotion: promo } = applyBestPromotion(r.pricePerNight, promotions, r.id);
         const price = promo ? dp : r.pricePerNight;
-        return { value: r.id, label: `${r.name} — ${formatCurrency(price)}/night` };
+        return { value: r.id, label: `${r.name} — ${formatCurrency(price)}${t.common.perNight}` };
       }),
     ],
-    [rooms, promotions]
+    [rooms, promotions, t.common.perNight]
   );
 
   const pricing = useMemo(() => {
@@ -80,7 +86,7 @@ export function BookingForm({
       animate="visible"
       onSubmit={(e) => { e.preventDefault(); onSubmit(); }}
       noValidate
-      aria-label="Room booking form"
+      aria-label={t.booking.reserveRoom}
       className="flex flex-col gap-5"
     >
       {/* Section: Booking details */}
@@ -88,14 +94,14 @@ export function BookingForm({
         {!compact && (
           <h3 className="text-sm font-semibold text-stone-700 mb-4 flex items-center gap-2">
             <Home size={15} className="text-stone-400" />
-            Stay Details
+            {t.booking.step1}
           </h3>
         )}
 
         <div className="flex flex-col gap-4">
           <motion.div custom={0} variants={fieldVariants}>
             <Select
-              label="Room"
+              label={t.rooms.pageTitle}
               required
               options={roomOptions}
               value={form.roomId}
@@ -107,7 +113,7 @@ export function BookingForm({
           <div className="grid grid-cols-2 gap-3">
             <motion.div custom={1} variants={fieldVariants}>
               <Input
-                label="Check-in"
+                label={t.booking.fields.checkIn}
                 type="date"
                 required
                 value={form.checkIn}
@@ -120,7 +126,7 @@ export function BookingForm({
             </motion.div>
             <motion.div custom={2} variants={fieldVariants}>
               <Input
-                label="Check-out"
+                label={t.booking.fields.checkOut}
                 type="date"
                 required
                 value={form.checkOut}
@@ -135,7 +141,7 @@ export function BookingForm({
 
           <motion.div custom={3} variants={fieldVariants}>
             <Select
-              label="Guests"
+              label={t.booking.fields.guests}
               required
               options={guestOptions}
               value={form.guests}
@@ -167,7 +173,7 @@ export function BookingForm({
             )}
             <div className="flex justify-between text-stone-600">
               <span>
-                {formatCurrency(effectivePrice)} × {pricing.nights} nights
+                {formatCurrency(effectivePrice)} × {pricing.nights} {pricing.nights === 1 ? t.common.night : t.common.nights}
                 {bestPromotion && (
                   <span className="text-stone-400 line-through ml-1 text-xs">
                     ({formatCurrency(selectedRoom?.pricePerNight ?? 0)})
@@ -178,9 +184,9 @@ export function BookingForm({
             </div>
             <div className="flex justify-between text-stone-500 text-xs">
               <span className="flex items-center gap-1">
-                Cleaning fee
-                <Tooltip content="One-time cleaning fee included in all stays.">
-                  <button type="button" aria-label="Info about cleaning fee">
+                {t.booking.summary.cleaningFee}
+                <Tooltip content={t.booking.summary.cleaningFeeHint}>
+                  <button type="button" aria-label={t.booking.summary.cleaningFee}>
                     <Info size={12} className="text-stone-400" />
                   </button>
                 </Tooltip>
@@ -189,9 +195,9 @@ export function BookingForm({
             </div>
             <div className="flex justify-between text-stone-500 text-xs">
               <span className="flex items-center gap-1">
-                Taxes (12%)
-                <Tooltip content="Includes VAT and local accommodation tax.">
-                  <button type="button" aria-label="Info about taxes">
+                {t.booking.summary.taxes}
+                <Tooltip content={t.booking.summary.taxesHint}>
+                  <button type="button" aria-label={t.booking.summary.taxes}>
                     <Info size={12} className="text-stone-400" />
                   </button>
                 </Tooltip>
@@ -199,7 +205,7 @@ export function BookingForm({
               <span>{formatCurrency(pricing.taxes)}</span>
             </div>
             <div className="flex justify-between font-bold text-stone-900 pt-2 border-t border-stone-200 mt-1">
-              <span>Total</span>
+              <span>{t.booking.summary.total}</span>
               <span>{formatCurrency(pricing.total)}</span>
             </div>
           </div>
@@ -211,31 +217,31 @@ export function BookingForm({
         {!compact && (
           <h3 className="text-sm font-semibold text-stone-700 mb-4 flex items-center gap-2">
             <Users size={15} className="text-stone-400" />
-            Your Information
+            {t.booking.guestInfoTitle}
           </h3>
         )}
         <div className="flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-3">
             <motion.div custom={4} variants={fieldVariants}>
               <Input
-                label="First name"
+                label={t.booking.fields.firstName}
                 required
                 autoComplete="given-name"
                 value={form.firstName}
                 error={errors.firstName}
-                placeholder="John"
+                placeholder="—"
                 onChange={(e) => onUpdateField('firstName', e.target.value)}
                 onBlur={() => onTouchField('firstName')}
               />
             </motion.div>
             <motion.div custom={5} variants={fieldVariants}>
               <Input
-                label="Last name"
+                label={t.booking.fields.lastName}
                 required
                 autoComplete="family-name"
                 value={form.lastName}
                 error={errors.lastName}
-                placeholder="Smith"
+                placeholder="—"
                 onChange={(e) => onUpdateField('lastName', e.target.value)}
                 onBlur={() => onTouchField('lastName')}
               />
@@ -244,28 +250,28 @@ export function BookingForm({
 
           <motion.div custom={6} variants={fieldVariants}>
             <Input
-              label="Email address"
+              label={t.booking.fields.email}
               type="email"
               required
               autoComplete="email"
               value={form.email}
               error={errors.email}
-              placeholder="john.smith@example.com"
+              placeholder="—"
               onChange={(e) => onUpdateField('email', e.target.value)}
               onBlur={() => onTouchField('email')}
-              hint="Booking confirmation will be sent here"
+              hint={t.booking.fields.emailHint}
             />
           </motion.div>
 
           <motion.div custom={7} variants={fieldVariants}>
             <Input
-              label="Phone number"
+              label={t.booking.fields.phone}
               type="tel"
               required
               autoComplete="tel"
               value={form.phone}
               error={errors.phone}
-              placeholder="+1 555 000 0000"
+              placeholder="—"
               onChange={(e) => onUpdateField('phone', e.target.value)}
               onBlur={() => onTouchField('phone')}
             />
@@ -273,11 +279,11 @@ export function BookingForm({
 
           <motion.div custom={8} variants={fieldVariants}>
             <Input
-              label="Special requests"
+              label={t.booking.fields.specialRequests}
               value={form.specialRequests ?? ''}
-              placeholder="Dietary requirements, occasion, preferences…"
+              placeholder={t.booking.placeholders.specialRequests}
               onChange={(e) => onUpdateField('specialRequests', e.target.value)}
-              hint="We'll do our very best to accommodate your needs."
+              hint={t.booking.fields.specialRequestsHint}
             />
           </motion.div>
         </div>
@@ -292,7 +298,7 @@ export function BookingForm({
           isLoading={isLoading}
           rightIcon={<ChevronRight size={16} />}
         >
-          Continue to Payment
+          {t.booking.continueToPayment}
         </Button>
       </motion.div>
     </motion.form>
