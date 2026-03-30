@@ -2,37 +2,32 @@
 
 import Link from 'next/link';
 import { MapPin, Phone, Mail, Instagram, Facebook, Twitter } from 'lucide-react';
-import { useTranslations } from '@/i18n/context';
+import { useLocale, useTranslations } from '@/i18n/context';
 
 const socials = [
-  { href: '#', label: 'Instagram', Icon: Instagram },
-  { href: '#', label: 'Facebook', Icon: Facebook },
-  { href: '#', label: 'Twitter', Icon: Twitter },
+  { label: 'Instagram', Icon: Instagram },
+  { label: 'Facebook', Icon: Facebook },
+  { label: 'Twitter', Icon: Twitter },
 ];
 
 export function Footer() {
   const t = useTranslations();
+  const locale = useLocale();
 
   const footerLinks = {
     hotel: [
       { href: '/', label: t.nav.home },
+      { href: '/#lumina-experience', label: t.nav.about },
       { href: '/rooms', label: t.nav.rooms },
-      { href: '/booking', label: t.nav.bookNow },
-      { href: '/contact', label: t.contact.pageTitle },
-    ],
-    amenities: [
-      { href: '#', label: t.footer.amenities.spa },
-      { href: '#', label: t.footer.amenities.restaurant },
-      { href: '#', label: t.footer.amenities.pool },
-      { href: '#', label: t.footer.amenities.conference },
-      { href: '#', label: t.footer.amenities.hikes },
+      { href: '/#visual-journey', label: t.nav.gallery },
     ],
     info: [
-      { href: '#', label: t.footer.infoLinks.about },
-      { href: '#', label: t.footer.infoLinks.gallery },
-      { href: '#', label: t.footer.infoLinks.press },
-      { href: '#', label: t.footer.infoLinks.privacy },
-      { href: '#', label: t.footer.infoLinks.terms },
+      { label: t.contact.info.labels.address, value: locale === 'ua' ? 'гора 1, Буковель, Івано-Франківська область, Україна' : t.contact.info.address, type: 'address' as const },
+      { label: t.contact.info.labels.email, value: 'example@gmail.com', href: 'mailto:example@gmail.com', type: 'contact' as const },
+      { label: t.contact.info.labels.phone, value: '+38 099 999 99 99', href: 'tel:+380999999999', type: 'contact' as const },
+      { label: t.footer.infoLinks.privacy, type: 'meta' as const },
+      { label: t.footer.infoLinks.terms, type: 'meta' as const },
+      { label: t.footer.infoLinks.social, type: 'meta' as const },
     ],
   };
 
@@ -62,7 +57,7 @@ export function Footer() {
 
       {/* Main footer */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block mb-4">
@@ -72,25 +67,6 @@ export function Footer() {
             <p className="text-sm leading-relaxed text-stone-400 max-w-xs">
               {t.footer.brandDescription}
             </p>
-            <div className="mt-6 flex flex-col gap-3">
-              <a
-                href="https://maps.google.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-2.5 text-sm hover:text-white transition-colors"
-              >
-                <MapPin size={15} className="shrink-0 mt-0.5 text-gold-500" />
-                <span>1 Готель Drive, Yaremche, Ivano-Frankivsk Oblast, Ukraine 78500</span>
-              </a>
-              <a href="tel:+380441234567" className="flex items-center gap-2.5 text-sm hover:text-white transition-colors">
-                <Phone size={15} className="text-gold-500" />
-                <span>+380 44 123 4567</span>
-              </a>
-              <a href="mailto:hello@lumina-hotel.com" className="flex items-center gap-2.5 text-sm hover:text-white transition-colors">
-                <Mail size={15} className="text-gold-500" />
-                <span>hello@lumina-hotel.com</span>
-              </a>
-            </div>
           </div>
 
           {/* Hotel links */}
@@ -109,35 +85,51 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Amenities */}
-          <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
-              {t.footer.columns.amenities}
-            </h3>
-            <ul className="flex flex-col gap-2.5">
-              {footerLinks.amenities.map(({ href, label }) => (
-                <li key={`${href}-${label}`}>
-                  <a href={href} className="text-sm hover:text-white transition-colors">
-                    {label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           {/* Info */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
               {t.footer.columns.info}
             </h3>
             <ul className="flex flex-col gap-2.5">
-              {footerLinks.info.map(({ href, label }) => (
-                <li key={`${href}-${label}`}>
-                  <a href={href} className="text-sm hover:text-white transition-colors">
-                    {label}
-                  </a>
-                </li>
-              ))}
+              {footerLinks.info
+                .filter((item) => item.type !== 'meta')
+                .map((item) => (
+                  <li key={`${item.label}-${item.type}`}>
+                    {item.type === 'address' && (
+                      <div className="flex items-start gap-2.5 text-sm hover:text-white transition-colors">
+                        <MapPin size={15} className="shrink-0 mt-0.5 text-gold-500" />
+                        <span>
+                          {item.label}: {item.value}
+                        </span>
+                      </div>
+                    )}
+                    {item.type === 'contact' && item.href && (
+                      <a href={item.href} className="flex items-center gap-2.5 text-sm hover:text-white transition-colors">
+                        {item.label === t.contact.info.labels.phone ? (
+                          <Phone size={15} className="text-gold-500" />
+                        ) : (
+                          <Mail size={15} className="text-gold-500" />
+                        )}
+                        <span>
+                          {item.label}: {item.value}
+                        </span>
+                      </a>
+                    )}
+                  </li>
+                ))}
+              <li className="pt-1">
+                <div className="mt-3 flex items-center gap-3">
+                  {socials.map(({ label, Icon }) => (
+                    <span
+                      key={label}
+                      aria-label={label}
+                      className="flex items-center justify-center w-8 h-8 rounded-lg bg-stone-800 text-stone-400 hover:bg-stone-700 hover:text-white transition-colors cursor-default"
+                    >
+                      <Icon size={15} />
+                    </span>
+                  ))}
+                </div>
+              </li>
             </ul>
           </div>
         </div>
@@ -145,20 +137,29 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-stone-600 text-center sm:text-left">
-            © {new Date().getFullYear()} Готель. {t.footer.bottom.allRights} {t.footer.bottom.demoBy}{' '}
-            <span className="text-stone-500">STEPS LAB</span>.
-          </p>
-          <div className="flex items-center gap-3">
-            {socials.map(({ href, label, Icon }) => (
+            © {new Date().getFullYear()} Готель. {t.footer.bottom.allRights}
+            <span className="block sm:inline whitespace-nowrap">
+              {' '}
+              Developed by{' '}
               <a
-                key={label}
-                href={href}
-                aria-label={label}
-                className="flex items-center justify-center w-8 h-8 rounded-lg bg-stone-800 text-stone-400 hover:bg-stone-700 hover:text-white transition-colors"
+                href="https://stepslab.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-stone-500 hover:text-white transition-colors"
               >
-                <Icon size={15} />
+                STEPS LAB
               </a>
-            ))}
+              .
+            </span>
+          </p>
+
+          <div className="flex items-center gap-4 text-xs text-stone-500">
+            <span className="hover:text-white transition-colors cursor-default">
+              {t.footer.infoLinks.privacy}
+            </span>
+            <span className="hover:text-white transition-colors cursor-default">
+              {t.footer.infoLinks.terms}
+            </span>
           </div>
         </div>
       </div>

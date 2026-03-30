@@ -466,9 +466,9 @@ const en = {
     brandDescription:
       'A sanctuary of refined luxury nestled in the ancient Carpathian forests of Ukraine.',
     columns: {
-      hotel: 'Hotel',
+      hotel: 'Navigation',
       amenities: 'Amenities',
-      info: 'Information',
+      info: 'Contacts',
     },
     amenities: {
       spa: 'Spa & Wellness',
@@ -483,6 +483,7 @@ const en = {
       press: 'Press & Media',
       privacy: 'Privacy Policy',
       terms: 'Terms of Service',
+      social: 'Social Media',
     },
     bottom: {
       allRights: 'All rights reserved.',
