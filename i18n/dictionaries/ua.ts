@@ -288,7 +288,7 @@ const ua = {
     },
     testimonials: {
       eyebrow: 'Історії Гостей',
-      title: 'Враження наших гостей',
+      title: 'Враження гостей',
       stayedIn: 'Зупинялися в: {room} · {date}',
       previous: 'Попередній відгук',
       next: 'Наступний відгук',

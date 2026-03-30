@@ -39,7 +39,7 @@ export function Footer() {
   return (
     <footer className="bg-stone-950 text-stone-400" role="contentinfo">
       {/* CTA Banner */}
-      <div className="border-b border-stone-800">
+      <div className="bg-stone-900 border-b border-stone-800">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div>

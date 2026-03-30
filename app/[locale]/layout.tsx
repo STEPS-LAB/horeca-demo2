@@ -43,7 +43,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     <I18nProvider locale={locale as Locale} dictionary={dictionary}>
       {/* Sets document.documentElement.lang client-side */}
       <LocaleLang lang={htmlLang} />
-      <Header locale={locale as Locale} />
+      <Header />
       {children}
       <Footer />
     </I18nProvider>

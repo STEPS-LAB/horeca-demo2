@@ -25,7 +25,6 @@ const linkVariants = {
 };
 
 export function Header() {
-  const locale = useLocale();
   const t = useTranslations();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);

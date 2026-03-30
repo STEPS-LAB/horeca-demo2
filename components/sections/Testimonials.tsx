@@ -41,26 +41,11 @@ export function Testimonials() {
   };
 
   return (
-    <section
-      className="py-20 sm:py-28 bg-stone-900 overflow-hidden"
-      aria-labelledby="testimonials-heading"
-    >
+    <section className="py-20 sm:py-28 bg-stone-50 overflow-hidden" aria-label={tr.sections.testimonials.title}>
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="text-xs font-semibold tracking-[0.2em] uppercase text-gold-400 mb-3 block">
-            {tr.sections.testimonials.eyebrow}
-          </span>
-          <h2 id="testimonials-heading" className="text-3xl sm:text-4xl font-bold text-white">
-            {tr.sections.testimonials.title}
-          </h2>
-        </motion.div>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-stone-900">{tr.sections.testimonials.title}</h2>
+        </div>
 
         {/* Testimonial slider */}
         <div className="relative">
@@ -73,7 +58,7 @@ export function Testimonials() {
               animate="center"
               exit="exit"
               transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              className="bg-stone-800 rounded-2xl p-8 sm:p-10"
+              className="bg-white rounded-2xl p-8 sm:p-10 border border-stone-200 shadow-sm"
             >
               {/* Quote icon */}
               <Quote
@@ -85,12 +70,12 @@ export function Testimonials() {
 
               {/* Text */}
               <blockquote>
-                <p className="text-lg sm:text-xl text-stone-200 leading-relaxed font-light italic text-pretty">
+                <p className="text-lg sm:text-xl text-stone-700 leading-relaxed font-light italic text-pretty">
                   &ldquo;{display.text}&rdquo;
                 </p>
 
                 <footer className="mt-8 flex items-center gap-4">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-stone-600 shrink-0">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-stone-200 shrink-0">
                     <Image
                       src={t.avatar}
                       alt={t.name}
@@ -100,10 +85,10 @@ export function Testimonials() {
                     />
                   </div>
                   <div>
-                    <cite className="not-italic font-semibold text-white text-base">
+                    <cite className="not-italic font-semibold text-stone-900 text-base">
                       {display.name}
                     </cite>
-                    <p className="text-stone-400 text-sm">{display.location}</p>
+                    <p className="text-stone-600 text-sm">{display.location}</p>
                     <p className="text-stone-500 text-xs mt-0.5">
                       {tr.sections.testimonials.stayedIn
                         .replace('{room}', display.roomStayed)
@@ -118,7 +103,7 @@ export function Testimonials() {
                       <Star
                         key={i}
                         size={14}
-                        className={i < t.rating ? 'text-gold-400' : 'text-stone-600'}
+                        className={i < t.rating ? 'text-gold-400' : 'text-stone-300'}
                         fill="currentColor"
                       />
                     ))}
@@ -151,7 +136,7 @@ export function Testimonials() {
                   <motion.div
                     animate={{
                       width: i === index ? 24 : 8,
-                      backgroundColor: i === index ? '#c9a96e' : '#44403c',
+                      backgroundColor: i === index ? '#c9a96e' : '#d6d3d1',
                     }}
                     transition={{ duration: 0.25 }}
                     className="h-2 rounded-full"
@@ -164,14 +149,14 @@ export function Testimonials() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => paginate(-1)}
-                className="flex items-center justify-center w-10 h-10 rounded-xl bg-stone-700 text-stone-300 hover:bg-stone-600 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
+                className="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-stone-200 text-stone-700 hover:bg-stone-100 hover:text-stone-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
                 aria-label={tr.sections.testimonials.previous}
               >
                 <ChevronLeft size={18} />
               </button>
               <button
                 onClick={() => paginate(1)}
-                className="flex items-center justify-center w-10 h-10 rounded-xl bg-stone-700 text-stone-300 hover:bg-stone-600 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
+                className="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-stone-200 text-stone-700 hover:bg-stone-100 hover:text-stone-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
                 aria-label={tr.sections.testimonials.next}
               >
                 <ChevronRight size={18} />
