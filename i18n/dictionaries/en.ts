@@ -8,7 +8,7 @@ const en = {
     bookNow: 'Book Now',
     contact: 'Contact',
     reserve: 'Reserve',
-    phone: '+380 44 123 2222',
+    phone: '+380 44 123 4567',
   },
 
   // ── Common ──────────────────────────────────

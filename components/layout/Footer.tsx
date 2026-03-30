@@ -24,7 +24,7 @@ export function Footer() {
     info: [
       { label: t.contact.info.labels.address, value: locale === 'ua' ? 'гора 1, Буковель, Івано-Франківська область, Україна' : t.contact.info.address, type: 'address' as const },
       { label: t.contact.info.labels.email, value: 'example@gmail.com', href: 'mailto:example@gmail.com', type: 'contact' as const },
-      { label: t.contact.info.labels.phone, value: '+38 099 999 99 99', href: 'tel:+380999999999', type: 'contact' as const },
+      { label: t.contact.info.labels.phone, value: '+380 44 123 4567', href: 'tel:+380441234567', type: 'contact' as const },
       { label: t.footer.infoLinks.privacy, type: 'meta' as const },
       { label: t.footer.infoLinks.terms, type: 'meta' as const },
       { label: t.footer.infoLinks.social, type: 'meta' as const },

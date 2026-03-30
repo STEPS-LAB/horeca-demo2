@@ -201,7 +201,7 @@ export function ContactClient() {
                         placeholder="—"
                         value={form.name}
                         error={touchedErrors.name}
-                        onChange={(e) => updateField('name', e.target.value)}
+                        onChange={(e) => updateField('name', e.target.value.replace(/\d+/g, ''))}
                         onBlur={() => touchField('name')}
                       />
                       <Input
