@@ -75,13 +75,13 @@ export function Tooltip({
             transition={{ duration: 0.15, ease: 'easeOut' }}
             className={cn(
               'absolute z-50 pointer-events-none',
-              'max-w-[240px] min-w-[80px]',
+              'max-w-[320px] min-w-[120px]',
               placementStyles[placement]
             )}
           >
             <div
               className={cn(
-                'bg-stone-800 text-stone-50 text-xs font-medium px-2.5 py-1.5 rounded-lg whitespace-nowrap shadow-lg',
+                'bg-stone-800 text-stone-50 text-xs font-medium px-2.5 py-1.5 rounded-lg whitespace-normal break-words leading-relaxed shadow-lg',
                 className
               )}
             >

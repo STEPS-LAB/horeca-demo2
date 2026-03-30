@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Check, Calendar, Mail, Home, Printer } from 'lucide-react';
+import { Check, Calendar, Users, Home, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { formatCurrency } from '@/utils/pricing';
 import { useLocale, useTranslations } from '@/i18n/context';
@@ -45,6 +45,12 @@ export function BookingConfirmation({
   const locale = useLocale();
   const t = useTranslations();
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const formatDate = (date: string) => {
+    if (!date) return '—';
+    const [year, month, day] = date.split('-');
+    if (!year || !month || !day) return date;
+    return `${day}.${month}.${year}`;
+  };
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -103,10 +109,10 @@ export function BookingConfirmation({
           {
             Icon: Calendar,
             label: t.booking.details.dates,
-            value: `${form.checkIn} → ${form.checkOut}`,
+            value: `${formatDate(form.checkIn)} → ${formatDate(form.checkOut)}`,
           },
           {
-            Icon: Mail,
+            Icon: Users,
             label: t.booking.details.guests,
             value: `${form.guests} ${form.guests === 1 ? t.common.guest : t.common.guests}`,
           },

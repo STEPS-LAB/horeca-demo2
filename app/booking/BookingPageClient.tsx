@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useBooking } from '@/hooks/useBooking';
 import { formatCurrency } from '@/utils/pricing';
-import { useTranslations } from '@/i18n/context';
+import { useLocale, useTranslations } from '@/i18n/context';
 import type { Room, Promotion } from '@/types';
 
 const slideVariants = {
@@ -20,6 +20,8 @@ const slideVariants = {
 
 export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; promotions?: Promotion[] }) {
   const t = useTranslations();
+  const locale = useLocale();
+  const includedLabel = locale === 'ua' ? 'Включено' : 'Included';
   const booking = useBooking(undefined, rooms, promotions);
   const [paymentData, setPaymentData] = useState({
     cardNumber: '',
@@ -151,11 +153,11 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
                       </div>
                       <div className="flex justify-between text-stone-400 text-xs">
                         <span>{t.booking.summary.cleaningFee}</span>
-                        <span>{formatCurrency(booking.pricing.cleaningFee)}</span>
+                        <span>{includedLabel}</span>
                       </div>
                       <div className="flex justify-between text-stone-400 text-xs">
                         <span>{t.booking.summary.taxes}</span>
-                        <span>{formatCurrency(booking.pricing.taxes)}</span>
+                        <span>{includedLabel}</span>
                       </div>
                       <div className="flex justify-between font-bold text-stone-900 pt-3 border-t border-stone-200 mt-1 text-base">
                         <span>{t.booking.summary.total}</span>

@@ -27,7 +27,7 @@ describe('pricing utils', () => {
       expect(result.basePrice).toBe(600);
       expect(result.cleaningFee).toBe(35);
       expect(result.taxes).toBeCloseTo((600 + 35) * 0.12, 1);
-      expect(result.total).toBe(result.basePrice + result.cleaningFee + result.taxes);
+      expect(result.total).toBe(result.basePrice);
     });
 
     it('returns zero totals for 0 nights', () => {

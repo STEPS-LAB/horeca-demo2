@@ -129,6 +129,7 @@ const en = {
     step1: 'Stay Details',
     step2: 'Payment',
     step3: 'Confirmation',
+    selectRoom: 'Choose a room',
     fields: {
       checkIn: 'Check-in',
       checkOut: 'Check-out',

@@ -19,9 +19,10 @@ export function calculateBookingPrice(
 ): BookingCalculation {
   const nights = calculateNights(checkIn, checkOut);
   const basePrice = pricePerNight * nights;
+  // Fees are already included in room rates and should not be charged on top.
   const cleaningFee = nights > 0 ? CLEANING_FEE : 0;
   const taxes = Math.round((basePrice + cleaningFee) * TAX_RATE * 100) / 100;
-  const total = basePrice + cleaningFee + taxes;
+  const total = basePrice;
 
   return {
     nights,

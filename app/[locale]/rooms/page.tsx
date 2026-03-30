@@ -11,7 +11,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   return {
-    title: locale === 'ua' ? 'Номери та Люкси' : 'Rooms & Suites',
+    title: locale === 'ua' ? 'Наші номери' : 'Rooms & Suites',
     description:
       locale === 'ua'
         ? 'Дослідіть усі категорії номерів готелю Готель — від затишних кімнат до Президентського Люксу.'
@@ -44,11 +44,8 @@ export default async function LocaleRoomsPage({
         />
         <div className="absolute inset-0 bg-gradient-to-b from-stone-950/80 via-stone-900/70 to-stone-900" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <span className="text-xs font-semibold tracking-[0.2em] uppercase text-gold-400 block mb-3">
-            Готель
-          </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
-            {isUa ? 'Номери та Люкси' : 'Rooms & Suites'}
+            {isUa ? 'Наші номери' : 'Rooms & Suites'}
           </h1>
           <p className="mt-3 text-stone-400 max-w-lg text-base leading-relaxed">
             {isUa

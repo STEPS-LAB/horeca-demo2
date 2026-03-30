@@ -64,7 +64,7 @@ const ua = {
   },
 
   rooms: {
-    pageTitle: 'Номери та Люкси',
+    pageTitle: 'Наші номери',
     pageSubtitle:
       'Від затишних номерів до розкішних люксів — кожен простір у Готель є шедевром комфорту та дизайну.',
     resultsCount: 'Знайдено {count} номер{plural}',
@@ -124,6 +124,7 @@ const ua = {
     step1: 'Деталі Перебування',
     step2: 'Оплата',
     step3: 'Підтвердження',
+    selectRoom: 'Оберіть номер',
     fields: {
       checkIn: 'Заїзд',
       checkOut: 'Виїзд',

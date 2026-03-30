@@ -24,9 +24,6 @@ export function RoomsPageClient({ rooms, promotions }: { rooms: Room[]; promotio
           aria-hidden="true"
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <span className="text-xs font-semibold tracking-[0.2em] uppercase text-gold-400 block mb-3">
-            Готель
-          </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">{t.rooms.pageTitle}</h1>
           <p className="mt-3 text-stone-400 max-w-lg text-base leading-relaxed">{t.rooms.pageSubtitle}</p>
         </div>

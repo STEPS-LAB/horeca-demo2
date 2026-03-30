@@ -1,13 +1,13 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Users, Home, ChevronRight, Info } from 'lucide-react';
 import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { formatCurrency, calculateBookingPrice, applyBestPromotion } from '@/utils/pricing';
-import { useTranslations } from '@/i18n/context';
+import { useLocale, useTranslations } from '@/i18n/context';
 import type { BookingFormData, ValidationErrors, Room, Promotion } from '@/types';
 
 interface BookingFormProps {
@@ -31,6 +31,33 @@ const fieldVariants = {
   }),
 };
 
+const PHONE_MASK_PLACEHOLDER = '+38 (0__)-___-__-__';
+const PHONE_DIGIT_SLOTS = [7, 8, 11, 12, 13, 15, 16, 18, 19];
+
+function normalizePhoneDigits(raw: string): string {
+  let digits = raw.replace(/\D/g, '');
+  if (digits.startsWith('380')) digits = digits.slice(3);
+  else if (digits.startsWith('80')) digits = digits.slice(2);
+  if (digits.startsWith('0')) digits = digits.slice(1);
+  return digits.slice(0, 9);
+}
+
+function formatUaPhone(digits: string): string {
+  if (!digits) return '';
+  const a = digits.slice(0, 2);
+  const b = digits.slice(2, 5);
+  const c = digits.slice(5, 7);
+  const d = digits.slice(7, 9);
+
+  let out = '+38 (0';
+  out += a;
+  if (digits.length >= 2) out += ')';
+  if (digits.length >= 3) out += `-${b}`;
+  if (digits.length >= 6) out += `-${c}`;
+  if (digits.length >= 8) out += `-${d}`;
+  return out;
+}
+
 export function BookingForm({
   form,
   errors,
@@ -43,7 +70,47 @@ export function BookingForm({
   compact = false,
 }: BookingFormProps) {
   const t = useTranslations();
+  const locale = useLocale();
+  const includedLabel = locale === 'ua' ? 'Включено' : 'Included';
+  const phoneInputRef = useRef<HTMLInputElement>(null);
   const selectedRoom = useMemo(() => rooms.find((r) => r.id === form.roomId) ?? null, [rooms, form.roomId]);
+  const sanitizeName = (value: string) => value.replace(/[^\p{L}\s'’-]/gu, '');
+  const sanitizePhone = (value: string) => formatUaPhone(normalizePhoneDigits(value));
+
+  const handlePhoneKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key !== 'Backspace' && e.key !== 'Delete') return;
+
+    const input = e.currentTarget;
+    const start = input.selectionStart ?? 0;
+    const end = input.selectionEnd ?? 0;
+    if (start !== end) return;
+
+    const digits = normalizePhoneDigits(form.phone);
+    if (!digits.length) return;
+
+    const slotIndex = e.key === 'Backspace'
+      ? [...PHONE_DIGIT_SLOTS].reverse().findIndex((slot) => slot < start)
+      : PHONE_DIGIT_SLOTS.findIndex((slot) => slot >= start);
+
+    const removeAt = e.key === 'Backspace'
+      ? (slotIndex === -1 ? -1 : PHONE_DIGIT_SLOTS.length - 1 - slotIndex)
+      : slotIndex;
+
+    if (removeAt < 0 || removeAt >= digits.length) return;
+
+    e.preventDefault();
+    const nextDigits = `${digits.slice(0, removeAt)}${digits.slice(removeAt + 1)}`;
+    const nextValue = formatUaPhone(nextDigits);
+    onUpdateField('phone', nextValue);
+
+    const caretSlot = PHONE_DIGIT_SLOTS[Math.max(removeAt, 0)] ?? nextValue.length;
+    requestAnimationFrame(() => {
+      const node = phoneInputRef.current;
+      if (!node) return;
+      const pos = Math.min(caretSlot, nextValue.length);
+      node.setSelectionRange(pos, pos);
+    });
+  };
 
   const { discountedPrice, promotion: bestPromotion } = useMemo(
     () => applyBestPromotion(selectedRoom?.pricePerNight ?? 0, promotions, selectedRoom?.id ?? undefined),
@@ -65,14 +132,15 @@ export function BookingForm({
 
   const roomOptions = useMemo(
     () => [
-      { value: '', label: '—' },
+      { value: '', label: t.booking.selectRoom },
       ...rooms.map((r) => {
         const { discountedPrice: dp, promotion: promo } = applyBestPromotion(r.pricePerNight, promotions, r.id);
         const price = promo ? dp : r.pricePerNight;
-        return { value: r.id, label: `${r.name} — ${formatCurrency(price)}${t.common.perNight}` };
+        const roomName = locale === 'ua' ? (r.nameUa ?? r.name) : r.name;
+        return { value: r.id, label: `${roomName} — ${formatCurrency(price)}${t.common.perNight}` };
       }),
     ],
-    [rooms, promotions, t.common.perNight]
+    [rooms, promotions, t.common.perNight, locale]
   );
 
   const pricing = useMemo(() => {
@@ -101,7 +169,7 @@ export function BookingForm({
         <div className="flex flex-col gap-4">
           <motion.div custom={0} variants={fieldVariants}>
             <Select
-              label={t.rooms.pageTitle}
+              label={t.booking.selectRoom}
               required
               options={roomOptions}
               value={form.roomId}
@@ -191,7 +259,7 @@ export function BookingForm({
                   </button>
                 </Tooltip>
               </span>
-              <span>{formatCurrency(pricing.cleaningFee)}</span>
+              <span>{includedLabel}</span>
             </div>
             <div className="flex justify-between text-stone-500 text-xs">
               <span className="flex items-center gap-1">
@@ -202,7 +270,7 @@ export function BookingForm({
                   </button>
                 </Tooltip>
               </span>
-              <span>{formatCurrency(pricing.taxes)}</span>
+              <span>{includedLabel}</span>
             </div>
             <div className="flex justify-between font-bold text-stone-900 pt-2 border-t border-stone-200 mt-1">
               <span>{t.booking.summary.total}</span>
@@ -230,7 +298,7 @@ export function BookingForm({
                 value={form.firstName}
                 error={errors.firstName}
                 placeholder="—"
-                onChange={(e) => onUpdateField('firstName', e.target.value)}
+                onChange={(e) => onUpdateField('firstName', sanitizeName(e.target.value))}
                 onBlur={() => onTouchField('firstName')}
               />
             </motion.div>
@@ -242,7 +310,7 @@ export function BookingForm({
                 value={form.lastName}
                 error={errors.lastName}
                 placeholder="—"
-                onChange={(e) => onUpdateField('lastName', e.target.value)}
+                onChange={(e) => onUpdateField('lastName', sanitizeName(e.target.value))}
                 onBlur={() => onTouchField('lastName')}
               />
             </motion.div>
@@ -265,14 +333,16 @@ export function BookingForm({
 
           <motion.div custom={7} variants={fieldVariants}>
             <Input
+              ref={phoneInputRef}
               label={t.booking.fields.phone}
               type="tel"
               required
               autoComplete="tel"
               value={form.phone}
               error={errors.phone}
-              placeholder="—"
-              onChange={(e) => onUpdateField('phone', e.target.value)}
+              placeholder={PHONE_MASK_PLACEHOLDER}
+              onChange={(e) => onUpdateField('phone', sanitizePhone(e.target.value))}
+              onKeyDown={handlePhoneKeyDown}
               onBlur={() => onTouchField('phone')}
             />
           </motion.div>
