@@ -15,7 +15,7 @@ export async function generateMetadata({
     description:
       locale === 'ua'
         ? 'Дослідіть усі категорії номерів готелю Готель — від затишних кімнат до Президентського Люксу.'
-        : 'Explore all Готель room categories — from cosy Forest Rooms to the Presidential Suite.',
+        : 'Explore all HOTEL room categories — from cosy Forest Rooms to the Presidential Suite.',
   };
 }
 
@@ -50,7 +50,7 @@ export default async function LocaleRoomsPage({
           <p className="mt-3 text-stone-400 max-w-lg text-base leading-relaxed">
             {isUa
               ? 'Кожен простір у Готель був створений нашими дизайнерами як особистий притулок. Оберіть свій.'
-              : 'Every space at Готель has been conceived by our designers to be a private sanctuary. Choose yours.'}
+              : 'Every space at HOTEL has been conceived by our designers to be a private sanctuary. Choose yours.'}
           </p>
         </div>
       </div>

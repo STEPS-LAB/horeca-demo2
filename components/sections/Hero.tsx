@@ -137,7 +137,7 @@ export function Hero() {
         type="button"
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-white/70 hover:text-white transition-colors group"
         onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-        aria-label={t.home.heroScrollAria}
+        aria-label={`${t.home.heroScrollCta} — ${t.home.heroScrollAria}`}
         animate={{ y: [0, 6, 0] }}
         transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
       >

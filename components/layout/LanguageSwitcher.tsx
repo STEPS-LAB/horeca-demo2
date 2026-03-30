@@ -31,7 +31,7 @@ export function LanguageSwitcher({ transparent }: LanguageSwitcherProps) {
           type="button"
           onClick={() => switchLocale(loc)}
           aria-pressed={locale === loc}
-          aria-label={localeFull[loc]}
+          aria-label={`${localeNames[loc]}, ${localeFull[loc]}`}
           disabled={isPending}
           className={cn(
             'min-h-11 min-w-11 px-2 text-xs font-semibold rounded-md tracking-wide transition-colors duration-150 inline-flex items-center justify-center',

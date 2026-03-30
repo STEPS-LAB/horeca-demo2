@@ -45,7 +45,7 @@ async function isAdminAuthenticated(req: NextRequest): Promise<boolean> {
 // ─────────────────────────────────────────────
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|api/).*)',
+    '/((?!_next/static|_next/image|favicon.ico|favicon.svg|apple-touch-icon.png|icon|apple-icon|robots.txt|sitemap.xml|api/).*)',
   ],
 };
 

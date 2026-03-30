@@ -26,7 +26,7 @@ export async function generateMetadata({
   return {
     title: isUa
       ? 'Готель — Там де Розкіш Зустрічає Природу'
-      : 'Готель — Where Luxury Meets Nature',
+      : 'HOTEL — Where Luxury Meets Nature',
   };
 }
 

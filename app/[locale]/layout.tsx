@@ -6,7 +6,7 @@ import { I18nProvider } from '@/i18n/context';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { LOCALES } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
-import { LocaleLang } from '@/components/layout/LocaleLang';
+import { SyncHtmlLang } from '@/app/providers';
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -37,12 +37,10 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   }
 
   const dictionary = await getDictionary(locale as Locale);
-  const htmlLang = locale === 'ua' ? 'uk' : 'en';
 
   return (
     <I18nProvider locale={locale as Locale} dictionary={dictionary}>
-      {/* Sets document.documentElement.lang client-side */}
-      <LocaleLang lang={htmlLang} />
+      <SyncHtmlLang />
       <Header />
       {children}
       <Footer />

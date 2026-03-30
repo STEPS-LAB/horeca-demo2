@@ -13,6 +13,7 @@ const en = {
 
   // ── Common ──────────────────────────────────
   common: {
+    brandName: 'HOTEL',
     perNight: '/ night',
     guests: 'guests',
     guest: 'guest',
@@ -44,9 +45,9 @@ const en = {
   home: {
     heroTitle: 'Where Luxury\nMeets Nature',
     heroSubtitle:
-      'Experience unparalleled comfort in the heart of the Carpathian Mountains. Готель — your sanctuary above the clouds.',
+      'Experience unparalleled comfort in the heart of the Carpathian Mountains. HOTEL — your sanctuary above the clouds.',
     heroLocation: 'Carpathian Mountains, Ukraine',
-    heroImageAlt: 'Готель — Carpathian mountain resort',
+    heroImageAlt: 'HOTEL — Carpathian mountain resort',
     heroPrimaryCta: 'Reserve Your Suite',
     heroSecondaryCta: 'Explore Rooms',
     heroReviews: '{rating} from {count} verified reviews',
@@ -63,14 +64,14 @@ const en = {
     gallerySubtitle: 'Discover the beauty of our mountain retreat.',
     testimonialsTitle: 'What Our Guests Say',
     testimonialsSubtitle:
-      'Real experiences from real guests who made unforgettable memories at Готель.',
+      'Real experiences from real guests who made unforgettable memories at HOTEL.',
   },
 
   // ── Rooms page ───────────────────────────────
   rooms: {
     pageTitle: 'Rooms & Suites',
     pageSubtitle:
-      'From intimate retreats to grand suites, every room at Готель is a masterpiece of comfort and design.',
+      'From intimate retreats to grand suites, every room at HOTEL is a masterpiece of comfort and design.',
     resultsCount: '{count} room{plural} found',
     noResults: 'No rooms match your filters.',
     clearFilters: 'Clear all filters',
@@ -239,10 +240,10 @@ const en = {
   // ── Sections ─────────────────────────────────
   sections: {
     features: {
-      eyebrow: 'The Готель Experience',
+      eyebrow: 'The HOTEL Experience',
       title: "Everything you need, nothing you don't expect",
       subtitle:
-        'Every amenity at Готель has been considered, designed, and perfected to elevate your stay from exceptional to unforgettable.',
+        'Every amenity at HOTEL has been considered, designed, and perfected to elevate your stay from exceptional to unforgettable.',
       items: {
         spa: {
           title: 'Spa & Wellness',
@@ -282,7 +283,7 @@ const en = {
     },
     gallery: {
       eyebrow: 'Visual Journey',
-      title: 'Life at Готель',
+      title: 'Life at HOTEL',
       viewAllRooms: 'View all rooms',
       images: {
         exterior: 'Hotel grounds and main building',
@@ -453,7 +454,7 @@ const en = {
   // ── Footer ────────────────────────────────────
   footer: {
     tagline: 'Your mountain sanctuary awaits.',
-    copyright: '© 2025 Готель. All rights reserved.',
+    copyright: '© 2025 HOTEL. All rights reserved.',
     links: {
       privacy: 'Privacy Policy',
       terms: 'Terms of Service',
@@ -479,7 +480,7 @@ const en = {
       hikes: 'Guided Hikes',
     },
     infoLinks: {
-      about: 'About Готель',
+      about: 'About HOTEL',
       gallery: 'Gallery',
       press: 'Press & Media',
       privacy: 'Privacy Policy',

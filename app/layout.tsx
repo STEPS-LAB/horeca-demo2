@@ -5,7 +5,6 @@ import { cookies } from 'next/headers';
 import { Providers } from '@/app/providers';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { LocaleLang } from '@/components/layout/LocaleLang';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { DEFAULT_LOCALE, LOCALES } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
@@ -19,11 +18,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Готель — Where Luxury Meets Nature',
-    template: '%s | Готель',
+    default: 'HOTEL — Where Luxury Meets Nature',
+    template: '%s | HOTEL',
   },
   description:
-    'Experience unparalleled luxury in the heart of the Carpathian Mountains. Готель offers breathtaking mountain views, world-class amenities, and bespoke hospitality.',
+    'Experience unparalleled luxury in the heart of the Carpathian Mountains. HOTEL offers breathtaking mountain views, world-class amenities, and bespoke hospitality.',
   keywords: [
     'luxury hotel',
     'Carpathian Mountains',
@@ -32,12 +31,21 @@ export const metadata: Metadata = {
     'spa hotel',
     'Ukraine hotel',
   ],
-  authors: [{ name: 'Готель' }],
+  authors: [{ name: 'HOTEL' }],
+  // horeca-demo1-style SVG + .ico for clients that always request /favicon.ico
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48', type: 'image/x-icon' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'Готель',
-    title: 'Готель — Where Luxury Meets Nature',
+    siteName: 'HOTEL',
+    title: 'HOTEL — Where Luxury Meets Nature',
     description:
       'Experience unparalleled luxury in the heart of the Carpathian Mountains.',
     images: [
@@ -45,13 +53,13 @@ export const metadata: Metadata = {
         url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80',
         width: 1200,
         height: 630,
-        alt: 'Готель',
+        alt: 'HOTEL',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Готель — Where Luxury Meets Nature',
+    title: 'HOTEL — Where Luxury Meets Nature',
     description:
       'Experience unparalleled luxury in the heart of the Carpathian Mountains.',
   },
@@ -86,13 +94,11 @@ export default async function RootLayout({
   const rawLocale = cookieStore.get('lumina_locale')?.value as Locale | undefined;
   const locale: Locale = rawLocale && LOCALES.includes(rawLocale) ? rawLocale : DEFAULT_LOCALE;
   const dictionary = await getDictionary(locale);
+  const htmlLang = locale === 'ua' ? 'uk' : 'en';
 
   return (
-    <html suppressHydrationWarning className={inter.variable}>
+    <html lang={htmlLang} suppressHydrationWarning className={inter.variable}>
       <body className="bg-stone-25 text-stone-900 antialiased">
-        {/* documentElement.lang set client-side */}
-        <LocaleLang lang={locale === 'ua' ? 'uk' : 'en'} />
-        {/* Providers is client-side; dictionary is serialized */}
         <Providers locale={locale} dictionary={dictionary}>
           <Header />
           {children}

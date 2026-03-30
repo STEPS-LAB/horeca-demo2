@@ -8,7 +8,7 @@ import { Menu, X, Phone } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
-import { useTranslations } from '@/i18n/context';
+import { useLocale, useTranslations } from '@/i18n/context';
 
 const menuVariants = {
   hidden: { opacity: 0, height: 0 },
@@ -26,6 +26,7 @@ const linkVariants = {
 
 export function Header() {
   const t = useTranslations();
+  const locale = useLocale();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -76,15 +77,16 @@ export function Header() {
           <Link
             href="/"
             className="flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 rounded-md"
-            aria-label="Готель — Home"
+            aria-label={`${t.common.brandName} — ${t.nav.home}`}
           >
             <span
               className={cn(
                 'text-xl font-bold tracking-[0.15em] transition-colors duration-300 lg:hidden',
+                locale === 'en' && 'uppercase',
                 headerTransparent ? 'text-white' : 'text-stone-900'
               )}
             >
-              Готель
+              {t.common.brandName}
             </span>
             <span
               className={cn(

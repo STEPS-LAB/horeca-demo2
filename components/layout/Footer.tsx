@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { MapPin, Phone, Mail, Instagram, Facebook, Twitter } from 'lucide-react';
 import { useLocale, useTranslations } from '@/i18n/context';
+import { cn } from '@/utils/cn';
 
 const socials = [
   { label: 'Instagram', Icon: Instagram },
@@ -61,8 +62,17 @@ export function Footer() {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block mb-4">
-              <span className="text-xl font-bold tracking-[0.15em] text-white lg:hidden">Готель</span>
-              <span className="hidden lg:inline-block text-xl font-bold tracking-[0.15em] uppercase text-white">HOTEL</span>
+              <span
+                className={cn(
+                  'text-xl font-bold tracking-[0.15em] text-white lg:hidden',
+                  locale === 'en' && 'uppercase'
+                )}
+              >
+                {t.common.brandName}
+              </span>
+              <span className="hidden lg:inline-block text-xl font-bold tracking-[0.15em] uppercase text-white">
+                {locale === 'en' ? t.common.brandName : 'HOTEL'}
+              </span>
             </Link>
             <p className="text-sm leading-relaxed text-stone-400 max-w-xs">
               {t.footer.brandDescription}
@@ -71,7 +81,7 @@ export function Footer() {
 
           {/* Hotel links */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-4">
               {t.footer.columns.hotel}
             </h3>
             <ul className="flex flex-col gap-2.5">
@@ -87,7 +97,7 @@ export function Footer() {
 
           {/* Info */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-4">
               {t.footer.columns.info}
             </h3>
             <ul className="flex flex-col gap-2.5">
@@ -135,8 +145,8 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-stone-600 text-center sm:text-left">
-            © {new Date().getFullYear()} Готель. {t.footer.bottom.allRights}
+          <p className="text-xs text-stone-400 text-center sm:text-left">
+            © {new Date().getFullYear()} {t.common.brandName}. {t.footer.bottom.allRights}
             <span className="block sm:inline whitespace-nowrap">
               {' '}
               Developed by{' '}
@@ -144,7 +154,7 @@ export function Footer() {
                 href="https://stepslab.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-stone-500 hover:text-white transition-colors"
+                className="text-stone-300 underline underline-offset-2 decoration-stone-500 hover:text-white hover:decoration-white transition-colors"
               >
                 STEPS LAB
               </a>
@@ -152,7 +162,7 @@ export function Footer() {
             </span>
           </p>
 
-          <div className="flex items-center gap-4 text-xs text-stone-500">
+          <div className="flex items-center gap-4 text-xs text-stone-400">
             <span className="hover:text-white transition-colors cursor-default">
               {t.footer.infoLinks.privacy}
             </span>

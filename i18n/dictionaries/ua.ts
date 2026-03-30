@@ -11,6 +11,7 @@ const ua = {
   },
 
   common: {
+    brandName: 'Готель',
     perNight: '/ ніч',
     guests: 'гостей',
     guest: 'гість',

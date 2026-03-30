@@ -15,7 +15,7 @@ export async function generateMetadata({
     description:
       locale === 'ua'
         ? 'Забронюйте ідеальний номер у готелі Готель — швидко, надійно та зручно.'
-        : 'Reserve your perfect room at Готель — fast, secure, and effortless.',
+        : 'Reserve your perfect room at HOTEL — fast, secure, and effortless.',
   };
 }
 

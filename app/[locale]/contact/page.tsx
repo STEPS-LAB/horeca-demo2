@@ -13,7 +13,7 @@ export async function generateMetadata({
     description:
       locale === 'ua'
         ? "Зв'яжіться з командою готелю Готель — запити, бронювання, заходи та особливі побажання."
-        : 'Get in touch with the Готель team — enquiries, reservations, events, and special requests.',
+        : 'Get in touch with the HOTEL team — enquiries, reservations, events, and special requests.',
   };
 }
 

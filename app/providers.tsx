@@ -1,8 +1,18 @@
 'use client';
 
+import { useEffect } from 'react';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries/en';
-import { I18nProvider } from '@/i18n/context';
+import { I18nProvider, useLocale } from '@/i18n/context';
+
+/** Keeps <html lang> in sync when the user switches language without a full reload. */
+export function SyncHtmlLang() {
+  const locale = useLocale();
+  useEffect(() => {
+    document.documentElement.lang = locale === 'ua' ? 'uk' : 'en';
+  }, [locale]);
+  return null;
+}
 
 export function Providers({
   locale,
@@ -15,6 +25,7 @@ export function Providers({
 }) {
   return (
     <I18nProvider locale={locale} dictionary={dictionary}>
+      <SyncHtmlLang />
       {children}
     </I18nProvider>
   );

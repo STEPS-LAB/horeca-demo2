@@ -35,7 +35,7 @@ const renderHeader = () => render(<Header />);
 describe('Header', () => {
   it('renders the hotel logo', () => {
     renderHeader();
-    expect(screen.getByText('Готель')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /HOTEL.*Home/i })).toBeInTheDocument();
   });
 
   it('renders navigation links', () => {

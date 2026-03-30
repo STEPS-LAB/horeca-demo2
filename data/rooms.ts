@@ -338,7 +338,7 @@ export const testimonials: Testimonial[] = [
     locationUa: 'Київ, Україна',
     avatar: `${BASE}/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=100&q=80`,
     rating: 5,
-    text: 'I have stayed at some of the finest hotels in the world, and Готель genuinely rivals them all. The Garden Villa is a masterpiece of design — the hot tub under the stars on a cold winter night is an experience I will never forget.',
+    text: 'I have stayed at some of the finest hotels in the world, and HOTEL genuinely rivals them all. The Garden Villa is a masterpiece of design — the hot tub under the stars on a cold winter night is an experience I will never forget.',
     textUa:
       'Я зупинялась у найкращих готелях світу, і Готель справді не поступається жодному. Вілла — шедевр дизайну, а джакузі під зорями холодної зимової ночі — досвід, який я ніколи не забуду.',
     date: 'December 2025',
@@ -354,7 +354,7 @@ export const testimonials: Testimonial[] = [
     locationUa: 'Івано-Франківськ, Україна',
     avatar: `${BASE}/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=100&q=80`,
     rating: 5,
-    text: 'We celebrated our anniversary in the Junior Forest Suite and it was absolutely perfect. The wraparound balcony, the forest sounds, the beautifully curated amenities — Готель is in a league of its own.',
+    text: 'We celebrated our anniversary in the Junior Forest Suite and it was absolutely perfect. The wraparound balcony, the forest sounds, the beautifully curated amenities — HOTEL is in a league of its own.',
     textUa:
       'Ми святкували річницю у Молодшому люксі “Ліс”, і це було ідеально. Кутовий балкон, звуки лісу, продумані до дрібниць зручності — Готель поза конкуренцією.',
     date: 'February 2026',
