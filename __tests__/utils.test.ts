@@ -38,10 +38,10 @@ describe('pricing utils', () => {
   });
 
   describe('formatCurrency', () => {
-    it('formats USD correctly', () => {
-      expect(formatCurrency(1500)).toBe('$1,500');
-      expect(formatCurrency(99)).toBe('$99');
-      expect(formatCurrency(0)).toBe('$0');
+    it('formats UAH correctly', () => {
+      expect(formatCurrency(1500)).toBe('67 500 грн');
+      expect(formatCurrency(99)).toBe('4 455 грн');
+      expect(formatCurrency(0)).toBe('0 грн');
     });
   });
 

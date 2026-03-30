@@ -1,36 +1,39 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 import { useTranslations } from '@/i18n/context';
 
 const galleryImages = [
   {
-    src: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80',
+    src: 'https://images.unsplash.com/photo-1757716583277-5ea5f0e73427?auto=format&fit=crop&w=1400&q=80',
     altKey: 'exterior',
-    className: 'col-span-2 row-span-2',
+    className: 'col-span-2 row-span-2 col-start-1 row-start-1',
   },
   {
-    src: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=600&q=80',
+    src: 'https://images.unsplash.com/photo-1747948543522-2dea7b685415?auto=format&fit=crop&w=900&q=80',
     altKey: 'spaRoom',
-    className: 'col-span-1 row-span-1',
+    className: 'col-span-1 row-span-1 col-start-3 row-start-1',
   },
   {
-    src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
+    src: 'https://images.unsplash.com/photo-1652695872063-50a5370d90a5?auto=format&fit=crop&w=900&q=80',
     altKey: 'dining',
-    className: 'col-span-1 row-span-1',
+    className: 'col-span-1 row-span-1 col-start-3 row-start-2',
   },
   {
-    src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=600&q=80',
+    src: 'https://images.unsplash.com/photo-1768931676483-f22777872c23?auto=format&fit=crop&w=900&q=80',
     altKey: 'pool',
-    className: 'col-span-1 row-span-2',
+    className: 'col-span-1 row-span-1 col-start-1 row-start-3',
   },
   {
-    src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=600&q=80',
+    src: 'https://images.unsplash.com/photo-1747948543214-5365a4700d55?auto=format&fit=crop&w=900&q=80',
     altKey: 'spaArea',
-    className: 'col-span-1 row-span-1',
+    className: 'col-span-1 row-span-1 col-start-2 row-start-3',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1637614042056-bf414069c311?auto=format&fit=crop&w=900&q=80',
+    altKey: 'lobby',
+    className: 'col-span-1 row-span-1 col-start-3 row-start-3',
   },
 ];
 
@@ -49,36 +52,23 @@ export function Gallery() {
   return (
     <section
       id="visual-journey"
-      className="py-20 sm:py-28 bg-stone-50"
+      className="py-20 sm:py-28 bg-white"
       aria-labelledby="gallery-heading"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10"
+          className="flex items-end justify-between gap-4 mb-10"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
           <div>
-            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-gold-600 mb-2 block">
-              {t.sections.gallery.eyebrow}
-            </span>
             <h2 id="gallery-heading" className="text-3xl sm:text-4xl font-bold text-stone-900">
               {t.sections.gallery.title}
             </h2>
           </div>
-          <Link
-            href="/rooms"
-            className="flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors group"
-          >
-            <span>{t.sections.gallery.viewAllRooms}</span>
-            <ArrowRight
-              size={15}
-              className="transition-transform duration-200 group-hover:translate-x-1"
-            />
-          </Link>
         </motion.div>
 
         {/* Mosaic grid */}

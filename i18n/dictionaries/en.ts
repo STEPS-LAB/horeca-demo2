@@ -284,11 +284,12 @@ const en = {
       title: 'Life at Готель',
       viewAllRooms: 'View all rooms',
       images: {
-        exterior: 'Hotel exterior at dusk',
-        spaRoom: 'Spa treatment room',
-        dining: 'Fine dining restaurant',
-        pool: 'Infinity pool at sunset',
-        spaArea: 'Spa and wellness area',
+        exterior: 'Hotel grounds and main building',
+        spaRoom: 'Paths and green areas on the property',
+        dining: 'Terrace and outdoor lounge',
+        pool: 'Pool area on the property',
+        spaArea: 'Outdoor relaxation area',
+        lobby: 'Central hotel area',
       },
     },
     testimonials: {

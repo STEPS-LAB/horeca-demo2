@@ -5,7 +5,26 @@ import { rooms } from '@/data/rooms';
 
 // Mock i18n context
 jest.mock('@/i18n/context', () => ({
-  useTranslations: () => ({}),
+  useTranslations: () => ({
+    common: {
+      perNight: '/ night',
+      quickView: 'Quick view',
+      viewImage: 'View image {index}',
+      viewDetails: 'Details',
+      bookNow: 'Book Now',
+      upTo: 'Up to {count}',
+      more: '{count} more',
+    },
+    rooms: {
+      types: new Proxy(
+        {},
+        {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          get: (_target, _prop) => 'Room',
+        }
+      ),
+    },
+  }),
   useLocale: () => 'en',
   I18nProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
@@ -58,7 +77,7 @@ describe('RoomCard', () => {
         onBook={mockOnBook}
       />
     );
-    expect(screen.getByText('$149')).toBeInTheDocument();
+    expect(screen.getByText('6\u00a0705 грн')).toBeInTheDocument();
   });
 
   it('renders the room rating', () => {

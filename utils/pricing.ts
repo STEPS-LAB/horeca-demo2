@@ -34,12 +34,11 @@ export function calculateBookingPrice(
 
 export function formatCurrency(amount: number): string {
   const amountUah = Math.round(amount * USD_TO_UAH);
-  return new Intl.NumberFormat('uk-UA', {
-    style: 'currency',
-    currency: 'UAH',
+  const number = new Intl.NumberFormat('uk-UA', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amountUah);
+  return `${number} грн`;
 }
 
 export function getTodayString(): string {
