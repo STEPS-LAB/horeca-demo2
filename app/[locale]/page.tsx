@@ -25,8 +25,8 @@ export async function generateMetadata({
   const isUa = locale === 'ua';
   return {
     title: isUa
-      ? 'Готель LUMINA — Там де Розкіш Зустрічає Природу'
-      : 'LUMINA Hotel — Where Luxury Meets Nature',
+      ? 'Готель — Там де Розкіш Зустрічає Природу'
+      : 'Готель — Where Luxury Meets Nature',
   };
 }
 

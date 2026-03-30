@@ -14,8 +14,8 @@ export async function generateMetadata({
     title: locale === 'ua' ? 'Забронювати Номер' : 'Book a Room',
     description:
       locale === 'ua'
-        ? 'Забронюйте ідеальний номер у готелі LUMINA — швидко, надійно та зручно.'
-        : 'Reserve your perfect room at LUMINA Hotel — fast, secure, and effortless.',
+        ? 'Забронюйте ідеальний номер у готелі Готель — швидко, надійно та зручно.'
+        : 'Reserve your perfect room at Готель — fast, secure, and effortless.',
   };
 }
 
@@ -36,7 +36,7 @@ export default async function LocaleBookingPage({
           className="absolute inset-0 opacity-20"
           style={{
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1920&q=60)',
+              'url(https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=60)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}

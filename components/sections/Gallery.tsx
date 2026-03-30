@@ -8,27 +8,27 @@ import { useTranslations } from '@/i18n/context';
 
 const galleryImages = [
   {
-    src: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=80',
+    src: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80',
     altKey: 'exterior',
     className: 'col-span-2 row-span-2',
   },
   {
-    src: 'https://images.unsplash.com/photo-1620626011761-996317702519?auto=format&fit=crop&w=600&q=80',
+    src: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=600&q=80',
     altKey: 'spaRoom',
     className: 'col-span-1 row-span-1',
   },
   {
-    src: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=600&q=80',
+    src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
     altKey: 'dining',
     className: 'col-span-1 row-span-1',
   },
   {
-    src: 'https://images.unsplash.com/photo-1561501900-3701fa6a0864?auto=format&fit=crop&w=600&q=80',
+    src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=600&q=80',
     altKey: 'pool',
     className: 'col-span-1 row-span-2',
   },
   {
-    src: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80',
+    src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=600&q=80',
     altKey: 'spaArea',
     className: 'col-span-1 row-span-1',
   },

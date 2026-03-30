@@ -12,7 +12,7 @@ export function ContactPageShell() {
           className="absolute inset-0 opacity-20"
           style={{
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1920&q=60)',
+              'url(https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1920&q=60)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}

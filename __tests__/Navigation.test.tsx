@@ -34,7 +34,7 @@ const renderHeader = () => render(<Header locale="en" />);
 describe('Header', () => {
   it('renders the hotel logo', () => {
     renderHeader();
-    expect(screen.getByText('LUMINA')).toBeInTheDocument();
+    expect(screen.getByText('Готель')).toBeInTheDocument();
   });
 
   it('renders navigation links', () => {

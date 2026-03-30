@@ -13,7 +13,7 @@ export function BookingPageShell({ rooms, promotions }: { rooms: Room[]; promoti
           className="absolute inset-0 opacity-20"
           style={{
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1920&q=60)',
+              'url(https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=60)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}

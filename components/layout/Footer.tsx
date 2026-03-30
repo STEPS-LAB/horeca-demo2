@@ -66,8 +66,8 @@ export function Footer() {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block mb-4">
-              <span className="text-xl font-bold tracking-[0.15em] text-white">LUMINA</span>
-              <span className="ml-2 text-xs tracking-[0.25em] uppercase font-light text-stone-500">Hotel</span>
+              <span className="text-xl font-bold tracking-[0.15em] text-white lg:hidden">Готель</span>
+              <span className="hidden lg:inline-block text-xl font-bold tracking-[0.15em] uppercase text-white">HOTEL</span>
             </Link>
             <p className="text-sm leading-relaxed text-stone-400 max-w-xs">
               {t.footer.brandDescription}
@@ -80,7 +80,7 @@ export function Footer() {
                 className="flex items-start gap-2.5 text-sm hover:text-white transition-colors"
               >
                 <MapPin size={15} className="shrink-0 mt-0.5 text-gold-500" />
-                <span>1 Lumina Drive, Yaremche, Ivano-Frankivsk Oblast, Ukraine 78500</span>
+                <span>1 Готель Drive, Yaremche, Ivano-Frankivsk Oblast, Ukraine 78500</span>
               </a>
               <a href="tel:+380441234567" className="flex items-center gap-2.5 text-sm hover:text-white transition-colors">
                 <Phone size={15} className="text-gold-500" />
@@ -145,7 +145,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-stone-600 text-center sm:text-left">
-            © {new Date().getFullYear()} LUMINA Hotel. {t.footer.bottom.allRights} {t.footer.bottom.demoBy}{' '}
+            © {new Date().getFullYear()} Готель. {t.footer.bottom.allRights} {t.footer.bottom.demoBy}{' '}
             <span className="text-stone-500">STEPS LAB</span>.
           </p>
           <div className="flex items-center gap-3">

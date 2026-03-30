@@ -12,8 +12,8 @@ export async function generateMetadata({
     title: locale === 'ua' ? 'Контакти' : 'Contact Us',
     description:
       locale === 'ua'
-        ? "Зв'яжіться з командою готелю LUMINA — запити, бронювання, заходи та особливі побажання."
-        : 'Get in touch with the LUMINA Hotel team — enquiries, reservations, events, and special requests.',
+        ? "Зв'яжіться з командою готелю Готель — запити, бронювання, заходи та особливі побажання."
+        : 'Get in touch with the Готель team — enquiries, reservations, events, and special requests.',
   };
 }
 
@@ -33,7 +33,7 @@ export default async function LocaleContactPage({
           className="absolute inset-0 opacity-20"
           style={{
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1920&q=60)',
+              'url(https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1920&q=60)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}

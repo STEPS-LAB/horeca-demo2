@@ -6,7 +6,7 @@ import { getDictionary } from '@/i18n/get-dictionary';
 import type { Locale } from '@/i18n/config';
 
 export const metadata: Metadata = {
-  title: { default: 'Admin CRM | LUMINA Hotel', template: '%s | LUMINA Admin' },
+  title: { default: 'Admin CRM | Готель', template: '%s | Готель Admin' },
 };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

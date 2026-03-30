@@ -77,23 +77,23 @@ export function Header() {
           <Link
             href="/"
             className="flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 rounded-md"
-            aria-label="LUMINA Hotel — Home"
+            aria-label="Готель — Home"
           >
             <span
               className={cn(
-                'text-xl font-bold tracking-[0.15em] transition-colors duration-300',
+                'text-xl font-bold tracking-[0.15em] transition-colors duration-300 lg:hidden',
                 headerTransparent ? 'text-white' : 'text-stone-900'
               )}
             >
-              LUMINA
+              Готель
             </span>
             <span
               className={cn(
-                'hidden sm:block text-xs tracking-[0.25em] uppercase font-light transition-colors duration-300 border-l pl-2',
-                headerTransparent ? 'text-white/70 border-white/30' : 'text-stone-400 border-stone-200'
+                'hidden lg:block text-xl tracking-[0.15em] uppercase font-bold transition-colors duration-300',
+                headerTransparent ? 'text-white' : 'text-stone-900'
               )}
             >
-              Hotel
+              HOTEL
             </span>
           </Link>
 

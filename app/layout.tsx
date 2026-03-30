@@ -19,11 +19,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'LUMINA Hotel — Where Luxury Meets Nature',
-    template: '%s | LUMINA Hotel',
+    default: 'Готель — Where Luxury Meets Nature',
+    template: '%s | Готель',
   },
   description:
-    'Experience unparalleled luxury in the heart of the Carpathian Mountains. LUMINA Hotel offers breathtaking mountain views, world-class amenities, and bespoke hospitality.',
+    'Experience unparalleled luxury in the heart of the Carpathian Mountains. Готель offers breathtaking mountain views, world-class amenities, and bespoke hospitality.',
   keywords: [
     'luxury hotel',
     'Carpathian Mountains',
@@ -32,26 +32,26 @@ export const metadata: Metadata = {
     'spa hotel',
     'Ukraine hotel',
   ],
-  authors: [{ name: 'LUMINA Hotel' }],
+  authors: [{ name: 'Готель' }],
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'LUMINA Hotel',
-    title: 'LUMINA Hotel — Where Luxury Meets Nature',
+    siteName: 'Готель',
+    title: 'Готель — Where Luxury Meets Nature',
     description:
       'Experience unparalleled luxury in the heart of the Carpathian Mountains.',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+        url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80',
         width: 1200,
         height: 630,
-        alt: 'LUMINA Hotel',
+        alt: 'Готель',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'LUMINA Hotel — Where Luxury Meets Nature',
+    title: 'Готель — Where Luxury Meets Nature',
     description:
       'Experience unparalleled luxury in the heart of the Carpathian Mountains.',
   },

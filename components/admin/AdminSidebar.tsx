@@ -47,7 +47,7 @@ export function AdminSidebar() {
             <Hotel size={16} className="text-stone-950" />
           </div>
           <div>
-            <p className="text-sm font-bold text-white tracking-wide">LUMINA</p>
+            <p className="text-sm font-bold text-white tracking-wide">Готель</p>
             <p className="text-[10px] text-stone-500 uppercase tracking-widest">Admin CRM</p>
           </div>
         </div>

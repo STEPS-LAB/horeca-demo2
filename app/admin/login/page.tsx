@@ -4,7 +4,7 @@ import { AdminLoginForm } from '@/components/admin/AdminLoginForm';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { DEFAULT_LOCALE, LOCALES, type Locale } from '@/i18n/config';
 
-export const metadata: Metadata = { title: 'Admin Login | LUMINA Hotel' };
+export const metadata: Metadata = { title: 'Admin Login | Готель' };
 
 export default async function AdminLoginPage() {
   const cookieStore = await cookies();
@@ -17,7 +17,7 @@ export default async function AdminLoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <span className="text-2xl font-bold tracking-[0.15em] text-white">LUMINA</span>
+          <span className="text-2xl font-bold tracking-[0.15em] text-white">Готель</span>
           <p className="text-stone-400 text-sm mt-1 tracking-widest uppercase">{t.portal}</p>
         </div>
 

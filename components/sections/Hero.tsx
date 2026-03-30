@@ -42,7 +42,7 @@ export function Hero() {
       {/* Parallax background */}
       <motion.div className="absolute inset-0" style={{ y: imageY }}>
         <Image
-          src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1920&q=85"
+          src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1920&q=85"
           alt={t.home.heroImageAlt}
           fill
           priority
