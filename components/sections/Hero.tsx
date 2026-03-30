@@ -53,13 +53,16 @@ export function Hero() {
       </motion.div>
 
       {/* Gradient overlay */}
-      <div className="absolute inset-0 gradient-hero" aria-hidden="true" />
+      <motion.div
+        className="absolute inset-0 gradient-hero"
+        style={{ opacity: overlayOpacity }}
+        aria-hidden="true"
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-stone-950/60 via-transparent to-transparent" aria-hidden="true" />
 
       {/* Content */}
       <motion.div
         className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full"
-        style={{ opacity: overlayOpacity }}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
