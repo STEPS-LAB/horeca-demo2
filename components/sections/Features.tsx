@@ -1,6 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useAnimationControls, useInView } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 import {
   Waves,
   UtensilsCrossed,
@@ -54,14 +55,23 @@ const containerVariants = {
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] } },
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } },
 };
 
 export function Features() {
   const t = useTranslations();
+  const controls = useAnimationControls();
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const inView = useInView(sectionRef, { once: true, margin: '-60px' });
+
+  useEffect(() => {
+    if (inView) controls.start('visible');
+  }, [inView, controls]);
+
   return (
     <section
+      ref={sectionRef}
       id="lumina-experience"
       className="py-20 sm:py-28 bg-white"
       aria-labelledby="features-heading"
@@ -70,9 +80,9 @@ export function Features() {
         {/* Header */}
         <motion.div
           className="max-w-2xl mx-auto text-center mb-14"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
+          initial="hidden"
+          animate={controls}
+          variants={cardVariants}
           transition={{ duration: 0.6 }}
         >
           <span className="text-xs font-semibold tracking-[0.2em] uppercase text-gold-600 mb-3 block">
@@ -94,16 +104,13 @@ export function Features() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
+          animate={controls}
         >
           {features.map(({ Icon, key }) => (
             <motion.div
               key={key}
               variants={cardVariants}
-              className="group relative p-6 rounded-2xl bg-stone-50 border border-stone-100 hover:border-gold-300/60 hover:bg-stone-25 hover:shadow-card transition-all duration-250"
-              whileHover={{ y: -3 }}
-              transition={{ duration: 0.2 }}
+              className="group relative p-6 rounded-2xl bg-stone-50 border border-stone-100 hover:border-gold-300/60 hover:bg-stone-25 hover:shadow-card transition-colors duration-250"
             >
               <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-white border border-stone-200 shadow-sm mb-4 transition-colors duration-250 group-hover:border-gold-300/50 group-hover:bg-gold-300/10">
                 <Icon
