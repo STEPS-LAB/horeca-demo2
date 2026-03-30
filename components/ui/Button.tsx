@@ -1,6 +1,7 @@
 'use client';
 
 import { forwardRef } from 'react';
+import Link from 'next/link';
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/utils/cn';
 
@@ -8,6 +9,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'gold';
 type ButtonSize = 'sm' | 'md' | 'lg' | 'xl';
 
 interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
+  href?: string;
   variant?: ButtonVariant;
   size?: ButtonSize;
   isLoading?: boolean;
@@ -27,7 +29,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   outline:
     'border border-stone-300 bg-transparent text-stone-700 hover:border-stone-500 hover:bg-stone-50',
   gold:
-    'gradient-gold text-white shadow-button hover:opacity-90',
+    'gradient-gold text-stone-950 shadow-button hover:opacity-90 focus-visible:ring-stone-900/70',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -40,6 +42,7 @@ const sizeStyles: Record<ButtonSize, string> = {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
+      href,
       variant = 'primary',
       size = 'md',
       isLoading = false,
@@ -55,37 +58,48 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const isDisabled = disabled || isLoading;
 
+    const cls = cn(
+      'inline-flex items-center justify-center font-medium rounded-lg',
+      href && !isDisabled ? 'transition-[color,background-color,border-color,opacity,transform] duration-150 ease-out' : 'transition-colors duration-150',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2',
+      'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
+      variantStyles[variant],
+      sizeStyles[size],
+      fullWidth && 'w-full',
+      className
+    );
+
+    const inner =
+      isLoading ? (
+        <>
+          <LoadingSpinner size={size} />
+          <span className="opacity-70">Please wait…</span>
+        </>
+      ) : (
+        <>
+          {leftIcon && <span className="shrink-0">{leftIcon}</span>}
+          {children && <span>{children}</span>}
+          {rightIcon && <span className="shrink-0">{rightIcon}</span>}
+        </>
+      );
+
+    if (href && !isDisabled) {
+      return (
+        <Link href={href} className={cn(cls, 'hover:scale-[1.02] active:scale-[0.98]')}>
+          {inner}
+        </Link>
+      );
+    }
+
+    const motionInteractive = {
+      whileHover: isDisabled ? undefined : { scale: 1.02 },
+      whileTap: isDisabled ? undefined : { scale: 0.98 },
+      transition: { duration: 0.15, ease: 'easeOut' as const },
+    };
+
     return (
-      <motion.button
-        ref={ref}
-        whileHover={isDisabled ? undefined : { scale: 1.02 }}
-        whileTap={isDisabled ? undefined : { scale: 0.98 }}
-        transition={{ duration: 0.15, ease: 'easeOut' }}
-        className={cn(
-          'inline-flex items-center justify-center font-medium rounded-lg',
-          'transition-colors duration-150',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2',
-          'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
-          variantStyles[variant],
-          sizeStyles[size],
-          fullWidth && 'w-full',
-          className
-        )}
-        disabled={isDisabled}
-        {...props}
-      >
-        {isLoading ? (
-          <>
-            <LoadingSpinner size={size} />
-            <span className="opacity-70">Please wait…</span>
-          </>
-        ) : (
-          <>
-            {leftIcon && <span className="shrink-0">{leftIcon}</span>}
-            {children && <span>{children}</span>}
-            {rightIcon && <span className="shrink-0">{rightIcon}</span>}
-          </>
-        )}
+      <motion.button ref={ref} className={cls} disabled={isDisabled} {...motionInteractive} {...props}>
+        {inner}
       </motion.button>
     );
   }

@@ -117,6 +117,7 @@ export function Features() {
                   size={20}
                   className="text-stone-500 transition-colors duration-250 group-hover:text-gold-600"
                   strokeWidth={1.5}
+                  aria-hidden
                 />
               </div>
               <h3 className="text-sm font-semibold text-stone-800 mb-1.5">

@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronDown, Star } from 'lucide-react';
@@ -37,7 +36,7 @@ export function Hero() {
     <section
       ref={containerRef}
       className="relative h-screen min-h-[600px] max-h-[960px] flex items-center overflow-hidden"
-      aria-label={t.home.heroTitle.replace('\n', ' ')}
+      aria-labelledby="hero-heading"
     >
       {/* Parallax background */}
       <motion.div className="absolute inset-0" style={{ y: imageY }}>
@@ -78,6 +77,7 @@ export function Hero() {
 
           {/* Headline */}
           <motion.h1
+            id="hero-heading"
             variants={itemVariants}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight text-balance"
           >
@@ -89,39 +89,37 @@ export function Hero() {
           {/* Subheadline */}
           <motion.p
             variants={itemVariants}
-            className="mt-5 text-base sm:text-lg text-white/75 max-w-xl leading-relaxed text-pretty"
+            className="mt-5 text-base sm:text-lg text-white/90 max-w-xl leading-relaxed text-pretty"
           >
             {t.home.heroSubtitle}
           </motion.p>
 
           {/* CTAs */}
           <motion.div variants={itemVariants} className="mt-8 flex flex-col sm:flex-row gap-3">
-            <Link href="/booking">
-              <Button
-                variant="gold"
-                size="lg"
-                className="w-full sm:w-auto shadow-[0_8px_30px_rgb(201,169,110,0.35)]"
-              >
-                {t.home.heroPrimaryCta}
-              </Button>
-            </Link>
-            <Link href="/rooms">
-              <Button
-                variant="ghost"
-                size="lg"
-                className="w-full sm:w-auto border border-white/25 text-white hover:bg-white/10"
-              >
-                {t.home.heroSecondaryCta}
-              </Button>
-            </Link>
+            <Button
+              href="/booking"
+              variant="gold"
+              size="lg"
+              className="w-full sm:w-auto shadow-[0_8px_30px_rgb(201,169,110,0.35)]"
+            >
+              {t.home.heroPrimaryCta}
+            </Button>
+            <Button
+              href="/rooms"
+              variant="ghost"
+              size="lg"
+              className="w-full sm:w-auto border border-white/25 bg-black/35 text-white hover:bg-white/15"
+            >
+              {t.home.heroSecondaryCta}
+            </Button>
           </motion.div>
 
           {/* Social proof */}
           <motion.div
             variants={itemVariants}
-            className="mt-10 flex items-center gap-4 text-white/60 text-sm"
+            className="mt-10 flex items-center gap-4 text-white/80 text-sm"
           >
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1" aria-hidden="true">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} size={12} fill="currentColor" className="text-gold-300" />
               ))}
@@ -136,7 +134,8 @@ export function Hero() {
 
       {/* Scroll indicator */}
       <motion.button
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-white/50 hover:text-white/80 transition-colors group"
+        type="button"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-white/70 hover:text-white transition-colors group"
         onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
         aria-label={t.home.heroScrollAria}
         animate={{ y: [0, 6, 0] }}

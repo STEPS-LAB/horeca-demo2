@@ -24,12 +24,13 @@ jest.mock('next/link', () => ({
 jest.mock('@/i18n/context', () => ({
   useTranslations: () => enDict,
   useLocale: () => 'en',
+  useSetLocale: () => jest.fn(),
   I18nProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 import { Header } from '@/components/layout/Header';
 
-const renderHeader = () => render(<Header locale="en" />);
+const renderHeader = () => render(<Header />);
 
 describe('Header', () => {
   it('renders the hotel logo', () => {
@@ -40,8 +41,8 @@ describe('Header', () => {
   it('renders navigation links', () => {
     renderHeader();
     const hrefs = screen.getAllByRole('link').map((l) => l.getAttribute('href'));
-    expect(hrefs).toContain('/en');
-    expect(hrefs).toContain('/en/rooms');
+    expect(hrefs).toContain('/');
+    expect(hrefs).toContain('/rooms');
   });
 
   it('has a Reserve link', () => {

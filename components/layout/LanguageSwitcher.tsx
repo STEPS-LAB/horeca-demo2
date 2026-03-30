@@ -2,7 +2,7 @@
 
 import { useTransition } from 'react';
 import { useLocale, useSetLocale } from '@/i18n/context';
-import { LOCALES, localeNames } from '@/i18n/config';
+import { LOCALES, localeFull, localeNames } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
 import { cn } from '@/utils/cn';
 
@@ -28,11 +28,13 @@ export function LanguageSwitcher({ transparent }: LanguageSwitcherProps) {
       {LOCALES.map((loc) => (
         <button
           key={loc}
+          type="button"
           onClick={() => switchLocale(loc)}
           aria-pressed={locale === loc}
+          aria-label={localeFull[loc]}
           disabled={isPending}
           className={cn(
-            'px-2 py-1 text-xs font-semibold rounded-md tracking-wide transition-colors duration-150',
+            'min-h-11 min-w-11 px-2 text-xs font-semibold rounded-md tracking-wide transition-colors duration-150 inline-flex items-center justify-center',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500',
             isPending && 'opacity-70 cursor-not-allowed',
             locale === loc

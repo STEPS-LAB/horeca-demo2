@@ -47,7 +47,7 @@ export function Footer() {
             </div>
             <Link
               href="/booking"
-              className="shrink-0 inline-flex items-center justify-center h-12 px-7 rounded-xl gradient-gold text-white font-semibold text-sm shadow-button hover:opacity-90 transition-opacity duration-150"
+              className="shrink-0 inline-flex items-center justify-center h-12 px-7 rounded-xl gradient-gold text-stone-950 font-semibold text-sm shadow-button hover:opacity-90 transition-opacity duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900"
             >
               {t.footer.cta.button}
             </Link>
@@ -118,14 +118,13 @@ export function Footer() {
                   </li>
                 ))}
               <li className="pt-1">
-                <div className="mt-3 flex items-center gap-3">
+                <div className="mt-3 flex items-center gap-3" aria-hidden="true">
                   {socials.map(({ label, Icon }) => (
                     <span
                       key={label}
-                      aria-label={label}
-                      className="flex items-center justify-center w-8 h-8 rounded-lg bg-stone-800 text-stone-400 hover:bg-stone-700 hover:text-white transition-colors cursor-default"
+                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-stone-800 text-stone-400"
                     >
-                      <Icon size={15} />
+                      <Icon size={15} aria-hidden />
                     </span>
                   ))}
                 </div>

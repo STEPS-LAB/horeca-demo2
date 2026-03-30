@@ -8,7 +8,7 @@ import { Menu, X, Phone } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
-import { useLocale, useTranslations } from '@/i18n/context';
+import { useTranslations } from '@/i18n/context';
 
 const menuVariants = {
   hidden: { opacity: 0, height: 0 },
@@ -132,23 +132,23 @@ export function Header() {
               <Phone size={14} />
               <span className="hidden xl:block">{t.nav.phone}</span>
             </a>
-            <Link href="/booking">
-              <Button
-                variant={headerTransparent ? 'ghost' : 'primary'}
-                size="sm"
-                className={headerTransparent ? 'border border-white/30 text-white hover:bg-white/10' : ''}
-              >
-                {t.nav.reserve}
-              </Button>
-            </Link>
+            <Button
+              href="/booking"
+              variant={headerTransparent ? 'ghost' : 'primary'}
+              size="sm"
+              className={headerTransparent ? 'border border-white/30 text-white hover:bg-white/10' : ''}
+            >
+              {t.nav.reserve}
+            </Button>
           </div>
 
           {/* Mobile: language + menu toggle */}
           <div className="lg:hidden flex items-center gap-2">
             <LanguageSwitcher transparent={headerTransparent} />
             <button
+              type="button"
               className={cn(
-                'flex items-center justify-center w-10 h-10 rounded-lg transition-colors duration-150',
+                'flex items-center justify-center min-h-11 min-w-11 rounded-lg transition-colors duration-150',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500',
                 headerTransparent
                   ? 'text-white hover:bg-white/10'
