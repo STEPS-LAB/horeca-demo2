@@ -53,7 +53,7 @@ const ua = {
     heroCheckOut: 'Виїзд',
     heroGuests: 'Гості',
     heroSearch: 'Перевірити наявність',
-    featuredTitle: 'Вибрані Номери',
+    featuredTitle: 'Найкращі номери',
     featuredSubtitle:
       'Кожен простір створено для вимогливого мандрівника, який цінує автентичність та вишуканість.',
     galleryTitle: 'Галерея',

@@ -20,7 +20,6 @@ interface RoomCardProps {
 
 export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomCardProps) {
   const [imgIndex, setImgIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
   const locale = useLocale();
   const t = useTranslations();
   const displayName = locale === 'ua' && room.nameUa ? room.nameUa : room.name;
@@ -37,8 +36,6 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
       className="group bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-card hover:shadow-[0_8px_30px_rgb(0,0,0,0.1)] transition-shadow duration-300"
       whileHover={{ y: -4 }}
       transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
       aria-label={`${displayName} — ${formatCurrency(room.pricePerNight)} ${t.common.perNight}`}
     >
       {/* Image gallery */}
@@ -57,7 +54,12 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
 
         {/* Type badge */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-          <Badge variant="gold">{t.rooms.types[room.type]}</Badge>
+          <Badge
+            variant="gold"
+            className="text-white bg-white/15 backdrop-blur-md border border-white/25 shadow-sm"
+          >
+            {t.rooms.types[room.type]}
+          </Badge>
           {bestPromotion && (
             <span className="self-start text-[10px] font-bold bg-red-500 text-white px-2 py-0.5 rounded-full tracking-wide uppercase">
               {bestPromotion.type === 'PERCENTAGE'
@@ -95,20 +97,15 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
         )}
 
         {/* Quick view overlay */}
-        <motion.div
-          className="absolute inset-0 flex items-center justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
+        <div className="absolute inset-0 flex items-center justify-center invisible group-hover:visible pointer-events-none">
           <button
             onClick={() => onViewDetails(room)}
-            className="flex items-center gap-2 glass text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-white/20 transition-colors"
+            className="pointer-events-auto flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 shadow-sm hover:bg-white/20 transition-colors"
           >
             <Eye size={15} />
             {t.common.quickView}
           </button>
-        </motion.div>
+        </div>
       </div>
 
       {/* Content */}

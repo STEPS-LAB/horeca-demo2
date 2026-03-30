@@ -24,7 +24,7 @@ export const rooms: Room[] = [
     viewUa: 'Вид на ліс',
     images: [
       `${BASE}/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80`,
-      `${BASE}/photo-1560185127-6a4c4ca7c9f8?auto=format&fit=crop&w=1200&q=80`,
+      `${BASE}/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80`,
       `${BASE}/photo-1571624436279-b272aff752b5?auto=format&fit=crop&w=1200&q=80`,
     ],
     amenities: ['Free Wi-Fi', 'Air Conditioning', 'Minibar', 'Room Service', 'Safe', 'Hair Dryer'],

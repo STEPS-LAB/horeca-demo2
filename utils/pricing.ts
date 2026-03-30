@@ -2,6 +2,7 @@ import type { BookingCalculation, Promotion } from '@/types';
 
 const TAX_RATE = 0.12;
 const CLEANING_FEE = 35;
+const USD_TO_UAH = 45;
 
 export function calculateNights(checkIn: string, checkOut: string): number {
   if (!checkIn || !checkOut) return 0;
@@ -32,12 +33,13 @@ export function calculateBookingPrice(
 }
 
 export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('en-US', {
+  const amountUah = Math.round(amount * USD_TO_UAH);
+  return new Intl.NumberFormat('uk-UA', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'UAH',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(amount);
+  }).format(amountUah);
 }
 
 export function getTodayString(): string {

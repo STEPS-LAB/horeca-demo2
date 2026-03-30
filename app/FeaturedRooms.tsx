@@ -41,9 +41,6 @@ export function FeaturedRooms({ rooms, promotions = [] }: { rooms: Room[]; promo
           transition={{ duration: 0.6 }}
         >
           <div>
-            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-gold-600 mb-2 block">
-              {t.nav.rooms}
-            </span>
             <h2
               id="featured-rooms-heading"
               className="text-3xl sm:text-4xl font-bold text-stone-900"

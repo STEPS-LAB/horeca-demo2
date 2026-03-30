@@ -94,7 +94,7 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
             animate="visible"
             exit="exit"
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-            className="relative z-10 w-full max-w-4xl bg-white rounded-t-3xl md:rounded-3xl shadow-modal max-h-[92dvh] overflow-y-auto"
+            className="relative z-10 w-full max-w-4xl bg-white rounded-t-3xl md:rounded-3xl shadow-modal max-h-[92dvh] overflow-y-auto modal-scroll"
           >
             {/* Close button */}
             <button

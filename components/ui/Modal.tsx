@@ -116,7 +116,7 @@ export function Modal({
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
             className={cn(
               'relative z-10 w-full bg-white rounded-t-2xl sm:rounded-2xl shadow-modal',
-              'max-h-[90dvh] overflow-y-auto',
+              'max-h-[90dvh] overflow-y-auto modal-scroll',
               'focus:outline-none',
               sizeStyles[size],
               className
