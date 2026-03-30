@@ -48,6 +48,7 @@ export function Gallery() {
   const t = useTranslations();
   return (
     <section
+      id="visual-journey"
       className="py-20 sm:py-28 bg-stone-50"
       aria-labelledby="gallery-heading"
     >

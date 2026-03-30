@@ -2,7 +2,9 @@ const en = {
   // ── Navigation ──────────────────────────────
   nav: {
     home: 'Home',
-    rooms: 'Rooms & Suites',
+    about: 'About Us',
+    rooms: 'Rooms',
+    gallery: 'Gallery',
     bookNow: 'Book Now',
     contact: 'Contact',
     reserve: 'Reserve',

@@ -1,7 +1,9 @@
 const ua = {
   nav: {
     home: 'Головна',
-    rooms: 'Номери та Люкси',
+    about: 'Про нас',
+    rooms: 'Номери',
+    gallery: 'Галерея',
     bookNow: 'Забронювати',
     contact: 'Контакти',
     reserve: 'Бронювати',

@@ -34,8 +34,9 @@ export function Header() {
 
   const navLinks = [
     { href: `/`, label: t.nav.home },
+    { href: `/#lumina-experience`, label: t.nav.about },
     { href: `/rooms`, label: t.nav.rooms },
-    { href: `/booking`, label: t.nav.bookNow },
+    { href: `/#visual-journey`, label: t.nav.gallery },
     { href: `/contact`, label: t.nav.contact },
   ];
 

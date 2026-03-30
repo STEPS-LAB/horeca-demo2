@@ -62,6 +62,7 @@ export function Features() {
   const t = useTranslations();
   return (
     <section
+      id="lumina-experience"
       className="py-20 sm:py-28 bg-white"
       aria-labelledby="features-heading"
     >
