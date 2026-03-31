@@ -10,20 +10,6 @@ import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 import { useLocale, useTranslations } from '@/i18n/context';
 
-const menuVariants = {
-  hidden: { opacity: 0, height: 0 },
-  visible: { opacity: 1, height: 'auto' },
-};
-
-const linkVariants = {
-  hidden: { opacity: 0, x: -12 },
-  visible: (i: number) => ({
-    opacity: 1,
-    x: 0,
-    transition: { delay: i * 0.07, duration: 0.2 },
-  }),
-};
-
 export function Header() {
   const t = useTranslations();
   const locale = useLocale();
@@ -44,6 +30,20 @@ export function Header() {
     setScrolled(window.scrollY > 48);
   }, []);
 
+  const handleNavClick = useCallback((href: string) => {
+    // Если это якорная ссылка или главная страница на текущей странице
+    if ((href.startsWith('/#') || href === '/') && (pathname === '/' || pathname === '')) {
+      if (href === '/') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const element = document.querySelector(href.replace('/', ''));
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
+  }, [pathname]);
+
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -56,6 +56,28 @@ export function Header() {
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!menuOpen) return;
+      
+      const target = event.target as HTMLElement;
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuButton = document.querySelector('[aria-controls="mobile-menu"]');
+      
+      if (mobileMenu && !mobileMenu.contains(target) && !menuButton?.contains(target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, [menuOpen]);
 
   const headerTransparent = isHome && !scrolled && !menuOpen;
@@ -194,18 +216,31 @@ export function Header() {
         {menuOpen && (
           <motion.div
             id="mobile-menu"
-            variants={menuVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             className="lg:hidden bg-white border-t border-stone-100 overflow-hidden"
           >
             <nav className="flex flex-col px-4 py-4 gap-1" aria-label="Mobile navigation">
               {navLinks.map(({ href, label }, i) => (
-                <motion.div key={href} custom={i} variants={linkVariants} initial="hidden" animate="visible">
+                <motion.div
+                  key={href}
+                  custom={i}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.07, duration: 0.2 }}
+                >
                   <Link
                     href={href}
+                    onClick={(e) => {
+                      // Если это якорная ссылка или главная страница на текущей странице
+                      if ((href.startsWith('/#') || href === '/') && (pathname === '/' || pathname === '')) {
+                        e.preventDefault();
+                        handleNavClick(href);
+                      }
+                      setMenuOpen(false);
+                    }}
                     className={cn(
                       'flex items-center px-4 py-3 rounded-xl text-base font-medium transition-colors duration-150',
                       pathname === href
@@ -220,6 +255,7 @@ export function Header() {
               <div className="pt-3 border-t border-stone-100 mt-2">
                 <a
                   href="tel:+380441234567"
+                  onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-2 px-4 py-3 text-stone-500 hover:text-stone-900 transition-colors"
                 >
                   <Phone size={16} />

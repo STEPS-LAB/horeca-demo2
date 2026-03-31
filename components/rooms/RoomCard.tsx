@@ -31,6 +31,16 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
   const displayAmenities = locale === 'ua' && room.amenitiesUa ? room.amenitiesUa : room.amenities;
   const { discountedPrice, promotion: bestPromotion } = applyBestPromotion(room.pricePerNight, promotions, room.id);
 
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const scrollLeft = container.scrollLeft;
+    const width = container.clientWidth;
+    const newIndex = Math.round(scrollLeft / width);
+    if (newIndex !== imgIndex && newIndex >= 0 && newIndex < room.images.length) {
+      setImgIndex(newIndex);
+    }
+  };
+
   return (
     <motion.article
       className="group bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-card hover:shadow-[0_8px_30px_rgb(0,0,0,0.1)] transition-shadow duration-300"
@@ -39,15 +49,29 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
       aria-label={`${displayName} — ${formatCurrency(room.pricePerNight)} ${t.common.perNight}`}
     >
       {/* Image gallery */}
-      <div className="relative h-52 sm:h-60 overflow-hidden">
-        <Image
-          src={room.images[imgIndex]}
-          alt={`${displayName} — image ${imgIndex + 1}`}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
-          loading="lazy"
-        />
+      <div
+        className="relative h-52 sm:h-60 overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-hide"
+        onScroll={handleScroll}
+      >
+        <div className="flex h-full" style={{ width: `${room.images.length * 100}%` }}>
+          {room.images.map((img, i) => (
+            <div
+              key={img}
+              className="relative h-full snap-center shrink-0"
+              style={{ width: `${100 / room.images.length}%` }}
+            >
+              <Image
+                src={img}
+                alt={`${displayName} — image ${i + 1}`}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+                loading="lazy"
+                draggable={false}
+              />
+            </div>
+          ))}
+        </div>
 
         {/* Gradient */}
         <div className="absolute inset-0 gradient-dark opacity-60 group-hover:opacity-70 transition-opacity" />
@@ -84,6 +108,11 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
                 key={i}
                 onClick={(e) => {
                   e.stopPropagation();
+                  const container = e.currentTarget.closest('.overflow-x-auto');
+                  if (container) {
+                    const width = container.clientWidth;
+                    container.scrollTo({ left: i * width, behavior: 'smooth' });
+                  }
                   setImgIndex(i);
                 }}
                 aria-label={t.common.viewImage.replace('{index}', String(i + 1))}
@@ -97,7 +126,7 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
         )}
 
         {/* Quick view overlay */}
-        <div className="absolute inset-0 flex items-center justify-center invisible group-hover:visible pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center invisible group-hover:visible pointer-events-none lg:flex">
           <button
             onClick={() => onViewDetails(room)}
             className="pointer-events-auto flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 shadow-sm hover:bg-white/20 transition-colors"

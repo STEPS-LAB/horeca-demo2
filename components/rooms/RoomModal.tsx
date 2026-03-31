@@ -48,6 +48,7 @@ const imageSlideVariants = {
 export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
   const [imgIndex, setImgIndex] = useState(0);
   const [imgDir, setImgDir] = useState(1);
+  const [swipeX, setSwipeX] = useState(0);
   const locale = useLocale();
   const t = useTranslations();
 
@@ -55,6 +56,24 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
     if (!room) return;
     setImgDir(dir);
     setImgIndex((prev) => (prev + dir + room.images.length) % room.images.length);
+  };
+
+  const handleSwipeStart = () => {
+    setSwipeX(0);
+  };
+
+  const handleSwipeMove = (_: any, info: any) => {
+    setSwipeX(info.offset.x);
+  };
+
+  const handleSwipeEnd = (_: any, info: any) => {
+    const threshold = 50;
+    if (info.offset.x > threshold) {
+      navigateImage(-1);
+    } else if (info.offset.x < -threshold) {
+      navigateImage(1);
+    }
+    setSwipeX(0);
   };
 
   // Reset image index when room changes
@@ -113,10 +132,17 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
                   custom={imgDir}
                   variants={imageSlideVariants}
                   initial="enter"
-                  animate="center"
+                  animate={{ ...imageSlideVariants.center, x: swipeX }}
                   exit="exit"
                   transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
                   className="absolute inset-0"
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.2}
+                  onDragStart={handleSwipeStart}
+                  onDrag={handleSwipeMove}
+                  onDragEnd={handleSwipeEnd}
+                  style={{ cursor: room.images.length > 1 ? 'grab' : 'default' }}
                 >
                   <Image
                     src={room.images[imgIndex]}
@@ -125,6 +151,7 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 896px"
                     priority
+                    draggable={false}
                   />
                 </motion.div>
               </AnimatePresence>

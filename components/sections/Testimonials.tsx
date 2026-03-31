@@ -25,10 +25,25 @@ export function Testimonials() {
   const locale = useLocale();
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [swipeX, setSwipeX] = useState(0);
 
   const paginate = (dir: number) => {
     setDirection(dir);
     setIndex((prev) => (prev + dir + testimonials.length) % testimonials.length);
+  };
+
+  const handleSwipeEnd = (_: any, info: any) => {
+    const threshold = 50;
+    if (info.offset.x > threshold) {
+      paginate(-1);
+    } else if (info.offset.x < -threshold) {
+      paginate(1);
+    }
+    setSwipeX(0);
+  };
+
+  const handleSwipeMove = (_: any, info: any) => {
+    setSwipeX(info.offset.x);
   };
 
   const t = testimonials[index];
@@ -59,6 +74,14 @@ export function Testimonials() {
               exit="exit"
               transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
               className="bg-white rounded-2xl p-8 sm:p-10 border border-stone-200 shadow-sm"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.15}
+              onDrag={handleSwipeMove}
+              onDragEnd={handleSwipeEnd}
+              style={{
+                cursor: 'grab',
+              }}
             >
               {/* Quote icon */}
               <Quote
