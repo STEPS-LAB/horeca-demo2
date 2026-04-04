@@ -25,7 +25,8 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 
 const inputBaseStyles = cn(
   /* text-base below sm avoids iOS Safari zoom on focus (<16px triggers zoom) */
-  'w-full rounded-lg border bg-white px-3 py-2.5 text-base sm:text-sm text-stone-900',
+  /* min-w-0: grid/flex children can shrink so date inputs don’t overlap in Safari */
+  'box-border w-full min-w-0 max-w-full rounded-lg border bg-white px-3 py-2.5 text-base sm:text-sm text-stone-900',
   'placeholder:text-stone-400',
   'transition-colors duration-150',
   'focus:outline-none focus:ring-2 focus:ring-gold-500/40 focus:border-gold-500',
@@ -33,36 +34,104 @@ const inputBaseStyles = cn(
 );
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, hint, leftIcon, rightIcon, className, id, ...props }, ref) => {
+  ({ label, error, hint, leftIcon, rightIcon, className, id, type, ...props }, ref) => {
     const generatedId = useId();
     const inputId = id ?? generatedId;
+    const describedBy = error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined;
+
+    /* iOS Safari: in-flow type=date ignores max-width; absolute + overflow-hidden shell matches select width */
+    if (type === 'date') {
+      return (
+        <div className="flex w-full min-w-0 max-w-full flex-col gap-1.5">
+          {label && (
+            <label htmlFor={inputId} className="text-sm font-medium text-stone-700">
+              {label}
+              {props.required && <span className="ml-1 text-gold-600">*</span>}
+            </label>
+          )}
+          <div
+            className={cn(
+              'relative isolate w-full min-w-0 max-w-full overflow-hidden rounded-lg border bg-white',
+              'min-h-[2.75rem] touch-manipulation',
+              'transition-colors duration-150',
+              'focus-within:border-gold-500 focus-within:ring-2 focus-within:ring-gold-500/40',
+              error
+                ? 'border-red-400 focus-within:border-red-500 focus-within:ring-red-500/40'
+                : 'border-stone-200',
+              props.disabled && 'pointer-events-none opacity-50'
+            )}
+          >
+            {leftIcon && (
+              <span className="pointer-events-none absolute left-3 top-1/2 z-[2] -translate-y-1/2 text-stone-400">
+                {leftIcon}
+              </span>
+            )}
+            {rightIcon && (
+              <span className="pointer-events-none absolute right-3 top-1/2 z-[2] -translate-y-1/2 text-stone-400">
+                {rightIcon}
+              </span>
+            )}
+            <input
+              ref={ref}
+              id={inputId}
+              type="date"
+              className={cn(
+                'input-date-ios-fix absolute inset-0 z-[1] box-border w-full min-w-0 max-w-full border-0 bg-transparent py-2.5 text-base sm:text-sm text-stone-900',
+                'focus:outline-none',
+                leftIcon ? 'pl-9' : 'pl-3',
+                rightIcon ? 'pr-9' : 'pr-3',
+                className
+              )}
+              aria-invalid={!!error}
+              aria-describedby={describedBy}
+              {...props}
+            />
+          </div>
+          {error && (
+            <p id={`${inputId}-error`} className="text-xs text-red-500 flex items-center gap-1">
+              <svg className="shrink-0" width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+                <path d="M6 1a5 5 0 100 10A5 5 0 006 1zm-.5 2.5a.5.5 0 011 0v3a.5.5 0 01-1 0v-3zm.5 5.5a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+              </svg>
+              {error}
+            </p>
+          )}
+          {hint && !error && (
+            <p id={`${inputId}-hint`} className="text-xs text-stone-400">
+              {hint}
+            </p>
+          )}
+        </div>
+      );
+    }
 
     return (
-      <div className="flex flex-col gap-1.5">
+      <div className="flex w-full min-w-0 max-w-full flex-col gap-1.5">
         {label && (
           <label htmlFor={inputId} className="text-sm font-medium text-stone-700">
             {label}
             {props.required && <span className="ml-1 text-gold-600">*</span>}
           </label>
         )}
-        <div className="relative">
+        <div className="relative w-full min-w-0 max-w-full overflow-x-clip">
           {leftIcon && (
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none">
+            <span className="absolute left-3 top-1/2 z-[1] -translate-y-1/2 text-stone-400 pointer-events-none">
               {leftIcon}
             </span>
           )}
           <input
             ref={ref}
             id={inputId}
+            type={type}
             className={cn(
               inputBaseStyles,
               error ? 'border-red-400 focus:border-red-500 focus:ring-red-500/40' : 'border-stone-200',
               leftIcon && 'pl-9',
               rightIcon && 'pr-9',
+              (type === 'datetime-local' || type === 'time' || type === 'month') && 'block',
               className
             )}
             aria-invalid={!!error}
-            aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
+            aria-describedby={describedBy}
             {...props}
           />
           {rightIcon && (
@@ -96,7 +165,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const textareaId = id ?? generatedId;
 
     return (
-      <div className="flex flex-col gap-1.5">
+      <div className="flex w-full min-w-0 max-w-full flex-col gap-1.5">
         {label && (
           <label htmlFor={textareaId} className="text-sm font-medium text-stone-700">
             {label}
@@ -140,7 +209,7 @@ function Select({ label, error, options, className, id, ...props }: SelectProps)
   const selectId = id ?? generatedId;
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex w-full min-w-0 max-w-full flex-col gap-1.5">
       {label && (
         <label htmlFor={selectId} className="text-sm font-medium text-stone-700">
           {label}

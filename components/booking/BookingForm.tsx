@@ -2,7 +2,7 @@
 
 import { useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Users, Home, ChevronRight, Info } from 'lucide-react';
+import { Users, Home, ChevronRight, Info } from 'lucide-react';
 import { Input, Select } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Tooltip } from '@/components/ui/Tooltip';
@@ -30,6 +30,9 @@ const fieldVariants = {
     transition: { delay: i * 0.05, duration: 0.3 },
   }),
 };
+
+/** Stops WebKit date inputs from sizing the row by min-content; matches full-width selects. */
+const fieldWrapCls = 'w-full min-w-0 max-w-full self-stretch';
 
 const PHONE_MASK_PLACEHOLDER = '+38 (0__)-___-__-__';
 const PHONE_DIGIT_SLOTS = [7, 8, 11, 12, 13, 15, 16, 18, 19];
@@ -155,7 +158,7 @@ export function BookingForm({
       onSubmit={(e) => { e.preventDefault(); onSubmit(); }}
       noValidate
       aria-label={t.booking.reserveRoom}
-      className="flex flex-col gap-5"
+      className="flex min-w-0 w-full max-w-full flex-col gap-5"
     >
       {/* Section: Booking details */}
       <div>
@@ -166,8 +169,8 @@ export function BookingForm({
           </h3>
         )}
 
-        <div className="flex flex-col gap-4">
-          <motion.div custom={0} variants={fieldVariants}>
+        <div className="flex min-w-0 flex-col gap-4">
+          <motion.div custom={0} variants={fieldVariants} className={fieldWrapCls}>
             <Select
               label={t.booking.selectRoom}
               required
@@ -178,8 +181,8 @@ export function BookingForm({
             />
           </motion.div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <motion.div custom={1} variants={fieldVariants}>
+          <div className="flex w-full min-w-0 max-w-full flex-col gap-4">
+            <motion.div custom={1} variants={fieldVariants} className={fieldWrapCls}>
               <Input
                 label={t.booking.fields.checkIn}
                 type="date"
@@ -189,10 +192,9 @@ export function BookingForm({
                 min={new Date().toISOString().split('T')[0]}
                 onChange={(e) => onUpdateField('checkIn', e.target.value)}
                 onBlur={() => onTouchField('checkIn')}
-                leftIcon={<Calendar size={14} />}
               />
             </motion.div>
-            <motion.div custom={2} variants={fieldVariants}>
+            <motion.div custom={2} variants={fieldVariants} className={fieldWrapCls}>
               <Input
                 label={t.booking.fields.checkOut}
                 type="date"
@@ -202,12 +204,11 @@ export function BookingForm({
                 min={form.checkIn || new Date().toISOString().split('T')[0]}
                 onChange={(e) => onUpdateField('checkOut', e.target.value)}
                 onBlur={() => onTouchField('checkOut')}
-                leftIcon={<Calendar size={14} />}
               />
             </motion.div>
           </div>
 
-          <motion.div custom={3} variants={fieldVariants}>
+          <motion.div custom={3} variants={fieldVariants} className={fieldWrapCls}>
             <Select
               label={t.booking.fields.guests}
               required
@@ -288,9 +289,9 @@ export function BookingForm({
             {t.booking.guestInfoTitle}
           </h3>
         )}
-        <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-3">
-            <motion.div custom={4} variants={fieldVariants}>
+        <div className="flex min-w-0 flex-col gap-4">
+          <div className="grid min-w-0 w-full max-w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3 [&>*]:min-w-0 [&>*]:w-full [&>*]:max-w-full">
+            <motion.div custom={4} variants={fieldVariants} className={fieldWrapCls}>
               <Input
                 label={t.booking.fields.firstName}
                 required
@@ -302,7 +303,7 @@ export function BookingForm({
                 onBlur={() => onTouchField('firstName')}
               />
             </motion.div>
-            <motion.div custom={5} variants={fieldVariants}>
+            <motion.div custom={5} variants={fieldVariants} className={fieldWrapCls}>
               <Input
                 label={t.booking.fields.lastName}
                 required
@@ -316,7 +317,7 @@ export function BookingForm({
             </motion.div>
           </div>
 
-          <motion.div custom={6} variants={fieldVariants}>
+          <motion.div custom={6} variants={fieldVariants} className={fieldWrapCls}>
             <Input
               label={t.booking.fields.email}
               type="email"
@@ -331,7 +332,7 @@ export function BookingForm({
             />
           </motion.div>
 
-          <motion.div custom={7} variants={fieldVariants}>
+          <motion.div custom={7} variants={fieldVariants} className={fieldWrapCls}>
             <Input
               ref={phoneInputRef}
               label={t.booking.fields.phone}
@@ -347,7 +348,7 @@ export function BookingForm({
             />
           </motion.div>
 
-          <motion.div custom={8} variants={fieldVariants}>
+          <motion.div custom={8} variants={fieldVariants} className={fieldWrapCls}>
             <Input
               label={t.booking.fields.specialRequests}
               value={form.specialRequests ?? ''}

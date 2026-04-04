@@ -55,7 +55,7 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
 
   return (
     <section className="py-12 sm:py-16 bg-stone-50 min-h-screen">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto min-w-0 max-w-2xl px-4 sm:px-6 lg:px-8">
         {/* Step indicator */}
         {booking.step !== 'confirmation' && (
           <div className="flex items-center justify-center mb-10">
@@ -94,7 +94,7 @@ export function BookingPageClient({ rooms, promotions = [] }: { rooms: Room[]; p
         )}
 
         {/* Card */}
-        <div className="bg-white rounded-2xl border border-stone-100 shadow-card overflow-hidden">
+        <div className="min-w-0 overflow-x-clip rounded-2xl border border-stone-100 bg-white shadow-card">
           <AnimatePresence mode="wait" custom={stepDir}>
             {booking.step === 'form' && (
               <motion.div
