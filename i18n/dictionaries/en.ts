@@ -173,7 +173,7 @@ const en = {
       specialRequests: 'Your special requests',
     },
     printReceipt: 'Print Receipt',
-    done: 'Done',
+    backToHome: 'Back to home',
     reserveRoom: 'Reserve Your Room',
     securePayment: 'Secure Payment',
     cardDetails: 'Card Details',

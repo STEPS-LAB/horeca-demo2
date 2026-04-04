@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Check, Calendar, Users, Home, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -44,6 +45,7 @@ export function BookingConfirmation({
 }: BookingConfirmationProps) {
   const locale = useLocale();
   const t = useTranslations();
+  const router = useRouter();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const formatDate = (date: string) => {
     if (!date) return '—';
@@ -154,8 +156,16 @@ export function BookingConfirmation({
         >
           {t.booking.printReceipt}
         </Button>
-        <Button variant="primary" size="md" className="sm:flex-1" onClick={onClose}>
-          {t.booking.done}
+        <Button
+          variant="primary"
+          size="md"
+          className="sm:flex-1"
+          onClick={() => {
+            onClose();
+            router.push('/');
+          }}
+        >
+          {t.booking.backToHome}
         </Button>
       </motion.div>
     </motion.div>

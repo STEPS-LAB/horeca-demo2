@@ -168,7 +168,7 @@ const ua = {
       specialRequests: 'Ваші побажання',
     },
     printReceipt: 'Роздрукувати квитанцію',
-    done: 'Готово',
+    backToHome: 'Повернутись на головну',
     reserveRoom: 'Забронювати номер',
     securePayment: 'Безпечна оплата',
     cardDetails: 'Дані картки',
