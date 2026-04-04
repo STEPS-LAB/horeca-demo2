@@ -215,4 +215,19 @@
   .modal-scroll::-webkit-scrollbar-thumb:hover {
     background-color: rgb(168 162 154); /* stone-400 */
   }
+
+  /*
+   * Scrollable cushion under footer on small screens: fixed mobile booking bar
+   * would otherwise cover the last lines when scrolled to the document end.
+   * Matches bar: pt-3 + h-12 + max(12px, safe-area) + buffer.
+   */
+  .pb-mobile-booking-bar {
+    padding-bottom: calc(0.75rem + 3rem + max(0.75rem, env(safe-area-inset-bottom, 0px)) + 0.25rem);
+  }
+
+  @media (min-width: 768px) {
+    .pb-mobile-booking-bar {
+      padding-bottom: 0;
+    }
+  }
 }

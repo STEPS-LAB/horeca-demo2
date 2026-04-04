@@ -1,9 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { MapPin, Phone, Mail, Instagram, Facebook, Twitter } from 'lucide-react';
 import { useLocale, useTranslations } from '@/i18n/context';
 import { cn } from '@/utils/cn';
+
+function normalizePath(p: string) {
+  const trimmed = p.replace(/\/$/, '') || '/';
+  return trimmed;
+}
 
 const socials = [
   { label: 'Instagram', Icon: Instagram },
@@ -14,6 +20,10 @@ const socials = [
 export function Footer() {
   const t = useTranslations();
   const locale = useLocale();
+  const pathname = usePathname();
+  const path = normalizePath(pathname ?? '');
+  const reserveMobileBookingBarSpace =
+    path !== '/booking' && !path.startsWith('/admin');
 
   const footerLinks = {
     hotel: [
@@ -33,7 +43,13 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-stone-950 text-stone-400" role="contentinfo">
+    <footer
+      className={cn(
+        'bg-stone-950 text-stone-400',
+        reserveMobileBookingBarSpace && 'pb-mobile-booking-bar'
+      )}
+      role="contentinfo"
+    >
       {/* CTA Banner */}
       <div className="bg-stone-900 border-b border-stone-800">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">

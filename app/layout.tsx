@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { Providers } from '@/app/providers';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { MobileBookingBar } from '@/components/layout/MobileBookingBar';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { DEFAULT_LOCALE, LOCALES } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
@@ -102,6 +103,7 @@ export default async function RootLayout({
         <Providers locale={locale} dictionary={dictionary}>
           <Header />
           {children}
+          <MobileBookingBar />
           <Footer />
         </Providers>
       </body>

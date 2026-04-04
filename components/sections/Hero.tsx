@@ -34,6 +34,7 @@ export function Hero() {
 
   return (
     <section
+      id="site-hero"
       ref={containerRef}
       className="relative h-screen min-h-[600px] max-h-[960px] flex items-center overflow-hidden"
       aria-labelledby="hero-heading"
