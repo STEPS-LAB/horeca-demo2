@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react';
 import { testimonials } from '@/data/rooms';
 import { useTranslations } from '@/i18n/context';
@@ -25,25 +25,20 @@ export function Testimonials() {
   const locale = useLocale();
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [swipeX, setSwipeX] = useState(0);
 
   const paginate = (dir: number) => {
     setDirection(dir);
     setIndex((prev) => (prev + dir + testimonials.length) % testimonials.length);
   };
 
-  const handleSwipeEnd = (_: any, info: any) => {
-    const threshold = 50;
-    if (info.offset.x > threshold) {
+  const handleSwipeEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const threshold = 48;
+    const vx = info.velocity.x;
+    if (info.offset.x > threshold || vx > 420) {
       paginate(-1);
-    } else if (info.offset.x < -threshold) {
+    } else if (info.offset.x < -threshold || vx < -420) {
       paginate(1);
     }
-    setSwipeX(0);
-  };
-
-  const handleSwipeMove = (_: any, info: any) => {
-    setSwipeX(info.offset.x);
   };
 
   const t = testimonials[index];
@@ -73,15 +68,13 @@ export function Testimonials() {
               animate="center"
               exit="exit"
               transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              className="bg-white rounded-2xl p-8 sm:p-10 border border-stone-200 shadow-sm"
+              className="touch-manipulation select-none bg-white rounded-2xl p-8 sm:p-10 border border-stone-200 shadow-sm"
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.15}
-              onDrag={handleSwipeMove}
+              dragElastic={0.2}
+              dragDirectionLock
               onDragEnd={handleSwipeEnd}
-              style={{
-                cursor: 'grab',
-              }}
+              style={{ cursor: 'grab' }}
             >
               {/* Quote icon */}
               <Quote

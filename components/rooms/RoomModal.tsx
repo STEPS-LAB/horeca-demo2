@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -39,41 +39,53 @@ const panelVariants = {
   exit: { opacity: 0, y: 40, scale: 0.97 },
 };
 
-const imageSlideVariants = {
-  enter: (dir: number) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: (dir: number) => ({ x: dir > 0 ? '-100%' : '100%', opacity: 0 }),
-};
-
 export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
   const [imgIndex, setImgIndex] = useState(0);
-  const [imgDir, setImgDir] = useState(1);
-  const [swipeX, setSwipeX] = useState(0);
+  const galleryScrollRef = useRef<HTMLDivElement>(null);
   const locale = useLocale();
   const t = useTranslations();
 
+  useEffect(() => {
+    if (!isOpen || !room) return;
+    setImgIndex(0);
+    requestAnimationFrame(() => {
+      const el = galleryScrollRef.current;
+      if (el) el.scrollLeft = 0;
+    });
+  }, [isOpen, room?.id]);
+
+  const handleGalleryScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (!room || room.images.length < 2) return;
+    const container = e.currentTarget;
+    const w = container.clientWidth;
+    if (w <= 0) return;
+    const next = Math.round(container.scrollLeft / w);
+    setImgIndex((prev) => {
+      if (next !== prev && next >= 0 && next < room.images.length) return next;
+      return prev;
+    });
+  };
+
+  const scrollGalleryToIndex = (i: number, behavior: ScrollBehavior = 'smooth') => {
+    const el = galleryScrollRef.current;
+    if (!el || !room) return;
+    const w = el.clientWidth;
+    if (w <= 0) return;
+    el.scrollTo({ left: i * w, behavior });
+    setImgIndex(i);
+  };
+
   const navigateImage = (dir: number) => {
-    if (!room) return;
-    setImgDir(dir);
-    setImgIndex((prev) => (prev + dir + room.images.length) % room.images.length);
-  };
-
-  const handleSwipeStart = () => {
-    setSwipeX(0);
-  };
-
-  const handleSwipeMove = (_: any, info: any) => {
-    setSwipeX(info.offset.x);
-  };
-
-  const handleSwipeEnd = (_: any, info: any) => {
-    const threshold = 50;
-    if (info.offset.x > threshold) {
-      navigateImage(-1);
-    } else if (info.offset.x < -threshold) {
-      navigateImage(1);
-    }
-    setSwipeX(0);
+    if (!room || room.images.length < 2) return;
+    setImgIndex((prev) => {
+      const next = (prev + dir + room.images.length) % room.images.length;
+      requestAnimationFrame(() => {
+        const el = galleryScrollRef.current;
+        const cw = el?.clientWidth ?? 0;
+        if (el && cw > 0) el.scrollTo({ left: next * cw, behavior: 'smooth' });
+      });
+      return next;
+    });
   };
 
   // Reset image index when room changes
@@ -124,74 +136,73 @@ export function RoomModal({ room, isOpen, onClose, onBook }: RoomModalProps) {
               <X size={18} />
             </button>
 
-            {/* Image gallery */}
+            {/* Image gallery — native horizontal scroll + snap (reliable swipe on mobile, same pattern as RoomCard). */}
             <div className="relative h-60 sm:h-72 md:h-80 overflow-hidden rounded-t-3xl md:rounded-t-3xl">
-              <AnimatePresence mode="wait" custom={imgDir}>
-                <motion.div
-                  key={imgIndex}
-                  custom={imgDir}
-                  variants={imageSlideVariants}
-                  initial="enter"
-                  animate={{ ...imageSlideVariants.center, x: swipeX }}
-                  exit="exit"
-                  transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-                  className="absolute inset-0"
-                  drag="x"
-                  dragConstraints={{ left: 0, right: 0 }}
-                  dragElastic={0.2}
-                  onDragStart={handleSwipeStart}
-                  onDrag={handleSwipeMove}
-                  onDragEnd={handleSwipeEnd}
-                  style={{ cursor: room.images.length > 1 ? 'grab' : 'default' }}
-                >
-                  <Image
-                    src={room.images[imgIndex]}
-                    alt={`${(locale === 'ua' && room.nameUa ? room.nameUa : room.name)} — ${t.common.image.replace('{index}', String(imgIndex + 1))}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 896px"
-                    priority
-                    draggable={false}
-                  />
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Navigation arrows */}
-              {room.images.length > 1 && (
-                <>
-                  <button
-                    onClick={() => navigateImage(-1)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-9 h-9 rounded-xl glass-dark text-white hover:bg-white/20 transition-colors"
-                    aria-label={t.rooms.modal.previousImage}
-                  >
-                    <ChevronLeft size={18} />
-                  </button>
-                  <button
-                    onClick={() => navigateImage(1)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-9 h-9 rounded-xl glass-dark text-white hover:bg-white/20 transition-colors"
-                    aria-label={t.rooms.modal.nextImage}
-                  >
-                    <ChevronRight size={18} />
-                  </button>
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-                    {room.images.map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => { setImgDir(i > imgIndex ? 1 : -1); setImgIndex(i); }}
-                        aria-label={t.common.image.replace('{index}', String(i + 1))}
-                        className={cn(
-                          'h-1.5 rounded-full transition-all duration-200',
-                          i === imgIndex ? 'w-5 bg-white' : 'w-1.5 bg-white/50'
-                        )}
+              <div
+                ref={galleryScrollRef}
+                className="relative z-0 h-full w-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-hide"
+                onScroll={handleGalleryScroll}
+              >
+                <div className="flex h-full" style={{ width: `${room.images.length * 100}%` }}>
+                  {room.images.map((img, i) => (
+                    <div
+                      key={img}
+                      className="relative h-full shrink-0 snap-center"
+                      style={{ width: `${100 / room.images.length}%` }}
+                    >
+                      <Image
+                        src={img}
+                        alt={`${locale === 'ua' && room.nameUa ? room.nameUa : room.name} — ${t.common.image.replace('{index}', String(i + 1))}`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 896px"
+                        priority={i === 0}
+                        draggable={false}
                       />
-                    ))}
-                  </div>
-                </>
-              )}
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-              {/* Badge overlay */}
-              <div className="absolute top-4 left-4">
-                <Badge variant="gold">{t.rooms.types[room.type]}</Badge>
+              <div className="pointer-events-none absolute inset-0 z-10">
+                {room.images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => navigateImage(-1)}
+                      className="pointer-events-auto absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-xl glass-dark text-white transition-colors hover:bg-white/20 min-h-11 min-w-11"
+                      aria-label={t.rooms.modal.previousImage}
+                    >
+                      <ChevronLeft size={18} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => navigateImage(1)}
+                      className="pointer-events-auto absolute right-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-xl glass-dark text-white transition-colors hover:bg-white/20 min-h-11 min-w-11"
+                      aria-label={t.rooms.modal.nextImage}
+                    >
+                      <ChevronRight size={18} />
+                    </button>
+                    <div className="pointer-events-auto absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+                      {room.images.map((_, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => scrollGalleryToIndex(i, 'smooth')}
+                          aria-label={t.common.image.replace('{index}', String(i + 1))}
+                          className={cn(
+                            'h-1.5 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white',
+                            i === imgIndex ? 'w-5 bg-white' : 'w-1.5 bg-white/50 hover:bg-white/70'
+                          )}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                <div className="pointer-events-auto absolute top-4 left-4">
+                  <Badge variant="gold">{t.rooms.types[room.type]}</Badge>
+                </div>
               </div>
             </div>
 
