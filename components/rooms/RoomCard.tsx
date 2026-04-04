@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Star, Users, Maximize2, BedDouble, Eye } from 'lucide-react';
+import { Star, Users, Maximize2, BedDouble, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { formatCurrency, applyBestPromotion } from '@/utils/pricing';
@@ -21,6 +21,7 @@ interface RoomCardProps {
 export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomCardProps) {
   const [imgIndex, setImgIndex] = useState(0);
   const galleryScrollRef = useRef<HTMLDivElement>(null);
+  const galleryDragRef = useRef({ active: false, pointerId: -1, startX: 0, startScrollLeft: 0 });
   const locale = useLocale();
   const t = useTranslations();
   const displayName = locale === 'ua' && room.nameUa ? room.nameUa : room.name;
@@ -42,6 +43,51 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
     }
   };
 
+  const scrollToImageIndex = useCallback(
+    (i: number) => {
+      const el = galleryScrollRef.current;
+      if (!el) return;
+      const w = el.clientWidth;
+      const next = Math.max(0, Math.min(room.images.length - 1, i));
+      el.scrollTo({ left: next * w, behavior: 'smooth' });
+      setImgIndex(next);
+    },
+    [room.images.length]
+  );
+
+  const onGalleryPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== 'mouse' || room.images.length <= 1) return;
+    const el = galleryScrollRef.current;
+    if (!el) return;
+    galleryDragRef.current = {
+      active: true,
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startScrollLeft: el.scrollLeft,
+    };
+    el.setPointerCapture(e.pointerId);
+  };
+
+  const onGalleryPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = galleryDragRef.current;
+    if (!d.active || e.pointerId !== d.pointerId) return;
+    const el = galleryScrollRef.current;
+    if (!el) return;
+    el.scrollLeft = d.startScrollLeft - (e.clientX - d.startX);
+  };
+
+  const endGalleryPointerDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = galleryDragRef.current;
+    if (!d.active || e.pointerId !== d.pointerId) return;
+    const el = galleryScrollRef.current;
+    try {
+      el?.releasePointerCapture(e.pointerId);
+    } catch {
+      /* already released */
+    }
+    galleryDragRef.current = { active: false, pointerId: -1, startX: 0, startScrollLeft: 0 };
+  };
+
   return (
     <motion.article
       className="group bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-card hover:shadow-[0_8px_30px_rgb(0,0,0,0.1)] transition-shadow duration-300"
@@ -53,8 +99,16 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
       <div className="relative h-52 sm:h-60">
         <div
           ref={galleryScrollRef}
-          className="relative z-0 h-full w-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-hide"
+          className={cn(
+            'relative z-0 h-full w-full overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-hide select-none',
+            room.images.length > 1 && 'lg:cursor-grab lg:active:cursor-grabbing'
+          )}
           onScroll={handleScroll}
+          onPointerDown={onGalleryPointerDown}
+          onPointerMove={onGalleryPointerMove}
+          onPointerUp={endGalleryPointerDrag}
+          onPointerCancel={endGalleryPointerDrag}
+          onLostPointerCapture={endGalleryPointerDrag}
         >
           <div className="flex h-full" style={{ width: `${room.images.length * 100}%` }}>
             {room.images.map((img, i) => (
@@ -105,6 +159,40 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
             <span className="text-stone-400 font-normal">({room.reviewCount})</span>
           </div>
 
+          {/* Desktop gallery arrows */}
+          {room.images.length > 1 && (
+            <>
+              <button
+                type="button"
+                aria-label={t.rooms.modal.previousImage}
+                className={cn(
+                  'pointer-events-auto absolute left-2 top-1/2 z-[11] hidden h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full glass-dark text-white shadow-sm transition-opacity hover:bg-white/20 lg:flex',
+                  imgIndex === 0 && 'pointer-events-none opacity-0'
+                )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  scrollToImageIndex(imgIndex - 1);
+                }}
+              >
+                <ChevronLeft size={14} strokeWidth={2.25} className="shrink-0" aria-hidden />
+              </button>
+              <button
+                type="button"
+                aria-label={t.rooms.modal.nextImage}
+                className={cn(
+                  'pointer-events-auto absolute right-2 top-1/2 z-[11] hidden h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full glass-dark text-white shadow-sm transition-opacity hover:bg-white/20 lg:flex',
+                  imgIndex >= room.images.length - 1 && 'pointer-events-none opacity-0'
+                )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  scrollToImageIndex(imgIndex + 1);
+                }}
+              >
+                <ChevronRight size={14} strokeWidth={2.25} className="shrink-0" aria-hidden />
+              </button>
+            </>
+          )}
+
           {/* Image dots */}
           {room.images.length > 1 && (
             <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5 pointer-events-auto">
@@ -114,12 +202,7 @@ export function RoomCard({ room, promotions = [], onViewDetails, onBook }: RoomC
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    const el = galleryScrollRef.current;
-                    if (el) {
-                      const width = el.clientWidth;
-                      el.scrollTo({ left: i * width, behavior: 'smooth' });
-                    }
-                    setImgIndex(i);
+                    scrollToImageIndex(i);
                   }}
                   aria-label={t.common.viewImage.replace('{index}', String(i + 1))}
                   className={cn(

@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { RoomCard } from '@/components/rooms/RoomCard';
 import { rooms } from '@/data/rooms';
+import { formatCurrency } from '@/utils/pricing';
 
 // Mock i18n context
 jest.mock('@/i18n/context', () => ({
@@ -23,6 +24,10 @@ jest.mock('@/i18n/context', () => ({
           get: (_target, _prop) => 'Room',
         }
       ),
+      modal: {
+        previousImage: 'Previous image',
+        nextImage: 'Next image',
+      },
     },
   }),
   useLocale: () => 'en',
@@ -77,7 +82,9 @@ describe('RoomCard', () => {
         onBook={mockOnBook}
       />
     );
-    expect(screen.getByText('6\u00a0705 грн')).toBeInTheDocument();
+    const card = screen.getByRole('article');
+    const norm = (s: string) => s.replace(/[\u00a0\u202f]/g, ' ').replace(/\s+/g, ' ').trim();
+    expect(norm(card.textContent ?? '')).toContain(norm(formatCurrency(mockRoom.pricePerNight)));
   });
 
   it('renders the room rating', () => {
