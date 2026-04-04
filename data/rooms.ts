@@ -320,7 +320,7 @@ export const testimonials: Testimonial[] = [
     nameUa: 'Софія та Марко Коваль',
     location: 'Львів, Україна',
     locationUa: 'Львів, Україна',
-    avatar: `${BASE}/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=100&q=80`,
+    avatar: `${BASE}/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=128&h=128&q=80`,
     rating: 5,
     text: 'An extraordinary experience from start to finish. The Executive Summit Suite took our breath away — waking up to those mountain views every morning was pure magic. The staff anticipated every need before we even realised we had one.',
     textUa:
@@ -336,7 +336,7 @@ export const testimonials: Testimonial[] = [
     nameUa: 'Оксана Шевченко',
     location: 'Київ, Україна',
     locationUa: 'Київ, Україна',
-    avatar: `${BASE}/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=100&q=80`,
+    avatar: `${BASE}/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=128&h=128&q=80`,
     rating: 5,
     text: 'I have stayed at some of the finest hotels in the world, and HOTEL genuinely rivals them all. The Garden Villa is a masterpiece of design — the hot tub under the stars on a cold winter night is an experience I will never forget.',
     textUa:
@@ -352,7 +352,7 @@ export const testimonials: Testimonial[] = [
     nameUa: 'Андрій та Анна Мельник',
     location: 'Івано-Франківськ, Україна',
     locationUa: 'Івано-Франківськ, Україна',
-    avatar: `${BASE}/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=100&q=80`,
+    avatar: `${BASE}/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=256&h=256&q=85`,
     rating: 5,
     text: 'We celebrated our anniversary in the Junior Forest Suite and it was absolutely perfect. The wraparound balcony, the forest sounds, the beautifully curated amenities — HOTEL is in a league of its own.',
     textUa:
@@ -368,7 +368,7 @@ export const testimonials: Testimonial[] = [
     nameUa: 'Тарас Бондаренко',
     location: 'Одеса, Україна',
     locationUa: 'Одеса, Україна',
-    avatar: `${BASE}/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=100&q=80`,
+    avatar: `${BASE}/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=128&h=128&q=80`,
     rating: 5,
     text: 'Business travel rarely feels like this. The Presidential Suite was staggering — the butler service impeccable, and the property itself is a work of art nestled in the mountains. I will be returning for leisure soon.',
     textUa:

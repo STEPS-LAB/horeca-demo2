@@ -91,13 +91,16 @@ export function Testimonials() {
                 </p>
 
                 <footer className="mt-8 flex items-center gap-4">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-stone-200 shrink-0">
+                  <div
+                    className="relative size-14 shrink-0 overflow-hidden rounded-full border-2 border-stone-200 bg-stone-100 shadow-sm ring-2 ring-white"
+                    aria-hidden
+                  >
                     <Image
                       src={t.avatar}
-                      alt={t.name}
+                      alt=""
                       fill
-                      className="object-cover"
-                      sizes="48px"
+                      className="object-cover object-center"
+                      sizes="56px"
                     />
                   </div>
                   <div>
