@@ -1,6 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useSyncExternalStore,
+} from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -10,12 +16,93 @@ import { Button } from '@/components/ui/Button';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 import { useLocale, useTranslations } from '@/i18n/context';
 
+const SECTION_HASHES = ['#lumina-experience', '#visual-journey'] as const;
+
+function normalizePath(p: string) {
+  if (!p || p === '') return '/';
+  const trimmed = p.replace(/\/$/, '') || '/';
+  return trimmed;
+}
+
+function pathOnlyFromHref(href: string) {
+  const [path] = href.split('#');
+  const [base] = (path ?? '').split('?');
+  return normalizePath(base || '/');
+}
+
+function subscribeLocationHash(onChange: () => void) {
+  window.addEventListener('hashchange', onChange);
+  window.addEventListener('popstate', onChange);
+  return () => {
+    window.removeEventListener('hashchange', onChange);
+    window.removeEventListener('popstate', onChange);
+  };
+}
+
+function getLocationHash() {
+  return typeof window !== 'undefined' ? window.location.hash : '';
+}
+
+/** Slower, ease-in-out scroll to top — feels less abrupt than native `smooth` on some engines. */
+function smoothScrollToTop(durationMs = 720) {
+  const startY = window.scrollY;
+  if (startY <= 0) return;
+  const start = performance.now();
+  const ease = (t: number) =>
+    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  function step(now: number) {
+    const elapsed = now - start;
+    const t = Math.min(1, elapsed / durationMs);
+    const y = Math.round(startY * (1 - ease(t)));
+    window.scrollTo(0, y);
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function syncUrlPathAndHash(href: string) {
+  const url = new URL(href, window.location.origin);
+  const next = `${url.pathname}${url.search}${url.hash}`;
+  window.history.pushState(window.history.state, '', next);
+  window.dispatchEvent(new HashChangeEvent('hashchange'));
+}
+
+function isNavLinkActive(pathname: string, href: string, locationHash: string) {
+  const path = normalizePath(pathname);
+  const hash = locationHash || '';
+  const targetPath = pathOnlyFromHref(href);
+
+  if (href.startsWith('/#')) {
+    const wanted = `#${href.split('#')[1] ?? ''}`;
+    return path === '/' && hash === wanted;
+  }
+
+  if (href === '/') {
+    if (path !== '/') return false;
+    return !SECTION_HASHES.includes(hash as (typeof SECTION_HASHES)[number]);
+  }
+
+  return path === targetPath;
+}
+
 export function Header() {
   const t = useTranslations();
   const locale = useLocale();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobilePanelRef = useRef<HTMLDivElement>(null);
+
+  /* pathname in the snapshot so active section updates after Next.js client navigations (hash may change without hashchange). */
+  const locationHash =
+    useSyncExternalStore(
+      subscribeLocationHash,
+      () => `${pathname}|${getLocationHash()}`.split('|')[1] ?? '',
+      () => ''
+    );
+
   const isHome = pathname === '/' || pathname === '';
 
   const navLinks = [
@@ -30,19 +117,24 @@ export function Header() {
     setScrolled(window.scrollY > 48);
   }, []);
 
-  const handleNavClick = useCallback((href: string) => {
-    // Если это якорная ссылка или главная страница на текущей странице
-    if ((href.startsWith('/#') || href === '/') && (pathname === '/' || pathname === '')) {
-      if (href === '/') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        const element = document.querySelector(href.replace('/', ''));
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+  const handleNavClick = useCallback(
+    (href: string) => {
+      if ((href.startsWith('/#') || href === '/') && (pathname === '/' || pathname === '')) {
+        if (href === '/') {
+          syncUrlPathAndHash('/');
+          smoothScrollToTop();
+        } else {
+          syncUrlPathAndHash(href);
+          const sel = href.replace(/^\/#/, '#');
+          const element = document.querySelector(sel);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         }
       }
-    }
-  }, [pathname]);
+    },
+    [pathname]
+  );
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -55,34 +147,43 @@ export function Header() {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [menuOpen]);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (!menuOpen) return;
-      
-      const target = event.target as HTMLElement;
-      const mobileMenu = document.getElementById('mobile-menu');
-      const menuButton = document.querySelector('[aria-controls="mobile-menu"]');
-      
-      if (mobileMenu && !mobileMenu.contains(target) && !menuButton?.contains(target)) {
-        setMenuOpen(false);
-      }
+    if (!menuOpen) return;
+    const onPointerDown = (e: PointerEvent) => {
+      const node = e.target as Node;
+      if (mobilePanelRef.current?.contains(node)) return;
+      if (menuButtonRef.current?.contains(node)) return;
+      setMenuOpen(false);
     };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
-    
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
   }, [menuOpen]);
 
   const headerTransparent = isHome && !scrolled && !menuOpen;
 
   return (
+    <>
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.button
+            key="mobile-menu-backdrop"
+            type="button"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-[35] cursor-default border-0 bg-stone-900/25 p-0 lg:hidden"
+            aria-label="Close menu"
+            onClick={() => setMenuOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
     <header
       className={cn(
         'fixed top-0 left-0 right-0 z-40',
@@ -126,10 +227,19 @@ export function Header() {
               <Link
                 key={href}
                 href={href}
+                onClick={(e) => {
+                  if (
+                    (href.startsWith('/#') || href === '/') &&
+                    (pathname === '/' || pathname === '')
+                  ) {
+                    e.preventDefault();
+                    handleNavClick(href);
+                  }
+                }}
                 className={cn(
                   'px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500',
-                  pathname === href
+                  isNavLinkActive(pathname, href, locationHash)
                     ? headerTransparent
                       ? 'text-white bg-white/15'
                       : 'text-stone-900 bg-stone-100'
@@ -170,6 +280,7 @@ export function Header() {
           <div className="lg:hidden flex items-center gap-2">
             <LanguageSwitcher transparent={headerTransparent} />
             <button
+              ref={menuButtonRef}
               type="button"
               className={cn(
                 'flex items-center justify-center min-h-11 min-w-11 rounded-lg transition-colors duration-150',
@@ -215,6 +326,7 @@ export function Header() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            ref={mobilePanelRef}
             id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
@@ -243,7 +355,7 @@ export function Header() {
                     }}
                     className={cn(
                       'flex items-center px-4 py-3 rounded-xl text-base font-medium transition-colors duration-150',
-                      pathname === href
+                      isNavLinkActive(pathname, href, locationHash)
                         ? 'bg-stone-900 text-white'
                         : 'text-stone-700 hover:bg-stone-50 hover:text-stone-900'
                     )}
@@ -267,5 +379,6 @@ export function Header() {
         )}
       </AnimatePresence>
     </header>
+    </>
   );
 }
