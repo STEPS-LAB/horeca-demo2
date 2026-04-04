@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries/en';
 import { I18nProvider, useLocale } from '@/i18n/context';
+import { ScrollToTop } from '@/components/layout/ScrollToTop';
 
 /** Keeps <html lang> in sync when the user switches language without a full reload. */
 export function SyncHtmlLang() {
@@ -26,6 +27,7 @@ export function Providers({
   return (
     <I18nProvider locale={locale} dictionary={dictionary}>
       <SyncHtmlLang />
+      <ScrollToTop />
       {children}
     </I18nProvider>
   );
