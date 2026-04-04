@@ -26,9 +26,14 @@ const featureOptions = [
   'Living Room',
 ];
 
+function clampPrice(n: number, max: number) {
+  if (!Number.isFinite(n)) return 0;
+  return Math.min(max, Math.max(0, Math.round(n)));
+}
+
 export function RoomFilters({ state, totalCount }: RoomFiltersProps) {
   const t = useTranslations();
-  const sliderId = useId();
+  const priceFieldId = useId();
   const {
     filter,
     filteredRooms,
@@ -131,29 +136,49 @@ export function RoomFilters({ state, totalCount }: RoomFiltersProps) {
             {formatCurrency(filter.priceRange[0])} – {formatCurrency(filter.priceRange[1])}
           </span>
         </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor={`${sliderId}-min`} className="sr-only">{t.rooms.filtersUi.minimumPrice}</label>
-          <input
-            id={`${sliderId}-min`}
-            type="range"
-            min={0}
-            max={MAX_PRICE}
-            step={25}
-            value={filter.priceRange[0]}
-            onChange={(e) => setPriceRange([+e.target.value, filter.priceRange[1]])}
-            className="w-full accent-stone-900 h-1.5 rounded-full cursor-pointer"
-          />
-          <label htmlFor={`${sliderId}-max`} className="sr-only">{t.rooms.filtersUi.maximumPrice}</label>
-          <input
-            id={`${sliderId}-max`}
-            type="range"
-            min={0}
-            max={MAX_PRICE}
-            step={25}
-            value={filter.priceRange[1]}
-            onChange={(e) => setPriceRange([filter.priceRange[0], +e.target.value])}
-            className="w-full accent-stone-900 h-1.5 rounded-full cursor-pointer"
-          />
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label htmlFor={`${priceFieldId}-from`} className="block text-xs text-stone-500 mb-1.5">
+              {t.rooms.filtersUi.priceFrom}
+            </label>
+            <input
+              id={`${priceFieldId}-from`}
+              type="number"
+              inputMode="numeric"
+              min={0}
+              max={MAX_PRICE}
+              step={1}
+              value={filter.priceRange[0]}
+              onChange={(e) => {
+                const raw = e.target.value;
+                const lo = raw === '' ? 0 : clampPrice(Number(raw), MAX_PRICE);
+                const hi = filter.priceRange[1];
+                setPriceRange([Math.min(lo, hi), hi]);
+              }}
+              className="w-full rounded-lg border border-stone-200 bg-white px-2.5 py-2 text-sm text-stone-900 tabular-nums focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/30"
+            />
+          </div>
+          <div>
+            <label htmlFor={`${priceFieldId}-to`} className="block text-xs text-stone-500 mb-1.5">
+              {t.rooms.filtersUi.priceTo}
+            </label>
+            <input
+              id={`${priceFieldId}-to`}
+              type="number"
+              inputMode="numeric"
+              min={0}
+              max={MAX_PRICE}
+              step={1}
+              value={filter.priceRange[1]}
+              onChange={(e) => {
+                const raw = e.target.value;
+                const hi = raw === '' ? MAX_PRICE : clampPrice(Number(raw), MAX_PRICE);
+                const lo = filter.priceRange[0];
+                setPriceRange([lo, Math.max(hi, lo)]);
+              }}
+              className="w-full rounded-lg border border-stone-200 bg-white px-2.5 py-2 text-sm text-stone-900 tabular-nums focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/30"
+            />
+          </div>
         </div>
       </div>
 

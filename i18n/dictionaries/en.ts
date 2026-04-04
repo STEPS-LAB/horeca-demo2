@@ -115,6 +115,8 @@ const en = {
       clear: 'Clear',
       showing: 'Showing {shown} of {total} rooms',
       pricePerNight: 'Price / Night',
+      priceFrom: 'From',
+      priceTo: 'To',
       minGuests: 'Min. Guests',
       minimumPrice: 'Minimum price',
       maximumPrice: 'Maximum price',

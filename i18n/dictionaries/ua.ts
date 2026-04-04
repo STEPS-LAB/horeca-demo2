@@ -111,6 +111,8 @@ const ua = {
       clear: 'Очистити',
       showing: 'Показано {shown} з {total} номерів',
       pricePerNight: 'Ціна / Ніч',
+      priceFrom: 'Від',
+      priceTo: 'До',
       minGuests: 'Мін. гостей',
       minimumPrice: 'Мінімальна ціна',
       maximumPrice: 'Максимальна ціна',
