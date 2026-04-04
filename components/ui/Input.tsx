@@ -24,7 +24,8 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 const inputBaseStyles = cn(
-  'w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-stone-900',
+  /* text-base below sm avoids iOS Safari zoom on focus (<16px triggers zoom) */
+  'w-full rounded-lg border bg-white px-3 py-2.5 text-base sm:text-sm text-stone-900',
   'placeholder:text-stone-400',
   'transition-colors duration-150',
   'focus:outline-none focus:ring-2 focus:ring-gold-500/40 focus:border-gold-500',

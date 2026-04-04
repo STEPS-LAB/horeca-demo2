@@ -123,7 +123,7 @@ export function AdminPricingClient({
                 required
                 value={form.name}
                 onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
-                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
+                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-base sm:text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
                 placeholder="—"
               />
             </div>
@@ -132,7 +132,7 @@ export function AdminPricingClient({
               <select
                 value={form.type}
                 onChange={(e) => setForm((p) => ({ ...p, type: e.target.value }))}
-                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
+                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-base sm:text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
               >
                 <option value="PERCENTAGE">{t.typePercentage}</option>
                 <option value="FIXED">{t.typeFixed}</option>
@@ -149,7 +149,7 @@ export function AdminPricingClient({
                 min="0"
                 value={form.value}
                 onChange={(e) => setForm((p) => ({ ...p, value: e.target.value }))}
-                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
+                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-base sm:text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
                 placeholder="10"
               />
             </div>
@@ -160,7 +160,7 @@ export function AdminPricingClient({
                 min="1"
                 value={form.minNights}
                 onChange={(e) => setForm((p) => ({ ...p, minNights: e.target.value }))}
-                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
+                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-base sm:text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
                 placeholder="3"
               />
             </div>
@@ -170,7 +170,7 @@ export function AdminPricingClient({
                 type="date"
                 value={form.startDate}
                 onChange={(e) => setForm((p) => ({ ...p, startDate: e.target.value }))}
-                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
+                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-base sm:text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
               />
             </div>
             <div>
@@ -179,7 +179,7 @@ export function AdminPricingClient({
                 type="date"
                 value={form.endDate}
                 onChange={(e) => setForm((p) => ({ ...p, endDate: e.target.value }))}
-                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
+                className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-base sm:text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500"
               />
             </div>
           </div>

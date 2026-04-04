@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { Plus, Pencil, ToggleRight, Star, X, Trash2 } from 'lucide-react';
 import type { Room } from '@/types';
 import { formatCurrency } from '@/utils/pricing';
+import { cn } from '@/utils/cn';
 import { useTranslations } from '@/i18n/context';
 
 // ── Shared form state ──────────────────────────────────────────────────────
@@ -70,7 +71,7 @@ function slugify(str: string) {
 
 // ── Tiny helpers ──────────────────────────────────────────────────────────
 const inputCls =
-  'w-full bg-stone-800 border border-stone-700 rounded-xl text-stone-100 text-sm px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gold-500 transition-colors placeholder:text-stone-600';
+  'w-full bg-stone-800 border border-stone-700 rounded-xl text-stone-100 text-base sm:text-sm px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gold-500 transition-colors placeholder:text-stone-600';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -242,7 +243,7 @@ function RoomFormModal({
           {/* Images */}
           <Field label={`${t.fieldImages} — ${t.fieldImagesHint}`}>
             <textarea
-              className={`${inputCls} resize-none font-mono text-xs`}
+              className={cn(inputCls, 'resize-none font-mono text-base sm:text-xs')}
               rows={4}
               value={form.imagesText}
               onChange={(e) => onChange({ imagesText: e.target.value })}
@@ -514,7 +515,7 @@ export function AdminRoomsClient({ initialRooms }: { initialRooms: Room[] }) {
           placeholder={t.search}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full max-w-sm bg-stone-900 border border-stone-800 rounded-xl text-stone-100 text-sm px-4 py-2.5 placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-gold-500 transition-colors"
+          className="w-full max-w-sm bg-stone-900 border border-stone-800 rounded-xl text-stone-100 text-base sm:text-sm px-4 py-2.5 placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-gold-500 transition-colors"
         />
       </div>
 

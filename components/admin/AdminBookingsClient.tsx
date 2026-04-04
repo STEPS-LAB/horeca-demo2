@@ -82,7 +82,7 @@ export function AdminBookingsClient({
           placeholder={t.search}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 min-w-48 bg-stone-900 border border-stone-800 rounded-xl text-stone-100 text-sm px-4 py-2 placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-gold-500"
+          className="flex-1 min-w-48 bg-stone-900 border border-stone-800 rounded-xl text-stone-100 text-base sm:text-sm px-4 py-2 placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-gold-500"
         />
       </div>
 

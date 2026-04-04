@@ -65,7 +65,7 @@ export function AdminLoginForm() {
             autoComplete="username"
             value={form.email}
             onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
-            className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-sm pl-9 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-gold-500 placeholder:text-stone-600 transition-colors"
+            className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-base sm:text-sm pl-9 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-gold-500 placeholder:text-stone-600 transition-colors"
             placeholder="admin@luminahotel.ua"
           />
         </div>
@@ -84,7 +84,7 @@ export function AdminLoginForm() {
             autoComplete="current-password"
             value={form.password}
             onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))}
-            className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-sm pl-9 pr-10 py-3 focus:outline-none focus:ring-2 focus:ring-gold-500 placeholder:text-stone-600 transition-colors"
+            className="w-full bg-stone-800 border border-stone-700 rounded-xl text-white text-base sm:text-sm pl-9 pr-10 py-3 focus:outline-none focus:ring-2 focus:ring-gold-500 placeholder:text-stone-600 transition-colors"
             placeholder="••••••••"
           />
           <button
