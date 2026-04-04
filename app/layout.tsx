@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { Providers } from '@/app/providers';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { AIConcierge } from '@/components/layout/AIConcierge';
 import { MobileBookingBar } from '@/components/layout/MobileBookingBar';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { DEFAULT_LOCALE, LOCALES } from '@/i18n/config';
@@ -104,6 +105,7 @@ export default async function RootLayout({
           <Header />
           {children}
           <MobileBookingBar />
+          <AIConcierge />
           <Footer />
         </Providers>
       </body>

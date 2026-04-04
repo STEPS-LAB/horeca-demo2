@@ -453,6 +453,24 @@ const en = {
     },
   },
 
+  // ── AI Concierge (demo) ───────────────────────
+  aiConcierge: {
+    title: 'AI Concierge',
+    online: 'Online · demo replies',
+    openLabel: 'Open AI concierge chat',
+    fabLine: 'Ask anything about your stay',
+    welcome:
+      "Hello! I'm your AI concierge. Ask me about rooms, spa, dining, or activities — demo answers only.",
+    placeholder: 'Ask something…',
+    send: 'Send message',
+    suggestions: [
+      'What dishes do you recommend?',
+      'Best spa or relaxation options?',
+      'Which room suits a couple?',
+      'How do I book a stay?',
+    ],
+  },
+
   // ── Footer ────────────────────────────────────
   footer: {
     tagline: 'Your mountain sanctuary awaits.',
